@@ -364,23 +364,19 @@ app.post("/place-order", async (req, res) => {
 app.get("/user-orders/:id", async (req, res) => {
   try {
     const order = await OrderModel.findById(req.params.id);
-    const products = await ProductModel.find();
-
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    const items = order.items.map(item => {
-      
-      return {
-       
-         productId: item.productId,
-        quantity: item.quantity,   
-        productName: item.snapName, 
-      image: item.snapImage,     
-      price: item.snapPrice
-      };
-    });
+    
+    const items = order.items.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,   
+      productName: item.snapName, 
+      image: item.snapImage,      
+      price: item.snapPrice       
+    }));
+
     const updatedOrder = {
       ...order._doc,
       items
