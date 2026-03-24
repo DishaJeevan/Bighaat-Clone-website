@@ -27,11 +27,7 @@ function Home() {
       <SprayersandNutrients />
       <Nutrients/>
       <SeedsSection /> 
-      <Pest/>
-      
-      
-      
-     
+      <Pest/>     
     </>
   );
 }
