@@ -1,0 +1,4 @@
+root: C:\Users\WIN-10\internship\workspace\server\nvm
+path: C:\Users\WIN-10\internship\workspace\server\nodejs
+arch: 64
+proxy: none

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Filter Sidebar</title>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <div class="sidebar">
+        <h2>Filters</h2>
+
+        <details open>
+            <summary>CATEGORIES <i class="fa-solid fa-angle-down"></i></summary>
+            <div class="content">
+                <label><input type="checkbox"> Vegetables</label>
+                <label><input type="checkbox"> Fruits</label>
+                <label><input type="checkbox"> Flowers</label>
+                <label><input type="checkbox"> Grains</label>
+                <label><input type="checkbox"> Herbs</label>
+            </div>
+        </details>
+
+        <details>
+            <summary>BRANDS <i class="fa-solid fa-angle-down"></i></summary>
+            <div class="content">
+                <label><input type="checkbox"> Brand A</label>
+                <label><input type="checkbox"> Brand B</label>
+                <label><input type="checkbox"> Brand C</label>
+                <label><input type="checkbox"> Brand D</label>
+                <label><input type="checkbox"> Brand E</label>
+            </div>
+        </details>
+
+        <details open>
+            <summary>
+                PRICE
+                <i class="fa-solid fa-angle-down"></i>
+            </summary>
+            <div class="content">
+                <input type="range" min="0" max="20000" class="range">
+                <div class="price-box">
+                    <select>
+                        <option>₹0</option>
+                        <option>₹1000</option>
+                        <option>₹5000</option>
+                    </select>
+                    to
+                    <select>
+                        <option>₹20000</option>
+                        <option>₹15000</option>
+                        <option>₹10000</option>
+                    </select>
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary>RATING <i class="fa-solid fa-angle-down"></i></summary>
+            <div class="content">
+                <label><input type="checkbox"> 5 Star</label>
+                <label><input type="checkbox"> 4 Star</label>
+                <label><input type="checkbox"> 3 Star</label>
+                <label><input type="checkbox"> 2 Star</label>
+                <label><input type="checkbox"> 1 Star</label>
+            </div>
+        </details>
+
+        <details>
+            <summary>AVAILABILITY <i class="fa-solid fa-angle-down"></i></summary>
+            <div class="content">
+                <label><input type="checkbox"> In Stock</label>
+                <label><input type="checkbox"> Out of Stock</label>
+            </div>
+        </details>
+    </div>
+
+    <div class="content-area seeds-page">
+
+        <div class="page-header">
+            <div class="title-section">
+                <h1>Seeds <span>(3915)</span></h1>
+            </div>
+
+            <div class="sort-section">
+                <label>Sort By :</label>
+                <select>
+                    <option>Best Selling</option>
+                    <option>Price Low to High</option>
+                    <option>Price High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <a href="#"><i class="fa-regular fa-heart"></i></a>
+                <div class="discount">38% OFF</div>
+
+                <div class="image-offer">
+                    <img src="images/seedimg1.jpg">
+                </div>
+
+                <div class="content-card">
+                    <h4>Katyayani Activated Humic Acid</h4>
+                    <p class="brand">Katyayani Organics</p>
+
+                    <div class="price">
+                        <span class="new-price">₹951</span>
+                        <span class="old-price">₹1525</span>
+                    </div>
+
+                    <p class="save-button">Save ₹574</p>
+                </div>
+
+                <div class="size-btn">
+                    <p>Size</p>
+                    <select>
+                        <option>800 gm</option>
+                        <option>1 kg</option>
+                        <option>2 kg</option>
+                        <option>5 kg</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
