@@ -113,8 +113,8 @@ return(
               <option value="late-blight">Late Blight</option>
               
                <option value="tapasimplements">Implements</option>
-  <option value="tapasnutrition">Crop Nutrition</option>
-  <option value="tapasprotection">Crop Protection</option>
+               <option value="tapasnutrition">Crop Nutrition</option>
+               <option value="tapasprotection">Crop Protection</option>
               <option value="growth-promoters">Growth Promoters</option>
             </select>
             
@@ -138,21 +138,8 @@ return(
           <input  type="text" name="star" placeholder="Rating" onChange={handleChange}/>
           <input  type="number" name="newPrice" placeholder="New Price" onChange={handleChange}/>
           <input  type="number" name="oldPrice" placeholder="Old Price" onChange={handleChange}/>
-          <input
-  type="text"
-  name="discount"
-  placeholder="Discount"
-  value={product.discount}
-
-/>
-<input
-  type="number"
-  name="saveAmount"
-  placeholder="Save Amount"
-  value={product.saveAmount}
-  
-/>
-                
+          <input type="text" name="discount" placeholder="Discount" value={product.discount}/>
+          <input type="number" name="saveAmount" placeholder="Save Amount" value={product.saveAmount}/>     
           <input type="text" name="size" placeholder="Enter sizes" onChange={handleChange}/>
           <input  type="file" name="image"  onChange={handleChange}/>
           <button type="submit">Add Product</button>
