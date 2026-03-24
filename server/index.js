@@ -8,7 +8,6 @@ const otpGenerator = require("otp-generator");
 const ProductSchema = require("./models/Product").schema;
 const { OrderSchema } = require("./models/Order");
 
-
 /*const fs=require("fs");*/
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,7 +29,6 @@ app.use(cors({
   credentials: true
 }));
 
-
 /*
 const multer=require("multer");
 const path=require("path");
@@ -49,13 +47,11 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 const parser = multer({
   storage: new CloudinaryStorage({
@@ -64,8 +60,7 @@ const parser = multer({
        folder: "products",
       format: async (req, file) => {
         
-        const ext = file.mimetype.split("/")[1].toLowerCase();
-        
+        const ext = file.mimetype.split("/")[1].toLowerCase();      
         const allowedFormats = ["jpeg", "jpg", "png", "webp"];
         return allowedFormats.includes(ext) ? ext : "png"; 
       },
@@ -79,8 +74,6 @@ const adminDB = mongoose.createConnection(process.env.ADMIN_DB_URI);
 
 userDB.once("open", () => console.log("Login DB Connected"));
 adminDB.once("open", () => console.log("Admin DB Connected"));
-
-
 
 const UserModel = userDB.model("users", UserSchema);
 const ProductModel = adminDB.model("products", ProductSchema);
@@ -209,7 +202,7 @@ app.post("/resend-otp", async (req, res) => {
 });
 
 app.post("/add-product", parser.single("image"), async (req,res)=>{
-   console.log("Received file:", req.file); // 🔹 Check this in console
+   console.log("Received file:", req.file); 
   console.log("Request body:", req.body);
   try {
     const product = new ProductModel({
@@ -265,16 +258,11 @@ app.delete("/delete-product/:id", async (req, res) => {
   }
 });
 
-
-
-// ... (Your imports and config remain the same)
-
 app.put("/update-product/:id", parser.single("image"), async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
     if (!product) return res.status(404).send("Product not found");
 
-    // Prepare data from request body
     const updateData = {
       id: req.body.id,
       name: req.body.name,
@@ -290,12 +278,9 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
       size: req.body.size,
     };
 
-    // LOGIC: IF A NEW FILE IS UPLOADED
     if (req.file) {
-      // 1. Delete the OLD image from Cloudinary storage
       if (product.image && product.image.includes("cloudinary")) {
         try {
-          // Robust extraction of publicId (e.g., "products/filename")
           const parts = product.image.split("/");
           const fileNameWithExt = parts.pop(); 
           const folder = parts.pop(); 
@@ -307,10 +292,8 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
           console.error("Cloudinary delete error:", clErr);
         }
       }
-      // 2. Set the NEW image path provided by the 'parser'
       updateData.image = req.file.path;
     } else {
-      // If no new file, keep the existing image
       updateData.image = product.image;
     }
 
@@ -322,7 +305,6 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
   }
 });
 
-// ... (Rest of your server code)
 app.get("/users", async (req, res) => {
   try {
     const users = await UserModel.find();
@@ -394,8 +376,6 @@ app.get("/user-orders/:id", async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-
-    
     const items = order.items.map(item => ({
       productId: item.productId,
       quantity: item.quantity,   
@@ -420,9 +400,7 @@ app.get("/orders", async (req, res) => {
     const products = await ProductModel.find();
     const updatedOrders = orders.map(order => {
       const items = order.items.map(item => {
-        const product = products.find(
-          p => String(p.id) === String(item.productId)
-        );
+        const product = products.find(p => String(p.id) === String(item.productId));
         return {...item,productDetails: product
         };
       });
@@ -491,9 +469,7 @@ app.put("/update-order/:id", async (req, res) => {
           Date: ${date} <br/> 
         </p>`;
       await sendMail(order.email, subject, message);
-    }
-    
-    
+    }  
     res.json({ message: "Order updated successfully" });
     
   } catch (err) {
