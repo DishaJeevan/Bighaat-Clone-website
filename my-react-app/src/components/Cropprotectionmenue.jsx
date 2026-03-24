@@ -145,12 +145,10 @@ function Cropprotectionmenue  () {
                 
                  <p className="save-button">Save ₹{product.saveAmount}</p>
             </div>
-
-           
               </div>
             </Link>            
-    ))}
- </div>
+                ))}
+             </div>
               <div class="end-section">
 
                 <div class="end-box">
