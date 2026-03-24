@@ -265,9 +265,11 @@ app.delete("/delete-product/:id", async (req, res) => {
   }
 });
 
+
 app.put("/update-product/:id", parser.single("image"), async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
+    if (!product) return res.status(404).send("Product not found");
 
     const updateData = {
       id: req.body.id,
@@ -284,15 +286,32 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
       size: req.body.size,
     };
 
+    
     if (req.file) {
-      updateData.image = req.file.path; 
+    
+      if (product.image && product.image.includes("cloudinary")) {
+        try {
+         
+          const parts = product.image.split("/");
+          const folder = parts[parts.length - 2]; // usually "products"
+          const fileName = parts[parts.length - 1].split(".")[0]; // the ID part
+          const publicId = `${folder}/${fileName}`;
+
+          await cloudinary.uploader.destroy(publicId);
+          console.log("Deleted old image:", publicId);
+        } catch (clErr) {
+          console.error("Cloudinary delete error:", clErr);
+        }
+      }
+    
+      updateData.image = req.file.path;
     }
 
     await ProductModel.findByIdAndUpdate(req.params.id, updateData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.status(500).send("Server Error");
   }
 });
 
@@ -449,28 +468,24 @@ app.put("/update-order/:id", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-   if (status === "Processed" || status === "Delivered") {
-    const products = await ProductModel.find();
+  
+if (status === "Processed" || status === "Delivered") {
     const amount = order.totalPrice;
     const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
+
+    // FIX: Get names and prices directly from the order's snapshot
     const productList = order.items.map(item => {
-      const product = products.find(p => String(p.id) === String(item.productId));
-      return `<li>${product?.name || "Product"} (x${item.quantity})</li>`;
+      return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
     }).join("");
+
     const subject = `Order Update: ${status}`;
-    const message = `<p>Your order is being :${status}<br/>
+    const message = `<p>Your order status is: ${status}<br/>
         <ul>${productList}</ul>
         Total: ₹${amount} <br/>
         Date: ${date} <br/> 
       </p>`;
     await sendMail(order.email, subject, message);
-  }
-    res.json({ message: "Order updated successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+}
 
 app.post("/cart-products", async (req, res) => {
   try {
