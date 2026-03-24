@@ -267,12 +267,14 @@ app.delete("/delete-product/:id", async (req, res) => {
 
 
 
-// index.js - Update this specific route
+// ... (Your imports and config remain the same)
+
 app.put("/update-product/:id", parser.single("image"), async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
     if (!product) return res.status(404).send("Product not found");
 
+    // Prepare data from request body
     const updateData = {
       id: req.body.id,
       name: req.body.name,
@@ -288,34 +290,39 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
       size: req.body.size,
     };
 
-    // IF A NEW FILE IS UPLOADED
+    // LOGIC: IF A NEW FILE IS UPLOADED
     if (req.file) {
-      // 1. Delete the old image from Cloudinary storage
+      // 1. Delete the OLD image from Cloudinary storage
       if (product.image && product.image.includes("cloudinary")) {
         try {
-          // Extracts "products/filename" from the full URL
+          // Robust extraction of publicId (e.g., "products/filename")
           const parts = product.image.split("/");
-          const folder = parts[parts.length - 2]; // usually "products"
-          const fileName = parts[parts.length - 1].split(".")[0]; // the ID part
-          const publicId = `${folder}/${fileName}`;
+          const fileNameWithExt = parts.pop(); 
+          const folder = parts.pop(); 
+          const publicId = `${folder}/${fileNameWithExt.split(".")[0]}`;
 
           await cloudinary.uploader.destroy(publicId);
-          console.log("Deleted old image:", publicId);
+          console.log("Deleted old image from Cloudinary:", publicId);
         } catch (clErr) {
           console.error("Cloudinary delete error:", clErr);
         }
       }
-      // 2. Set the new image path
+      // 2. Set the NEW image path provided by the 'parser'
       updateData.image = req.file.path;
+    } else {
+      // If no new file, keep the existing image
+      updateData.image = product.image;
     }
 
     await ProductModel.findByIdAndUpdate(req.params.id, updateData);
     res.sendStatus(200);
   } catch (err) {
-    console.error(err);
+    console.error("Update error:", err);
     res.status(500).send("Server Error");
   }
 });
+
+// ... (Rest of your server code)
 app.get("/users", async (req, res) => {
   try {
     const users = await UserModel.find();
