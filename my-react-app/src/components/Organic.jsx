@@ -62,10 +62,8 @@ useEffect(() => {
                 <p className="save-button-menu">
                   Save ₹{product.oldPrice - product.newPrice}
                 </p>
-              </div>
-
-              
-</div>
+              </div>  
+          </div>
            </Link>
           ))}
 
@@ -85,13 +83,11 @@ useEffect(() => {
       active substances and other co-formulated can be either biological or chemical products. 
       Bio and Organic Plant protection products are available with various top brands.
     </p>
-  </div>
+    </div>
       </div>
-
     </div>
     </div>
   );
 }
-
 
 export default Organic;
