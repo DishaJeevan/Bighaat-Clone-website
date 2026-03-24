@@ -42,7 +42,7 @@ function SprayersandNutrients() {
               />
             </div>
 
-<div className="rating-star-menu">
+              <div className="rating-star-menu">
                 {product.star}
               </div>
             <div className="content-card">
@@ -65,17 +65,7 @@ function SprayersandNutrients() {
 
       <div class="sparayer-offer-img">
         <img src="images/sprayerofferimg.png" alt="smartimage" />
-      </div>
-
-      
-
-      
-
-      
-
-
-
-      
+      </div>    
     </>
   );
 }
