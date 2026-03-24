@@ -266,6 +266,8 @@ app.delete("/delete-product/:id", async (req, res) => {
 });
 
 
+
+// index.js - Update this specific route
 app.put("/update-product/:id", parser.single("image"), async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -286,12 +288,12 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
       size: req.body.size,
     };
 
-    
+    // IF A NEW FILE IS UPLOADED
     if (req.file) {
-    
+      // 1. Delete the old image from Cloudinary storage
       if (product.image && product.image.includes("cloudinary")) {
         try {
-         
+          // Extracts "products/filename" from the full URL
           const parts = product.image.split("/");
           const folder = parts[parts.length - 2]; // usually "products"
           const fileName = parts[parts.length - 1].split(".")[0]; // the ID part
@@ -303,7 +305,7 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
           console.error("Cloudinary delete error:", clErr);
         }
       }
-    
+      // 2. Set the new image path
       updateData.image = req.file.path;
     }
 
@@ -314,7 +316,6 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
 app.get("/users", async (req, res) => {
   try {
     const users = await UserModel.find();
@@ -468,24 +469,31 @@ app.put("/update-order/:id", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-  
-if (status === "Processed" || status === "Delivered") {
-    const amount = order.totalPrice;
-    const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
+    if (status === "Processed" || status === "Delivered") {
+      const amount = order.totalPrice;
+      const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
 
-    // FIX: Get names and prices directly from the order's snapshot
-    const productList = order.items.map(item => {
-      return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
-    }).join("");
+      const productList = order.items.map(item => {
+        return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
+      }).join("");
 
-    const subject = `Order Update: ${status}`;
-    const message = `<p>Your order status is: ${status}<br/>
-        <ul>${productList}</ul>
-        Total: ₹${amount} <br/>
-        Date: ${date} <br/> 
-      </p>`;
-    await sendMail(order.email, subject, message);
-}
+      const subject = `Order Update: ${status}`;
+      const message = `<p>Your order status is: ${status}<br/>
+          <ul>${productList}</ul>
+          Total: ₹${amount} <br/>
+          Date: ${date} <br/> 
+        </p>`;
+      await sendMail(order.email, subject, message);
+    }
+    
+    
+    res.json({ message: "Order updated successfully" });
+    
+  } catch (err) {
+    console.error("Order update error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 app.post("/cart-products", async (req, res) => {
   try {
