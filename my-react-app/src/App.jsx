@@ -83,16 +83,14 @@ function App() {
        <Route path="/product/:id" element={<IndividualPage />} />
        <Route path="/products" element={<Products />} />
        <Route path="/thrips" element={<Thrips />} />
-<Route path="/leaf-eating" element={<LeafEating />} />
-<Route path="/late-blight" element={<LightBlight />} />
-  <Route path="/flower-fruits" element={<FlowerFruits />} />
-<Route path="/green-leaves" element={<GreenLeaves />} />
-<Route path="/nutrient-deficiencies" element={<NutrientDeficiencies />} />
-<Route path="/growth-promoters" element={<GrowthPage />} />
-<Route path="/offer-page" element={<OfferPage />} />
-<Route path="/best-selling" element={<BestPage />} />
-       
-       
+      <Route path="/leaf-eating" element={<LeafEating />} />
+      <Route path="/late-blight" element={<LightBlight />} />
+        <Route path="/flower-fruits" element={<FlowerFruits />} />
+      <Route path="/green-leaves" element={<GreenLeaves />} />
+      <Route path="/nutrient-deficiencies" element={<NutrientDeficiencies />} />
+      <Route path="/growth-promoters" element={<GrowthPage />} />
+      <Route path="/offer-page" element={<OfferPage />} />
+      <Route path="/best-selling" element={<BestPage />} />     
       </Routes>
       <Footer/>
         {isCartOpen && <Cart />}
