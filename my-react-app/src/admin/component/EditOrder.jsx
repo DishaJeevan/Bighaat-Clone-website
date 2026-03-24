@@ -53,21 +53,16 @@ return(
     <tbody>
       {orders.map((o) => (
         o.items && o.items.map((item, index) => (
-          <tr key={`${o._id}-${index}`}>
-          <td>{o.user_id}</td>
-          <td>{o.email}</td>
-         <td>
-  <img src={item.image} alt="product" width="50" 
-    onError={(e) => { e.target.src = 'https://via.placeholder.com/50'; }} 
-  />
-</td>
-<td>{item.productName || "N/A"}</td>
-<td>{item.quantity}</td>
-<td>₹{item.price || 0}</td>
-          <td>₹{item.price || 0}</td> 
-          <td>{new Date(o.datetime).toLocaleString()}</td>
-          <td>{o.status}</td>
-        </tr>
+      <tr key={`${o._id}-${index}`}>
+        <td>{o.user_id}</td>
+        <td>{o.email}</td>
+        <td><img src={item.image} alt="product" width="50" onError={(e) => { e.target.src = 'https://via.placeholder.com/50'; }} /></td>
+        <td>{item.productName || "N/A"}</td>
+        <td>{item.quantity}</td>
+        <td>₹{item.price || 0}</td> 
+        <td>{new Date(o.datetime).toLocaleString()}</td>
+        <td>{o.status}</td>
+      </tr>
         ))
       ))}
     </tbody>
