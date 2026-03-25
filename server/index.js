@@ -287,14 +287,11 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
 
           let publicIdParts = urlParts.slice(uploadIndex + 1);
 
-          // remove version (v123...)
           if (publicIdParts[0].startsWith("v")) {
             publicIdParts.shift();
           }
 
-          const publicId = publicIdParts
-            .join("/")
-            .replace(/\.[^/.]+$/, "");
+          const publicId = publicIdParts.join("/").replace(/\.[^/.]+$/, "");
 
           console.log("Deleting:", publicId);
 
