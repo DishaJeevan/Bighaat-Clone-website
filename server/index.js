@@ -281,13 +281,25 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
     if (req.file) {
       if (product.image && product.image.includes("cloudinary")) {
         try {
-          const parts = product.image.split("/");
-          const fileNameWithExt = parts.pop(); 
-          const folder = parts.pop(); 
-          const publicId = `${folder}/${fileNameWithExt.split(".")[0]}`;
+          const urlParts = product.image.split("/");
+
+          const uploadIndex = urlParts.indexOf("upload");
+
+          let publicIdParts = urlParts.slice(uploadIndex + 1);
+
+          // remove version (v123...)
+          if (publicIdParts[0].startsWith("v")) {
+            publicIdParts.shift();
+          }
+
+          const publicId = publicIdParts
+            .join("/")
+            .replace(/\.[^/.]+$/, "");
+
+          console.log("Deleting:", publicId);
 
           await cloudinary.uploader.destroy(publicId);
-          console.log("Deleted old image from Cloudinary:", publicId);
+
         } catch (clErr) {
           console.error("Cloudinary delete error:", clErr);
         }
@@ -296,7 +308,6 @@ app.put("/update-product/:id", parser.single("image"), async (req, res) => {
     } else {
       updateData.image = product.image;
     }
-
     await ProductModel.findByIdAndUpdate(req.params.id, updateData);
     res.sendStatus(200);
   } catch (err) {
