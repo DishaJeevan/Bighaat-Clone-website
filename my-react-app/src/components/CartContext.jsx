@@ -1,28 +1,39 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export const CartContext = createContext();
 export function CartProvider({ children }) {
 
+  const location = useLocation();
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+ const getUserCartKey = () => {
+  const email = localStorage.getItem("email");
+  return email ? `cart_${email}` : "cart_guest";
+};
+
+const [cart, setCart] = useState(() => {
+  const key = getUserCartKey();
+  const savedCart = localStorage.getItem(key);
+  return savedCart ? JSON.parse(savedCart) : [];
+});
 
   function clearCart() {
-    setCart([]);                       
-    localStorage.removeItem("cart");   
-  }
+  const key = getUserCartKey();
+  setCart([]);
+  localStorage.removeItem(key);
+}
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    } else {
-      localStorage.removeItem("cart");  
-    }
-  }, [cart]);
+  const key = getUserCartKey();
+
+  if (cart.length > 0) {
+    localStorage.setItem(key, JSON.stringify(cart));
+  } else {
+    localStorage.removeItem(key);
+  }
+}, [cart]);
 
   function addToCart(product) {
   setCart((prev) => {
@@ -76,6 +87,12 @@ export function CartProvider({ children }) {
 
   fetchProducts();
 }, [cart]);
+
+useEffect(() => {
+  const key = getUserCartKey();
+  const savedCart = localStorage.getItem(key);
+  setCart(savedCart ? JSON.parse(savedCart) : []);
+}, [location]);
 
 const cartWithDetails = cart.map((cartItem) => {
   const product = products.find((p) => String(p.id) === String(cartItem.id));
