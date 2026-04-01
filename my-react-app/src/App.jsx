@@ -45,6 +45,7 @@ import FlowerFruits from "./components/FlowerFruits";
 import GreenLeaves from "./components/GreenLeaves";
 import NutrientDeficiencies from "./components/NutrientDeficiencies";
 import BestPage from "./components/BestPage";
+import Search from "./components/Search";
 
 
 function App() {
@@ -83,14 +84,16 @@ function App() {
        <Route path="/product/:id" element={<IndividualPage />} />
        <Route path="/products" element={<Products />} />
        <Route path="/thrips" element={<Thrips />} />
-      <Route path="/leaf-eating" element={<LeafEating />} />
-      <Route path="/late-blight" element={<LightBlight />} />
+        <Route path="/leaf-eating" element={<LeafEating />} />
+        <Route path="/late-blight" element={<LightBlight />} />
         <Route path="/flower-fruits" element={<FlowerFruits />} />
-      <Route path="/green-leaves" element={<GreenLeaves />} />
-      <Route path="/nutrient-deficiencies" element={<NutrientDeficiencies />} />
-      <Route path="/growth-promoters" element={<GrowthPage />} />
-      <Route path="/offer-page" element={<OfferPage />} />
-      <Route path="/best-selling" element={<BestPage />} />     
+        <Route path="/green-leaves" element={<GreenLeaves />} />
+        <Route path="/nutrient-deficiencies" element={<NutrientDeficiencies />} />
+        <Route path="/growth-promoters" element={<GrowthPage />} />
+        <Route path="/offer-page" element={<OfferPage />} />
+        <Route path="/best-selling" element={<BestPage />} />
+        <Route path="/search/:keyword" element={<Search />} />
+          
       </Routes>
       <Footer/>
         {isCartOpen && <Cart />}
