@@ -18,6 +18,8 @@ const allowedOrigins = [
   "https://bighaat-clone-website.onrender.com"
 ];
 
+
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -219,6 +221,7 @@ app.post("/add-product", parser.single("image"), async (req,res)=>{
       saveAmount: req.body.saveAmount,
       size: req.body.size,
       image: req.file ? req.file.path : "",
+      createdAt: new Date(),
     });
 
     await product.save();
@@ -231,7 +234,17 @@ app.post("/add-product", parser.single("image"), async (req,res)=>{
 
 app.get("/products", async (req, res) => {
   try {
-    const products = await ProductModel.find();
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: "i", 
+          },
+        }
+      : {};
+
+    const products = await ProductModel.find({ ...keyword });
+
     res.json(products);
   } catch (err) {
     console.log(err);
@@ -471,11 +484,9 @@ app.put("/update-order/:id", async (req, res) => {
       }).join("");
 
       const subject = `Order Update: ${status}`;
-      const message = `<p>Your order status is: ${status}<br/>
-          <ul>${productList}</ul>
+      const message = `<p>Your order status is: ${status}<br/><ul>${productList}</ul>
           Total: ₹${amount} <br/>
-          Date: ${date} <br/> 
-        </p>`;
+          Date: ${date} <br/> </p>`;
       await sendMail(order.email, subject, message);
     }  
     res.json({ message: "Order updated successfully" });
