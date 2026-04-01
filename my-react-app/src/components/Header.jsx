@@ -28,7 +28,7 @@ useEffect(() => {
     }
 
     try {
-      const res = await axios.get("https://bighaat-clone.onrender.com/products?keyword=${keyword}");
+     const res = await axios.get(`https://bighaat-clone.onrender.com/products?keyword=${keyword}`);
 
       const filtered = res.data.filter((p) =>
         p.name.toLowerCase().includes(keyword.toLowerCase())
