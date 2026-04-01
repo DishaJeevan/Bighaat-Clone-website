@@ -13,8 +13,8 @@ function Cart() {
       productId: item.id,
       quantity: item.qty,
       snapName: item.name,      
-  snapPrice: item.newPrice, 
-  snapImage: item.image
+      snapPrice: item.newPrice, 
+      snapImage: item.image
 }));
 
      const totalPrice = total;
