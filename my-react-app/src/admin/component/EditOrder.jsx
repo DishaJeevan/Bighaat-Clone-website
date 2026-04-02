@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function EditOrder(){
 
-const {id}=useParams();
+const {user_id}=useParams();
 const navigate=useNavigate();
 
 const [orders,setOrders] = useState([]);
@@ -13,7 +13,7 @@ const [status,setStatus]=useState("");
 useEffect(()=>{
   const getOrders=async()=>{
 
-  const res=await axios.get(`https://bighaat-clone.onrender.com/user-orders/${id}`);
+  const res=await axios.get(`https://bighaat-clone.onrender.com/user-orders/${user_id}`);
   console.log("Orders fetched:", res.data); 
   setOrders(res.data);
 
