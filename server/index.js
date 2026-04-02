@@ -391,24 +391,20 @@ app.post("/place-order", async (req, res) => {
   }
 });
 
-app.put("/update-order/:id", async (req, res) => {
+app.get("/user-orders/:id", async (req, res) => {
   try {
-    const { status } = req.body;
-    const { id } = req.params;
+   
+    const idFromUrl = req.params.id;
+
+    const mongoUserId = new mongoose.Types.ObjectId(idFromUrl);
+
+    const orders = await OrderModel.find({ user_id: mongoUserId });
 
     
-    const result = await OrderModel.updateMany(
-      { user_id: new mongoose.Types.ObjectId(id) }, 
-      { $set: { status: status } }
-    );
-
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: "No orders found for this user" });
-    }
-
-    res.json({ message: "All user orders updated successfully" });
+    res.json(orders);
+    
   } catch (err) {
-    console.error("Order update error:", err);
+    console.error("Error fetching user orders:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -463,31 +459,34 @@ app.delete("/delete-order/:id", async (req, res) => {
 app.put("/update-order/:id", async (req, res) => {
   try {
     const { status } = req.body;
-    const order = await OrderModel.findByIdAndUpdate(
-      req.params.id, 
-      { status }, 
-      { new: true }
+    const userId = req.params.id; 
+
+  
+    const result = await OrderModel.updateMany(
+      { user_id: new mongoose.Types.ObjectId(userId) }, 
+      { $set: { status: status } }
     );
 
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "No orders found for this user" });
     }
 
-    if (status === "Processed" || status === "Delivered") {
-      const amount = order.totalPrice;
-      const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
+    const latestOrder = await OrderModel.findOne({ user_id: userId }).sort({ datetime: -1 });
 
-      const productList = order.items.map(item => {
-        return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
-      }).join("");
+    if (latestOrder && (status === "Processed" || status === "Delivered")) {
+      const productList = latestOrder.items.map(item => 
+        `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`
+      ).join("");
 
       const subject = `Order Update: ${status}`;
       const message = `<p>Your order status is: ${status}<br/><ul>${productList}</ul>
-          Total: ₹${amount} <br/>
-          Date: ${date} <br/> </p>`;
-      await sendMail(order.email, subject, message);
-    }  
-    res.json({ message: "Order updated successfully" });
+          Total: ₹${latestOrder.totalPrice} <br/>
+          Date: ${new Date().toLocaleString()} <br/> </p>`;
+      
+      await sendMail(latestOrder.email, subject, message);
+    }
+
+    res.json({ message: "User orders updated successfully" });
     
   } catch (err) {
     console.error("Order update error:", err);
