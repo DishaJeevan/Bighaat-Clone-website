@@ -22,12 +22,12 @@ useEffect(()=>{
   }
 };
 getOrders();
-},[id]);
+},[user_id]);
 
 const updateOrder=async(e)=>{
   e.preventDefault();
   try{
-    await axios.put(`https://bighaat-clone.onrender.com/update-order/${id}`,{status});
+    await axios.put(`https://bighaat-clone.onrender.com/update-order/${user_id}`,{status});
     alert("Order Updated");
     navigate("/admin/manage-orders");
   }catch(err){
