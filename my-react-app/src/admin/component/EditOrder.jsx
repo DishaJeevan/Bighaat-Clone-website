@@ -4,15 +4,20 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function EditOrder() {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
+  
   const [orders, setOrders] = useState([]);
   const [status, setStatus] = useState("");
+
+ 
+  const userId = id || location.pathname.split("/").pop();
 
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${id}`);
+        const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
         console.log("Orders fetched:", res.data);
         setOrders(res.data);
 
@@ -20,22 +25,21 @@ function EditOrder() {
           setStatus(res.data[0].status);
         }
       } catch (err) {
-        console.error("Error fetching orders:", err);
+        console.error("Error:", err);
       }
     };
-    if (id) getOrders();
-  }, [id]);
+    if (userId) getOrders();
+  }, [userId]);
 
   const updateOrder = async (e) => {
     e.preventDefault();
     try {
-      // Note: This updates the status for the USER ID provided
-      await axios.put(`https://bighaat-clone.onrender.com/update-order/${id}`, { status });
-      alert("Orders Updated successfully!");
+   
+      await axios.put(`https://bighaat-clone.onrender.com/update-order/${userId}`, { status });
+      alert("Order Updated");
       navigate("/admin/manage-orders");
     } catch (err) {
       console.log(err);
-      alert("Failed to update status");
     }
   };
 
