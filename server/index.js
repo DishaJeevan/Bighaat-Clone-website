@@ -393,36 +393,15 @@ app.post("/place-order", async (req, res) => {
 
 app.get("/user-orders/:id", async (req, res) => {
   try {
+   
     const idFromUrl = req.params.id;
 
-    
     const mongoUserId = new mongoose.Types.ObjectId(idFromUrl);
 
- 
     const orders = await OrderModel.find({ user_id: mongoUserId });
 
-    if (!orders || orders.length === 0) {
-      return res.json([]); 
-    }
-
     
-    const formattedOrders = orders.map(order => {
-      const items = order.items.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,   
-        productName: item.snapName, 
-        image: item.snapImage,    
-        price: item.snapPrice     
-      }));
-
-      return {
-        ...order._doc,
-        items
-      };
-    });
-
-   
-    res.json(formattedOrders);
+    res.json(orders);
     
   } catch (err) {
     console.error("Error fetching user orders:", err);
