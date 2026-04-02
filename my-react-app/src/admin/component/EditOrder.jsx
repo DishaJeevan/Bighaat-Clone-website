@@ -56,29 +56,26 @@ function EditOrder() {
           </tr>
         </thead>
         <tbody>
-          {orders.map((o) =>
-            o.items && o.items.map((item, index) => (
-              <tr key={`${o._id}-${index}`}>
-                <td>{o.user_id}</td>
-                <td>{o.email}</td>
-                <td>
-                  <img 
-                    src={item.snapImage || item.image || "https://via.placeholder.com/50"} 
-                    alt="product" 
-                    width="50" 
-                    onError={(e) => { e.target.src = 'https://via.placeholder.com/50'; }} 
-                  />
-                </td>
-            
-                <td>{item.snapName || item.productName || "N/A"}</td>
-                <td>{item.quantity}</td>
-                {/* FIX: Use snapPrice fallback */}
-                <td>₹{item.snapPrice || item.price || 0}</td> 
-                <td>{new Date(o.datetime).toLocaleString()}</td>
-                <td><span className={`status-badge ${o.status}`}>{o.status}</span></td>
-              </tr>
-            ))
-          )}
+         {orders.map((o) => (
+  o.items && o.items.map((item, index) => (
+    <tr key={`${o._id}-${index}`}>
+      <td>{o.user_id}</td>
+      <td>{o.email}</td>
+      <td>
+        <img 
+          src={item.snapImage || item.image} 
+          alt="product" 
+          width="50" 
+        />
+      </td>
+      <td>{item.snapName || item.productName}</td>
+      <td>{item.quantity}</td>
+      <td>₹{item.snapPrice || item.price}</td> 
+      <td>{new Date(o.datetime).toLocaleString()}</td>
+      <td>{o.status}</td>
+    </tr>
+  ))
+))}
         </tbody>
       </table>
 
