@@ -46,6 +46,7 @@ import GreenLeaves from "./components/GreenLeaves";
 import NutrientDeficiencies from "./components/NutrientDeficiencies";
 import BestPage from "./components/BestPage";
 import Search from "./components/Search";
+import Order from "./components/Order";
 
 
 function App() {
@@ -93,7 +94,7 @@ function App() {
         <Route path="/offer-page" element={<OfferPage />} />
         <Route path="/best-selling" element={<BestPage />} />
         <Route path="/search/:keyword" element={<Search />} />
-          
+          <Route path="/orders" element={<Order />} />
       </Routes>
       <Footer/>
         {isCartOpen && <Cart />}
