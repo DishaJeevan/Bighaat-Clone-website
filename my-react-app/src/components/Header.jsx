@@ -28,7 +28,7 @@ useEffect(() => {
     }
 
     try {
-     const res = await axios.get(`https://bighaat-clone.onrender.com/products?keyword=${keyword}`);
+      const res = await axios.get(`https://bighaat-clone.onrender.com/products?keyword=${keyword}`);
 
       const filtered = res.data.filter((p) =>
         p.name.toLowerCase().includes(keyword.toLowerCase())
@@ -123,7 +123,7 @@ useEffect(() => {
             <div className="user-dropdown">
               <p>{user}</p>
               <Link to="/orders">My Orders</Link>
-              <Link to="/profile">Profile</Link>
+              <Link to="/profile">My Address</Link>
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
