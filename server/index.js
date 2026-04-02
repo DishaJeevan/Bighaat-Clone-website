@@ -391,20 +391,24 @@ app.post("/place-order", async (req, res) => {
   }
 });
 
-app.get("/user-orders/:id", async (req, res) => {
+app.put("/update-order/:id", async (req, res) => {
   try {
-   
-    const idFromUrl = req.params.id;
-
-    const mongoUserId = new mongoose.Types.ObjectId(idFromUrl);
-
-    const orders = await OrderModel.find({ user_id: mongoUserId });
+    const { status } = req.body;
+    const { id } = req.params;
 
     
-    res.json(orders);
-    
+    const result = await OrderModel.updateMany(
+      { user_id: new mongoose.Types.ObjectId(id) }, 
+      { $set: { status: status } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "No orders found for this user" });
+    }
+
+    res.json({ message: "All user orders updated successfully" });
   } catch (err) {
-    console.error("Error fetching user orders:", err);
+    console.error("Order update error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
