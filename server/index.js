@@ -393,25 +393,19 @@ app.post("/place-order", async (req, res) => {
 
 app.get("/user-orders/:id", async (req, res) => {
   try {
-    const order = await OrderModel.findById(req.params.id);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-    const items = order.items.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,   
-      productName: item.snapName, 
-      image: item.snapImage,      
-      price: item.snapPrice       
-    }));
+   
+    const idFromUrl = req.params.id;
 
-    const updatedOrder = {
-      ...order._doc,
-      items
-    };
-    res.json([updatedOrder]);
+    const mongoUserId = new mongoose.Types.ObjectId(idFromUrl);
+
+    const orders = await OrderModel.find({ user_id: mongoUserId });
+
+    
+    res.json(orders);
+    
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error fetching user orders:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
