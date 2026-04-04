@@ -3169,11 +3169,19 @@ body {
 
 
 .manage-container {
-  width: 80%;
+  width: 600px;
   margin: auto;
+  background: rgb(238, 237, 237);
+  border-radius: 10px;
+  min-height:900px;
+  margin-bottom:100px;
 }
 .manage-container h2 {
-margin-top:40px;
+margin-top:50px;
+font-size:30px;
+padding-top:20px;
+margin-left:40px;
+font-weight:500;
 }
 
 
@@ -3181,11 +3189,15 @@ margin-top:40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: rgb(248, 246, 246);
   padding: 15px;
-  margin-top: 15px;
+  margin-top: 45px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width:500px;
+  margin-left:60px;
+  margin-bottom:-20px;
+ 
 }
 
 
@@ -3284,4 +3296,89 @@ margin-top:40px;
 
 .item-info p {
   margin: 3px 0;
+}
+
+
+
+.address-page {
+  padding: 40px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  font-size: 22px;
+  margin-left: 350px;
+}
+
+.address-container {
+  background: #fff;
+  padding: 25px;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-left:350px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.phone-input {
+  display: flex;
+}
+
+.phone-input span {
+  background: #eee;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+}
+
+.phone-input input {
+  flex: 1;
+  border-radius: 0 6px 6px 0;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: orange;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+}
+
+.save-btn {
+  background: green;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
 }
