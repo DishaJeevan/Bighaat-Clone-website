@@ -50,11 +50,11 @@ function ManageUsers() {
                 <td>{u._id}</td>
                 <td>{u.email}</td>
                 <td>{u.otp}</td>
-                 <td>
-              {u.address
-                ? `${u.address.flat}, ${u.address.street}, ${u.address.city}`
-                : "No Address"}
-            </td>
+                <td>
+  {u.address && typeof u.address === 'object' && u.address.city 
+    ? `${u.address.city}, ${u.address.state}` 
+    : "Not Provided"}
+</td>
                 <td>{new Date(u.otpExpires).toLocaleString()}</td>
 
                 <td>
