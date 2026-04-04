@@ -5,7 +5,7 @@ const cors = require("cors");
 const UserSchema = require("./models/User").schema;
 const sendMail = require("./mailsend");
 const otpGenerator = require("otp-generator");
-const ProductSchema = require("./models/Product").schema;
+const ProductSchema = require("./models/Product");
 const { OrderSchema } = require("./models/Order");
 
 /*const fs=require("fs");*/
@@ -77,7 +77,7 @@ const adminDB = mongoose.createConnection(process.env.ADMIN_DB_URI);
 userDB.once("open", () => console.log("Login DB Connected"));
 adminDB.once("open", () => console.log("Admin DB Connected"));
 
-const UserModel = userDB.model("users", UserSchema);
+const UserModel = userDB.model("users", UserSchema.schema);
 const ProductModel = adminDB.model("products", ProductSchema);
 const OrderModel = adminDB.model("orders", OrderSchema);
  
@@ -525,8 +525,15 @@ app.post("/save-address", async (req, res) => {
 
 app.get("/get-address/:id", async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.id);
-    res.json(user.address || {});
+    const user = await UserModel.findById(req.params.id).lean();
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (user.address && user.address.name) {
+      res.json(user.address);
+    } else {
+      res.json({}); 
+    }
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
