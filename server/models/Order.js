@@ -11,8 +11,8 @@ const OrderSchema = new mongoose.Schema({
     productId: String,
     quantity: Number,
     snapName: String,
-      snapPrice: Number,
-      snapImage: String
+    snapPrice: Number,
+    snapImage: String
   }
 ],
   totalPrice: Number,
@@ -24,6 +24,18 @@ const OrderSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "Pending",
+  },
+
+  address: {   
+    name: String,
+    phone: String,
+    flat: String,
+    street: String,
+    pincode: String,
+    city: String,
+    district: String,
+    state: String,
+    landmark: String
   },
 });
 module.exports = { OrderSchema };
