@@ -529,7 +529,7 @@ app.post("/save-address", async (req, res) => {
   }
 });
 
-axios.get(`/get-address/${user_id}`, async (req, res) => {
+app.get("/get-address/:id", async (req, res) => {
   try {
     const user = await UserModel.findById(req.params.id);
     res.json(user.address || {});
