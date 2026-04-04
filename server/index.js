@@ -378,11 +378,11 @@ app.get("/products/:id", async (req, res) => {
 
 app.post("/place-order", async (req, res) => {
   try {
-    const { user_id, email, items, totalPrice } = req.body;
+    const { user_id, email, items, totalPrice,address, } = req.body;
     if (!items || items.length === 0) {
       return res.status(400).json({ error: "No items in order" });
     }
-    const order = new OrderModel({user_id: new mongoose.Types.ObjectId(user_id),email,items,totalPrice,datetime: new Date(),status: "Pending"});
+    const order = new OrderModel({user_id: new mongoose.Types.ObjectId(user_id),email,items,totalPrice,address,datetime: new Date(),status: "Pending"});
     await order.save();
     res.json({ message: "Order placed successfully" });
   } catch (err) {
@@ -459,34 +459,31 @@ app.delete("/delete-order/:id", async (req, res) => {
 app.put("/update-order/:id", async (req, res) => {
   try {
     const { status } = req.body;
-    const userId = req.params.id; 
-
-  
-    const result = await OrderModel.updateMany(
-      { user_id: new mongoose.Types.ObjectId(userId) }, 
-      { $set: { status: status } }
+    const order = await OrderModel.findByIdAndUpdate(
+      req.params.id, 
+      { status }, 
+      { new: true }
     );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: "No orders found for this user" });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    const latestOrder = await OrderModel.findOne({ user_id: userId }).sort({ datetime: -1 });
+    if (status === "Processed" || status === "Delivered") {
+      const amount = order.totalPrice;
+      const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
 
-    if (latestOrder && (status === "Processed" || status === "Delivered")) {
-      const productList = latestOrder.items.map(item => 
-        `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`
-      ).join("");
+      const productList = order.items.map(item => {
+        return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
+      }).join("");
 
       const subject = `Order Update: ${status}`;
       const message = `<p>Your order status is: ${status}<br/><ul>${productList}</ul>
-          Total: ₹${latestOrder.totalPrice} <br/>
-          Date: ${new Date().toLocaleString()} <br/> </p>`;
-      
-      await sendMail(latestOrder.email, subject, message);
-    }
-
-    res.json({ message: "User orders updated successfully" });
+          Total: ₹${amount} <br/>
+          Date: ${date} <br/> </p>`;
+      await sendMail(order.email, subject, message);
+    }  
+    res.json({ message: "Order updated successfully" });
     
   } catch (err) {
     console.error("Order update error:", err);
@@ -499,6 +496,43 @@ app.post("/cart-products", async (req, res) => {
     const ids = req.body;
     const products = await ProductModel.find({id: { $in: ids }});
     res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/save-address", async (req, res) => {
+  try {
+    const { user_id, address } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID missing" });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user_id,
+      { $set: { address: address } }, 
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("Address saved:", updatedUser.address);
+
+    res.json(updatedUser);
+
+  } catch (err) {
+    console.error("Save address error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/get-address/:id", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    res.json(user.address || {});
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
