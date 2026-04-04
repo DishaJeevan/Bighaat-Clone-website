@@ -10,13 +10,13 @@ function FetchAddress() {
 
   const [address, setAddress] = useState(null);
 
-  const user_id = localStorage.getItem("user_id");
+  const _id = localStorage.getItem("_id");
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
         const res = await axios.get(
-          `https://bighaat-clone.onrender.com/get-address/${user_id}`
+          `https://bighaat-clone.onrender.com/get-address/${_id}`
         );
 
         if (res.data && res.data.name) {
@@ -28,14 +28,14 @@ function FetchAddress() {
     };
 
     fetchAddress();
-  }, [user_id]);
+  }, [_id]);
 
   const placeOrder = async () => {
     try {
       const email = localStorage.getItem("email");
 
       await axios.post("https://bighaat-clone.onrender.com/place-order", {
-        user_id,
+        _id,
         email,
         items: [],
         totalPrice: 0,
