@@ -84,10 +84,12 @@ function Cart() {
           <div className="total-price">₹{total}</div>
          <button 
   className="proceed-btn" 
-  onClick={() => {
-    closeCart();
-    navigate("/my-address", { state: { fromCart: true } });
-  }}
+ 
+   onClick={() => {
+  closeCart();
+  navigate("/checkout-address");
+}}
+  
 >
   Proceed
 </button>
