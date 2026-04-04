@@ -39,6 +39,9 @@ function ManageUsers() {
               <th>Email</th>
               <th>OTP</th>
               <th>OTP Expiry</th>
+              <th>Name</th>
+          <th>Phone</th>
+          <th>City</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -48,7 +51,11 @@ function ManageUsers() {
                 <td>{u._id}</td>
                 <td>{u.email}</td>
                 <td>{u.otp}</td>
+                <td>{u.address?.name}</td>
+                <td>{u.address?.phone}</td>
+                <td>{u.address?.city}</td>
                 <td>{new Date(u.otpExpires).toLocaleString()}</td>
+
                 <td>
                   <button className="edit-btn" onClick={()=>navigate(`/admin/edit-user/${u._id}`)}>
                     <i className="fas fa-edit"></i>
