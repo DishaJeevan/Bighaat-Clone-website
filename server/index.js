@@ -2,10 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
-const UserSchema = require("./models/User").schema;
+const UserSchema = require("./models/User");
 const sendMail = require("./mailsend");
 const otpGenerator = require("otp-generator");
-const ProductSchema = require("./models/Product");
+const ProductSchema = require("./models/Product").schema;
 const { OrderSchema } = require("./models/Order");
 
 /*const fs=require("fs");*/
