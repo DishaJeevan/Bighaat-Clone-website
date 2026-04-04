@@ -8,6 +8,7 @@ function MyAddress() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [hasAddress, setHasAddress] = useState(false);
+   const [loading, setLoading] = useState(true);
 
   const user_id = localStorage.getItem("user_id");
   const email = localStorage.getItem("email");
@@ -26,17 +27,25 @@ function MyAddress() {
     landmark: ""
   });
 
-  useEffect(() => {
-    axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
-      .then(res => {
-        if (res.data && res.data.name) {
-          setForm(res.data);
-          setHasAddress(true);
-        } else {
-          setIsEditing(true); 
+ 
+
+useEffect(() => {
+  axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+    .then(res => {
+      if (res.data && res.data.name) {
+        setForm(res.data);
+        setHasAddress(true);
+
+        
+        if (location.pathname === "/checkout-address") {
+          navigate("/my-address");
         }
-      });
-  }, []);
+      } else {
+        setIsEditing(true);
+      }
+    })
+    .finally(() => setLoading(false));
+}, []);
 
 
   const handleChange = (e) => {
@@ -50,6 +59,7 @@ function MyAddress() {
       user_id,
       address: form
     });
+    localStorage.setItem("address_updated", Date.now());
 
     alert("Address saved");
 
