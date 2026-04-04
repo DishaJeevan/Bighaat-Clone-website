@@ -59,15 +59,14 @@ useEffect(() => {
       user_id,
       address: form
     });
-    localStorage.setItem("address_updated", Date.now());
-
-    alert("Address saved");
-
-    setHasAddress(true);
-    setIsEditing(false);
-
+    
+   
+    setHasAddress(true); 
+    setIsEditing(false); 
+    
+    alert("Address saved successfully!");
   } catch (err) {
-    console.log(err);
+    console.error(err);
     alert("Error saving address");
   }
 };
