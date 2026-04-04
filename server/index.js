@@ -504,27 +504,21 @@ app.post("/cart-products", async (req, res) => {
 app.post("/save-address", async (req, res) => {
   try {
     const { user_id, address } = req.body;
-
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID missing" });
-    }
-
-    
     const id = new mongoose.Types.ObjectId(user_id);
 
+    
     const updatedUser = await UserModel.findByIdAndUpdate(
       id,
       { $set: { address: address } }, 
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true, strict: false } 
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!updatedUser) return res.status(404).json({ error: "User not found" });
 
+    console.log("SUCCESS! Saved Address:", updatedUser.address);
     res.json(updatedUser.address);
   } catch (err) {
-    console.error("Save address error:", err);
+    console.error("Save error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
