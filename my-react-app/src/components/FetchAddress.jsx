@@ -13,22 +13,27 @@ function FetchAddress() {
   const user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      try {
-        const res = await axios.get(
-          `https://bighaat-clone.onrender.com/get-address/${user_id}`
-        );
+  const fetchAddress = async () => {
+    if (!user_id) return; 
+    try {
+      const res = await axios.get(
+        `https://bighaat-clone.onrender.com/get-address/${user_id}`
+      );
 
-        if (res.data && res.data.name) {
-          setAddress(res.data);
-        }
-      } catch (err) {
-        console.log("Error fetching address", err);
+     
+      if (res.data && Object.keys(res.data).length > 0 && res.data.name) {
+        setAddress(res.data);
+      } else {
+        setAddress(null); 
       }
-    };
+    } catch (err) {
+      console.log("Error fetching address", err);
+      setAddress(null);
+    }
+  };
 
-    fetchAddress();
-  }, [user_id]);
+  fetchAddress();
+}, [user_id]);
 
   const placeOrder = async () => {
     try {
