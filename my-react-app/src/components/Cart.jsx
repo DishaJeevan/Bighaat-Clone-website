@@ -2,31 +2,34 @@ import { useContext } from "react";
 import { CartContext } from "../components/CartContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
-  const { cart, cartWithDetails, total, increaseQty, decreaseQty, closeCart, clearCart } = useContext(CartContext);
-  const placeOrder = async () => {
-    try {
-      const email = localStorage.getItem("email");
-      const user_id = localStorage.getItem("user_id");
-      const items = cartWithDetails.map(item => ({
-      productId: item.id,
-      quantity: item.qty,
-      snapName: item.name,      
-      snapPrice: item.newPrice, 
-      snapImage: item.image
-}));
+  const navigate = useNavigate();
 
-     const totalPrice = total;
-    await axios.post("https://bighaat-clone.onrender.com/place-order", {user_id,email,items,totalPrice});
-    alert("Order placed successfully");
-     clearCart(); 
-     closeCart();
-  } catch (err) {
-    console.log(err);
-    alert("Server error");
-  }
-};
+  const { cart, cartWithDetails, total, increaseQty, decreaseQty, closeCart, clearCart } = useContext(CartContext);
+//   const placeOrder = async () => {
+//     try {
+//       const email = localStorage.getItem("email");
+//       const user_id = localStorage.getItem("user_id");
+//       const items = cartWithDetails.map(item => ({
+//       productId: item.id,
+//       quantity: item.qty,
+//       snapName: item.name,      
+//       snapPrice: item.newPrice, 
+//       snapImage: item.image
+// }));
+
+  //    const totalPrice = total;
+  //   await axios.post("https://bighaat-clone.onrender.com/place-order", {user_id,email,items,totalPrice});
+  //   alert("Order placed successfully");
+  //    clearCart(); 
+  //    closeCart();
+  // } catch (err) {
+  //   console.log(err);
+  //   alert("Server error");
+  // }
+// };
 
   return (
     <div className="cart-sidebar">
@@ -79,7 +82,15 @@ function Cart() {
           </div>
 
           <div className="total-price">₹{total}</div>
-          <button className="proceed-btn" onClick={placeOrder}>Proceed</button>
+         <button 
+  className="proceed-btn" 
+  onClick={() => {
+    closeCart();
+    navigate("/my-address", { state: { fromCart: true } });
+  }}
+>
+  Proceed
+</button>
         </div>
       )}
     </div>
