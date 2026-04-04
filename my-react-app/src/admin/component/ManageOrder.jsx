@@ -39,6 +39,7 @@ function ManageOrder() {
               <th>Total Orders</th>
               <th>Total Amount</th>
               <th>Last Order</th>
+              <th>Address</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -50,7 +51,11 @@ function ManageOrder() {
               <td>{o.items ? o.items.length : 0}</td> 
               <td>₹{o.totalPrice}</td>
               <td>{new Date(o.datetime).toLocaleString()}</td>
-
+            <td>
+              {o.address
+                ? `${o.address.flat}, ${o.address.street}, ${o.address.city}`
+                : "No Address"}
+            </td>
                 <td>
                   <button className="edit-btn" onClick={() => {
                     console.log("Editing user:", o._id);
