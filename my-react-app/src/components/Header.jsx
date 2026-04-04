@@ -8,17 +8,28 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+
 function Header() {
   const { cart, openCart } = useContext(CartContext);
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
- 
+  const location = useLocation();
   const navigate=useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState([]);
   const [user, setUser] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const location = useLocation();
+  const [address, setAddress] = useState(null);
+
+useEffect(() => {
+  const user_id = localStorage.getItem("user_id");
+  if(user_id){
+    axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+      .then(res => setAddress(res.data));
+  }
+}, []);
+ 
+ 
 
 useEffect(() => {
   const fetchProducts = async () => {
@@ -57,6 +68,8 @@ useEffect(() => {
   const email = localStorage.getItem("email");
   setUser(email);
 }, [location]);
+
+
 
 
   return (
@@ -123,7 +136,9 @@ useEffect(() => {
             <div className="user-dropdown">
               <p>{user}</p>
               <Link to="/orders">My Orders</Link>
-              <Link to="/profile">My Address</Link>
+             <p onClick={() => navigate("/my-address")}>My Address</p>
+            
+              
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
