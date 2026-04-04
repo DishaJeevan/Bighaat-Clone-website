@@ -14,26 +14,28 @@ function FetchAddress() {
 
   useEffect(() => {
   const fetchAddress = async () => {
-    if (!user_id) return; 
+  
+    if (!user_id || user_id === "undefined") return; 
+    
     try {
       const res = await axios.get(
         `https://bighaat-clone.onrender.com/get-address/${user_id}`
       );
 
      
-      if (res.data && Object.keys(res.data).length > 0 && res.data.name) {
+      if (res.data && res.data.name) {
         setAddress(res.data);
       } else {
         setAddress(null); 
       }
     } catch (err) {
-      console.log("Error fetching address", err);
+      console.error("Error fetching address", err);
       setAddress(null);
     }
   };
 
   fetchAddress();
-}, [user_id]);
+}, [user_id]); 
 
   const placeOrder = async () => {
     try {
