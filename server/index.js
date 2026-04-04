@@ -503,14 +503,14 @@ app.post("/cart-products", async (req, res) => {
 
 app.post("/save-address", async (req, res) => {
   try {
-    const { _id, address } = req.body;
+    const { user_id, address } = req.body;
 
-    if (!_id) {
+    if (!user_id) {
       return res.status(400).json({ error: "User ID missing" });
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      _id,
+      user_id,
       { $set: { address: address } }, 
       { new: true }
     );
