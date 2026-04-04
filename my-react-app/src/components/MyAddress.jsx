@@ -10,7 +10,7 @@ function MyAddress() {
   const [hasAddress, setHasAddress] = useState(false);
    const [loading, setLoading] = useState(true);
 
-  const user_id = localStorage.getItem("user_id");
+  const _id = localStorage.getItem("_id");
   const email = localStorage.getItem("email");
 
   const { cartWithDetails, total, clearCart, closeCart } = useContext(CartContext);
@@ -30,7 +30,7 @@ function MyAddress() {
  
 
 useEffect(() => {
-  axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+  axios.get(`https://bighaat-clone.onrender.com/get-address/${_id}`)
     .then(res => {
       if (res.data && res.data.name) {
         setForm(res.data);
@@ -56,7 +56,7 @@ useEffect(() => {
  const saveAddress = async () => {
   try {
     await axios.post("https://bighaat-clone.onrender.com/save-address", {
-      user_id,
+      _id,
       address: form
     });
     localStorage.setItem("address_updated", Date.now());
@@ -84,7 +84,7 @@ useEffect(() => {
       }));
 
       await axios.post("https://bighaat-clone.onrender.com/place-order", {
-        user_id,
+        _id,
         email,
         items,
         totalPrice: total,
