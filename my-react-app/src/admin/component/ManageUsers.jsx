@@ -38,10 +38,9 @@ function ManageUsers() {
               <th>ID</th>
               <th>Email</th>
               <th>OTP</th>
-              <th>OTP Expiry</th>
-              <th>Name</th>
-          <th>Phone</th>
-          <th>City</th>
+              <th>Address</th>
+              
+          <th>OTP Expiry</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -51,9 +50,11 @@ function ManageUsers() {
                 <td>{u._id}</td>
                 <td>{u.email}</td>
                 <td>{u.otp}</td>
-                <td>{u.address?.name}</td>
-                <td>{u.address?.phone}</td>
-                <td>{u.address?.city}</td>
+                 <td>
+              {u.address
+                ? `${u.address.flat}, ${u.address.street}, ${u.address.city}`
+                : "No Address"}
+            </td>
                 <td>{new Date(u.otpExpires).toLocaleString()}</td>
 
                 <td>
