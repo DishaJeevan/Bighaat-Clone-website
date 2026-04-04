@@ -22,11 +22,19 @@ function Header() {
   const [address, setAddress] = useState(null);
 
 useEffect(() => {
-  const user_id = localStorage.getItem("user_id");
-  if(user_id){
-    axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
-      .then(res => setAddress(res.data));
-  }
+  const fetchAddress = () => {
+    const user_id = localStorage.getItem("user_id");
+    if(user_id){
+      axios.get(`/get-address/${user_id}`)
+        .then(res => setAddress(res.data));
+    }
+  };
+
+  fetchAddress();
+
+  window.addEventListener("storage", fetchAddress);
+
+  return () => window.removeEventListener("storage", fetchAddress);
 }, []);
  
  
@@ -136,8 +144,9 @@ useEffect(() => {
             <div className="user-dropdown">
               <p>{user}</p>
               <Link to="/orders">My Orders</Link>
-             <p onClick={() => navigate("/my-address")}>My Address</p>
-            
+             <p onClick={() => navigate("/my-address")}>
+                My Address
+              </p>
               
               <button onClick={handleLogout}>Logout</button>
             </div>
