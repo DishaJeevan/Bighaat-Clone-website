@@ -51,9 +51,11 @@ function ManageUsers() {
                 <td>{u.email}</td>
                 <td>{u.otp}</td>
                 <td>
-  {u.address && typeof u.address === 'object' && u.address.city 
-    ? `${u.address.city}, ${u.address.state}` 
-    : "Not Provided"}
+  {u.address && typeof u.address === "object" ? (
+    `${u.address.name}, ${u.address.phone}, ${u.address.flat}, ${u.address.street}, ${u.address.city}, ${u.address.district}, ${u.address.state} - ${u.address.pincode}${u.address.landmark ? ", " + u.address.landmark : ""}`
+  ) : (
+    "Not Provided"
+  )}
 </td>
                 <td>{new Date(u.otpExpires).toLocaleString()}</td>
 
