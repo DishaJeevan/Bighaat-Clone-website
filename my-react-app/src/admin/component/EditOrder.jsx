@@ -32,16 +32,21 @@ function EditOrder() {
   }, [userId]);
 
   const updateOrder = async (e) => {
-    e.preventDefault();
-    try {
-   
-      await axios.put(`https://bighaat-clone.onrender.com/update-order/${userId}`, { status });
-      alert("Order Updated");
-      navigate("/admin/manage-orders");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  e.preventDefault();
+  try {
+    const orderId = orders[0]?._id; 
+
+    await axios.put(
+      `https://bighaat-clone.onrender.com/update-order/${orderId}`,
+      { status }
+    );
+
+    alert("Order Updated");
+    navigate("/admin/manage-orders");
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   return (
     <div className="product-card-useredit">
