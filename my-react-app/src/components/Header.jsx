@@ -144,9 +144,10 @@ useEffect(() => {
             <div className="user-dropdown">
               <p>{user}</p>
               <Link to="/orders">My Orders</Link>
+             
              <p onClick={() => navigate("/my-address")}>
-                My Address
-              </p>
+  My Address
+</p>
               
               <button onClick={handleLogout}>Logout</button>
             </div>
