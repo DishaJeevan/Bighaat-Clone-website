@@ -477,7 +477,7 @@ app.put("/update-order/:id", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    if (status === "Processed" || status === "Delivered") {
+    if (status === "Processed" || status === "Delivered"|| status === "Shipped"|| status === "Pending") {
       const amount = order.totalPrice;
       const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
 
