@@ -31,25 +31,37 @@ function EditOrder() {
     if (userId) getOrders();
   }, [userId]);
 
- const updateOrder = async (e) => {
-  e.preventDefault();
+  const updateOrder = async (e) => {
+    e.preventDefault();
+    try {
+   
+      await axios.put(`https://bighaat-clone.onrender.com/update-order/${order._id}`, { status });
+      alert("Order Updated");
+      navigate("/admin/manage-orders");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  try {
-    await Promise.all(
-      orders.map(order =>
-        axios.put(
-          `https://bighaat-clone.onrender.com/update-order/${order._id}`,
-          { status }
-        )
-      )
-    );
+ // const updateOrder = async (e) => {
+ //  e.preventDefault();
 
-    alert("All Orders Updated");
-    navigate("/admin/manage-orders");
-  } catch (err) {
-    console.log(err);
-  }
-};
+ //  try {
+    
+ //        axios.put(
+ //          `https://bighaat-clone.onrender.com/update-order/${order._id}`,
+ //          { status }
+ //        )
+ //      )
+ //    );
+
+  
+ //   alert("Order Updated");
+ //      navigate("/admin/manage-orders");
+ //    } catch (err) {
+ //      console.log(err);
+ //    }
+ //  };
 
   return (
     <div className="product-card-useredit">
