@@ -1,6 +1,7 @@
 import { useEffect, useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../components/CartContext";
 
 
 function AddressView() {
@@ -10,7 +11,7 @@ const navigate = useNavigate();
 
 
   const user_id = localStorage.getItem("user_id");
-
+const { openCart } = useContext(CartContext);
   useEffect(() => {
     const fetchAddress = async () => {
       try {
@@ -69,9 +70,14 @@ const navigate = useNavigate();
     )}
 
     <div className="address-buttons">
-      <button onClick={() => navigate("/checkout-address")}>
-        Move to Checkout
-      </button>
+      <button
+  onClick={() => {
+    openCart();           
+    navigate("/checkout-address"); 
+  }}
+>
+  Move to Checkout
+</button>
 
       <button
         onClick={() =>
