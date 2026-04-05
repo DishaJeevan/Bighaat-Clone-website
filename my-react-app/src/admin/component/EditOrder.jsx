@@ -17,13 +17,14 @@ function EditOrder() {
   useEffect(() => {
     const getOrders = async () => {
       try {
+        
         const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
         console.log("Orders fetched:", res.data);
-        setOrders(res.data);
-
         if (res.data.length > 0) {
-          setStatus(res.data[0].status);
-        }
+  const latestOrder = res.data[res.data.length - 1]; 
+  setOrders([latestOrder]); 
+  setStatus(latestOrder.status);
+}
       } catch (err) {
         console.error("Error:", err);
       }
@@ -34,8 +35,14 @@ function EditOrder() {
   const updateOrder = async (e) => {
     e.preventDefault();
     try {
-   
-      await axios.put(`https://bighaat-clone.onrender.com/update-order/${order._id}`, { status });
+    const orderId = orders[0]?._id;
+     orders.map(order =>
+    axios.put(
+      `https://bighaat-clone.onrender.com/update-order/${order._id}`,
+      { status }
+    )
+  )
+);
       alert("Order Updated");
       navigate("/admin/manage-orders");
     } catch (err) {
