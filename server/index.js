@@ -77,7 +77,7 @@ const adminDB = mongoose.createConnection(process.env.ADMIN_DB_URI);
 userDB.once("open", () => console.log("Login DB Connected"));
 adminDB.once("open", () => console.log("Admin DB Connected"));
 
-const UserModel = userDB.model("users", UserSchema.schema);
+const UserModel = userDB.model("users", UserSchema);
 const ProductModel = adminDB.model("products", ProductSchema);
 const OrderModel = adminDB.model("orders", OrderSchema);
  
