@@ -31,17 +31,20 @@ function EditOrder() {
     if (userId) getOrders();
   }, [userId]);
 
-  const updateOrder = async (e) => {
+ const updateOrder = async (e) => {
   e.preventDefault();
-  try {
-    const orderId = orders[0]?._id; 
 
-    await axios.put(
-      `https://bighaat-clone.onrender.com/update-order/${orderId}`,
-      { status }
+  try {
+    await Promise.all(
+      orders.map(order =>
+        axios.put(
+          `https://bighaat-clone.onrender.com/update-order/${order._id}`,
+          { status }
+        )
+      )
     );
 
-    alert("Order Updated");
+    alert("All Orders Updated");
     navigate("/admin/manage-orders");
   } catch (err) {
     console.log(err);
