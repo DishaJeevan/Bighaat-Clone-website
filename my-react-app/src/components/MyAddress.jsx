@@ -1,211 +1,133 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState ,useEffect} from "react";
 import axios from "axios";
-import { CartContext } from "../components/CartContext";
+import { useNavigate,useLocation } from "react-router-dom";
 
-function MyAddress() {
+function MyAddress({ existingAddress }) {
   const navigate = useNavigate();
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [hasAddress, setHasAddress] = useState(false);
-   const [loading, setLoading] = useState(true);
+   const location = useLocation();
 
   const user_id = localStorage.getItem("user_id");
-  const email = localStorage.getItem("email");
 
-  const { cartWithDetails, total, clearCart, closeCart } = useContext(CartContext);
+  const addressData = existingAddress || location.state?.address;
 
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    flat: "",
-    street: "",
-    pincode: "",
-    city: "",
-    district: "",
-    state: "",
-    landmark: ""
-  });
+  const [form, setForm] = useState(
+    addressData || {
+      name: "",
+      phone: "",
+      flat: "",
+      street: "",
+      pincode: "",
+      city: "",
+      district: "",
+      state: "",
+      landmark: ""
+    }
+  );
 
- 
-
-useEffect(() => {
-  axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
-    .then(res => {
-      if (res.data && res.data.name) {
-        setForm(res.data);
-        setHasAddress(true);
-
-        
-        if (location.pathname === "/checkout-address") {
-          navigate("/my-address");
+  useEffect(() => {
+  if (!addressData) {
+    axios
+      .get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+      .then(res => {
+        if (res.data) {
+          setForm(res.data);
         }
-      } else {
-        setIsEditing(true);
-      }
-    })
-    .finally(() => setLoading(false));
+      });
+  }
 }, []);
-
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-
- const saveAddress = async () => {
-  try {
-    await axios.post("https://bighaat-clone.onrender.com/save-address", {
-      user_id,
-      address: form
-    });
-    
-   
-    setHasAddress(true); 
-    setIsEditing(false); 
-    
-    alert("Address saved successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Error saving address");
-  }
-};
-
-
-  const placeOrder = async () => {
+  const saveAddress = async () => {
     try {
-      const items = cartWithDetails.map(item => ({
-        productId: item.id,
-        quantity: item.qty,
-        snapName: item.name,
-        snapPrice: item.newPrice,
-        snapImage: item.image
-      }));
+      await axios.post(
+        "https://bighaat-clone.onrender.com/save-address",
+        {
+          user_id,
+          address: form
+        }
+      );
 
-      await axios.post("https://bighaat-clone.onrender.com/place-order", {
-        user_id,
-        email,
-        items,
-        totalPrice: total,
-         address: form
-      });
+     
+      window.dispatchEvent(new Event("address_updated"));
 
-      alert("Order placed successfully");
-
-      clearCart();
-      closeCart();
-      navigate("/orders");
+      alert("Address saved");
+      navigate("/my-address");
 
     } catch (err) {
       console.log(err);
-      alert("Error placing order");
+      alert("Error saving address");
     }
   };
 
-
-  if (hasAddress && !isEditing) {
-    return (
-      <div className="address-page">
-        <h2>My Address</h2>
-
-        <div className="address-card">
-          <h4>{form.name}</h4>
-          <p>{form.phone}</p>
-          <p>{form.flat}, {form.street}</p>
-          <p>{form.city}, {form.district}</p>
-          <p>{form.state} - {form.pincode}</p>
-          <p>{form.landmark}</p>
-
-          <div style={{ marginTop: "10px" }}>
-            <button onClick={() => setIsEditing(true)}>Edit Address</button>
-            <button onClick={placeOrder}>Place Order</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="address-page">
+  <div className="address-form">
+    <h2>Add Address</h2>
 
-      <h2 className="page-title">Add / Edit Address</h2>
+    <div className="form-group">
+      <label>Name</label>
+      <input name="name" value={form.name} onChange={handleChange} />
+    </div>
 
-      <div className="address-container">
+    <div className="form-group">
+      <label>Phone</label>
+      <input name="phone" value={form.phone} onChange={handleChange} />
+    </div>
 
-        <div className="form-group">
-          <label>Full Name *</label>
-          <input name="name" value={form.name} onChange={handleChange} />
-        </div>
+    <div className="form-group">
+      <label>Flat / House No</label>
+      <input name="flat" value={form.flat} onChange={handleChange} />
+    </div>
 
-        <div className="form-group">
-          <label>Mobile Number *</label>
-          <div className="phone-input">
-            <span>+91</span>
-            <input name="phone" value={form.phone} onChange={handleChange} />
-          </div>
-        </div>
+    <div className="form-group">
+      <label>Street</label>
+      <input name="street" value={form.street} onChange={handleChange} />
+    </div>
 
-        <div className="form-group">
-          <label>Flat / House No</label>
-          <input name="flat" value={form.flat} onChange={handleChange} />
-        </div>
+    <div className="form-row">
+      <div className="form-group">
+        <label>City</label>
+        <input name="city" value={form.city} onChange={handleChange} />
+      </div>
 
-        <div className="form-group">
-          <label>Street / Area *</label>
-          <input name="street" value={form.street} onChange={handleChange} />
-        </div>
-
-        <div className="row">
-          <div className="form-group">
-            <label>Pincode *</label>
-            <input name="pincode" value={form.pincode} onChange={handleChange} />
-          </div>
-
-          <div className="form-group">
-            <label>City *</label>
-            <input name="city" value={form.city} onChange={handleChange} />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="form-group">
-            <label>District *</label>
-            <input name="district" value={form.district} onChange={handleChange} />
-          </div>
-
-          <div className="form-group">
-            <label>State *</label>
-            <input name="state" value={form.state} onChange={handleChange} />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label>Landmark</label>
-          <input name="landmark" value={form.landmark} onChange={handleChange} />
-        </div>
-
-        <div className="form-actions">
-                        <button 
-                className="cancel-btn" 
-                onClick={() => {
-                    if (hasAddress) {
-                    setIsEditing(false);
-                    } else {
-                    navigate("/");
-                    }
-                }}
-                >
-                Cancel
-                </button>
-
-          <button className="save-btn" onClick={saveAddress}>
-            Save
-          </button>
-        </div>
-
+      <div className="form-group">
+        <label>District</label>
+        <input name="district" value={form.district} onChange={handleChange} />
       </div>
     </div>
-  );
+
+    <div className="form-row">
+      <div className="form-group">
+        <label>State</label>
+        <input name="state" value={form.state} onChange={handleChange} />
+      </div>
+
+      <div className="form-group">
+        <label>Pincode</label>
+        <input name="pincode" value={form.pincode} onChange={handleChange} />
+      </div>
+    </div>
+
+    <div className="form-group">
+      <label>Landmark</label>
+      <input name="landmark" value={form.landmark} onChange={handleChange} />
+    </div>
+
+    <div className="form-buttons">
+      <button className="save-btn" onClick={saveAddress}>
+        Save Address
+      </button>
+
+      <button
+        className="cancel-btn"
+        onClick={() => navigate("/my-address")}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+);
 }
 
 export default MyAddress;
