@@ -346,20 +346,28 @@ app.delete("/delete-user/:id", async (req, res) => {
 
 app.put("/update-user/:id", async (req, res) => {
   try {
+    const { email, address } = req.body;
+
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.params.id,
-      { email: req.body.email }, 
-      { new: true }
+      { 
+        $set: { 
+          email: email,
+          address: address 
+        } 
+      },
+      { new: true, runValidators: true }
     );
 
-    res.json({
-      message: "User updated successfully",
-      user: updatedUser
-    });
+    if (!updatedUser) return res.status(404).json({ error: "User not found" });
+
+    res.json({ message: "User updated successfully", user: updatedUser });
   } catch (err) {
+    console.error("Update error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
+ 
 
 app.get("/products/:id", async (req, res) => {
   try {
