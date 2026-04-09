@@ -581,16 +581,22 @@ app.get("/get-address/:id", async (req, res) => {
 });
 
 app.post("/create-razorpay-order", async (req, res) => {
-  const { amount } = req.body;
+  try {
+    const { amount } = req.body;
 
-  const options = {
-    amount: amount * 100,
-    currency: "INR",
-    receipt: "order_" + Date.now()
-  };
+    const options = {
+      amount: amount * 100,
+      currency: "INR",
+      receipt: "order_" + Date.now()
+    };
 
-  const order = await razorpay.orders.create(options);
-  res.json(order);
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+
+  } catch (err) {
+    console.error("Razorpay error:", err);
+    res.status(500).json({ error: "Payment creation failed" });
+  }
 });
 
 app.listen(PORT, () => {
