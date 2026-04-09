@@ -43,6 +43,17 @@ function Order() {
               <p>₹{o.totalPrice}</p>
               <p>{new Date(o.datetime).toLocaleDateString()}</p>
 
+              <p style={{
+                  fontWeight: "bold",
+                  color:
+                    o.status === "Delivered" ? "green" :
+                    o.status === "Shipped" ? "blue" :
+                    o.status === "Processed" ? "orange" :
+                    "gray"
+                }}>
+            {o.status || "Pending"}
+          </p>
+
               <button
                 className="view-btn"
                 onClick={() => {
@@ -73,10 +84,17 @@ function Order() {
               </button>
             </div>
 
-            <div className="modal-body">
-
+                    <div className="modal-body">
+                    <p style={{ fontWeight: "bold" }}>
+                    Order Status: {selectedOrder?.status}
+                  </p>
+                  
+                  <p>
+                    Payment Status: {selectedOrder?.paymentStatus}
+                  </p>
               {selectedOrder?.items?.map((item, index) => (
                 <div className="order-item" key={index}>
+                          
                   <img
                     src={item.snapImage || "https://via.placeholder.com/60"}
                     alt="product"
@@ -87,6 +105,8 @@ function Order() {
                     <p>Quantity: {item.quantity}</p>
                     <p>Price: ₹{item.snapPrice}</p>
                   </div>
+
+                  
                 </div>
               ))}
 
