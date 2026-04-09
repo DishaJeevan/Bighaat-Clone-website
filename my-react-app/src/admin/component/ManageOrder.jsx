@@ -71,7 +71,7 @@ function ManageOrder() {
                 <td>
                   <button className="edit-btn" onClick={() => {
                     console.log("Editing user:", o._id);
-                   navigate(`/admin/edit-order/${o._id}`);
+                   navigate(`/admin/user-orders/${o._id}`);
                   }}><i className="fas fa-edit"></i>
                 </button>
 
