@@ -27,28 +27,28 @@ function CheckoutAddress() {
       .finally(() => setLoading(false));
   }, []);
 
-  const placeOrder = async () => {
-    const items = cartWithDetails.map(item => ({
-      productId: item.id,
-      quantity: item.qty,
-      snapName: item.name,
-      snapPrice: item.newPrice,
-      snapImage: item.image
-    }));
+  // const placeOrder = async () => {
+  //   const items = cartWithDetails.map(item => ({
+  //     productId: item.id,
+  //     quantity: item.qty,
+  //     snapName: item.name,
+  //     snapPrice: item.newPrice,
+  //     snapImage: item.image
+  //   }));
 
-    await axios.post("https://bighaat-clone.onrender.com/place-order", {
-      user_id,
-      email,
-      items,
-      totalPrice: total,
-      address
-    });
+  //   await axios.post("https://bighaat-clone.onrender.com/place-order", {
+  //     user_id,
+  //     email,
+  //     items,
+  //     totalPrice: total,
+  //     address
+  //   });
 
-    alert("Order placed");
-    clearCart();
-    closeCart();
-    navigate("/orders");
-  };
+  //   alert("Order placed");
+  //   clearCart();
+  //   closeCart();
+  //   navigate("/orders");
+  // };
  if (loading) {
   return <p>Loading address...</p>;
 }
@@ -98,9 +98,8 @@ function CheckoutAddress() {
 
           <button
             className="placeorder-btn"
-            onClick={placeOrder}
-          >
-            Place Order
+            onClick={() => navigate("/payment")}>
+            Proceed to Payment
           </button>
         </div>
 
