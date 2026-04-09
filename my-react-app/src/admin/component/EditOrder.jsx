@@ -15,23 +15,23 @@ function EditOrder() {
   const userId = id || location.pathname.split("/").pop();
 
   useEffect(() => {
-  const getOrders = async () => {
-    try {
-      const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
-      
-      if (res.data.length > 0) {
-       
-        setOrders(res.data); 
+    const getOrders = async () => {
+      try {
         
-      
-        setStatus(res.data[0].status);
+        const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
+        console.log("Orders fetched:", res.data);
+        if (res.data.length > 0) {
+  const latestOrder = res.data[res.data.length - 1]; 
+  setOrders([latestOrder]); 
+  setStatus(latestOrder.status);
+}
+      } catch (err) {
+        console.error("Error:", err);
       }
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  };
-  if (userId) getOrders();
-}, [userId]);
+    };
+    if (userId) getOrders();
+  }, [userId]);
+
   const updateOrder = async (e) => {
   e.preventDefault();
 
