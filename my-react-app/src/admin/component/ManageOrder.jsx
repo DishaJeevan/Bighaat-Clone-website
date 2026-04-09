@@ -70,10 +70,10 @@ function ManageOrder() {
 </td>
                 <td>
                   <button className="edit-btn" onClick={() => {
-                    console.log("Editing user:", o._id);
-                   navigate(`/admin/user-orders/${o.user_id}`);
-                  }}><i className="fas fa-edit"></i>
-                </button>
+  navigate(`/admin/user-orders/${o.user_id}`, { state: { orderId: o._id } });
+}}>
+  <i className="fas fa-edit"></i>
+</button>
 
                   <button  className="delete-btn" onClick={() => deleteOrder(o._id)}>
                     <i className="fas fa-trash"></i>
