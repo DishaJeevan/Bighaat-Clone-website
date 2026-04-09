@@ -16,6 +16,16 @@ const OrderSchema = new mongoose.Schema({
   }
 ],
   totalPrice: Number,
+
+  paymentMethod: {
+  type: String
+},
+paymentStatus: {
+  type: String,
+  default: "Pending"
+},
+razorpay_order_id: String,
+razorpay_payment_id: String,
   status: String,
   datetime: {
     type: Date,
