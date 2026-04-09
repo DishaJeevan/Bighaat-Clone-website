@@ -47,7 +47,7 @@ function PaymentPage() {
     );
 
     const options = {
-      key: "YOUR_RAZORPAY_KEY",
+      key: "import.meta.env.VITE_RAZORPAY_KEY",
       amount: data.amount,
       currency: "INR",
       order_id: data.id,
