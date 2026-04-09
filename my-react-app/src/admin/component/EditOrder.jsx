@@ -14,23 +14,37 @@ function EditOrder() {
  
   const userId = id || location.pathname.split("/").pop();
 
-  useEffect(() => {
-    const getOrders = async () => {
-      try {
-        
-        const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
-        console.log("Orders fetched:", res.data);
-        if (res.data.length > 0) {
-  const latestOrder = res.data[res.data.length - 1]; 
-  setOrders([latestOrder]); 
-  setStatus(latestOrder.status);
-}
-      } catch (err) {
-        console.error("Error:", err);
+ const { state } = useLocation(); // Get the state we passed
+const targetOrderId = state?.orderId; 
+
+useEffect(() => {
+  const getOrders = async () => {
+    try {
+      const res = await axios.get(`https://bighaat-clone.onrender.com/user-orders/${userId}`);
+      
+      if (res.data.length > 0) {
+        if (targetOrderId) {
+          // FIND the specific order that matches the one we clicked
+          const specificOrder = res.data.find(order => order._id === targetOrderId);
+          
+          if (specificOrder) {
+            setOrders([specificOrder]); 
+            setStatus(specificOrder.status);
+          } else {
+            // Fallback: if not found, show the latest (your original logic)
+            setOrders([res.data[res.data.length - 1]]);
+          }
+        } else {
+          // If no state was passed, show the latest
+          setOrders([res.data[res.data.length - 1]]);
+        }
       }
-    };
-    if (userId) getOrders();
-  }, [userId]);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  if (userId) getOrders();
+}, [userId, targetOrderId]);
 
   const updateOrder = async (e) => {
   e.preventDefault();
