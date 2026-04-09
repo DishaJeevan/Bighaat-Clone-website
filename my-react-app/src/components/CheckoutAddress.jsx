@@ -98,7 +98,10 @@ function CheckoutAddress() {
 
           <button
             className="placeorder-btn"
-            onClick={() => navigate("/payment")}>
+           onClick={() => {
+            localStorage.setItem("address", JSON.stringify(address));
+            navigate("/payment");
+          }}
             Proceed to Payment
           </button>
         </div>
