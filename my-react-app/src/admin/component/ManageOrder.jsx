@@ -40,6 +40,8 @@ function ManageOrder() {
               <th>Total Amount</th>
               <th>Last Order</th>
               <th>Address</th>
+              <th>Payment Method</th>
+              <th>Payment Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -56,6 +58,16 @@ function ManageOrder() {
                 ? `${o.address.flat}, ${o.address.street}, ${o.address.city}`
                 : "No Address"}
             </td>
+                <td>{o.paymentMethod || "N/A"}</td>
+<td>
+  <span style={{
+    color:
+      o.paymentStatus === "Paid" ? "green" :
+      o.paymentStatus === "Failed" ? "red" : "orange"
+  }}>
+    {o.paymentStatus}
+  </span>
+</td>
                 <td>
                   <button className="edit-btn" onClick={() => {
                     console.log("Editing user:", o._id);
