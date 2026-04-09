@@ -7,6 +7,7 @@ const sendMail = require("./mailsend");
 const otpGenerator = require("otp-generator");
 const ProductSchema = require("./models/Product").schema;
 const { OrderSchema } = require("./models/Order");
+const Razorpay = require("razorpay");
 
 /*const fs=require("fs");*/
 const app = express();
@@ -80,6 +81,12 @@ adminDB.once("open", () => console.log("Admin DB Connected"));
 const UserModel = userDB.model("users", UserSchema);
 const ProductModel = adminDB.model("products", ProductSchema);
 const OrderModel = adminDB.model("orders", OrderSchema);
+
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
  
 function generateOTP() {
   return otpGenerator.generate(4, {
@@ -386,12 +393,38 @@ app.get("/products/:id", async (req, res) => {
 
 app.post("/place-order", async (req, res) => {
   try {
-    const { user_id, email, items, totalPrice,address, } = req.body;
+    const {
+      user_id,
+      email,
+      items,
+      totalPrice,
+      address,
+      paymentMethod,
+      paymentStatus,
+      razorpay_order_id,
+      razorpay_payment_id
+    } = req.body;
+
     if (!items || items.length === 0) {
       return res.status(400).json({ error: "No items in order" });
     }
-    const order = new OrderModel({user_id: new mongoose.Types.ObjectId(user_id),email,items,totalPrice,address,datetime: new Date(),status: "Pending"});
+
+    const order = new OrderModel({
+      user_id: new mongoose.Types.ObjectId(user_id),
+      email,
+      items,
+      totalPrice,
+      address,
+      paymentMethod,
+      paymentStatus,
+      razorpay_order_id,
+      razorpay_payment_id,
+      status: "Pending",
+      datetime: new Date()
+    });
+
     await order.save();
+
     res.json({ message: "Order placed successfully" });
   } catch (err) {
     console.log("Order error:", err);
@@ -545,6 +578,19 @@ app.get("/get-address/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
+});
+
+app.post("/create-razorpay-order", async (req, res) => {
+  const { amount } = req.body;
+
+  const options = {
+    amount: amount * 100,
+    currency: "INR",
+    receipt: "order_" + Date.now()
+  };
+
+  const order = await razorpay.orders.create(options);
+  res.json(order);
 });
 
 app.listen(PORT, () => {
