@@ -500,8 +500,18 @@ app.delete("/delete-order/:id", async (req, res) => {
 app.put("/update-order/:id", async (req, res) => {
   try {
     const { status } = req.body;
+
+    const updateData = { status };
+
+   
+    if (status === "Delivered") {
+      updateData.paymentStatus = "Paid";
+    }
+
+ 
     const order = await OrderModel.findByIdAndUpdate(
       req.params.id, 
+      updateData,
       { status }, 
       { new: true }
     );
