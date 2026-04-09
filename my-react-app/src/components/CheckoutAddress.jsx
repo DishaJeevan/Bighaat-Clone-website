@@ -101,7 +101,7 @@ function CheckoutAddress() {
            onClick={() => {
             localStorage.setItem("address", JSON.stringify(address));
             navigate("/payment");
-          }}
+          }}>
             Proceed to Payment
           </button>
         </div>
