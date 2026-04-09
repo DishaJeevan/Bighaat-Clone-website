@@ -3502,3 +3502,29 @@ font-weight:500;
 }
 
 
+.payment-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+
+.payment-options {
+  margin: 20px 0;
+}
+
+.payment-options label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 12px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
