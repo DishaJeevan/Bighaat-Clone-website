@@ -467,8 +467,7 @@ app.put("/update-order/:id", async (req, res) => {
  
     const order = await OrderModel.findByIdAndUpdate(
       req.params.id, 
-      updateData,
-      { status }, 
+      updateData, 
       { new: true }
     );
 
