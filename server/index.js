@@ -389,7 +389,29 @@ app.post("/place-order",async(req,res)=>{
 
       });
       await order.save();
-      res.json({message:"Order placed successfully"});
+      if (paymentMethod === "ONLINE" && paymentStatus === "Paid") {
+
+  const productList = items.map(item => {
+    return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
+  }).join("");
+
+  const subject = "Payment Successful - Order Confirmed";
+
+  const message = `
+    <h2>Payment Successful</h2>
+    <p>Your order has been placed successfully.</p>
+    
+    <h3>Order Details:</h3>
+    <ul>${productList}</ul>
+
+    <p><strong>Total:</strong> ₹${totalPrice}</p>
+    <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+  `;
+
+  await sendMail(email, subject, message);
+}
+
+res.json({ message: "Order placed successfully" });
     }catch(err){
       console.log("Order error:",err);
       res.status(500).json({error:"Server error"});
