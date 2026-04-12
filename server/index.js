@@ -1,476 +1,434 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express=require("express");
+const mongoose=require("mongoose");
 require("dotenv").config();
-const cors = require("cors");
-const UserSchema = require("./models/User");
-const sendMail = require("./mailsend");
-const otpGenerator = require("otp-generator");
-const ProductSchema = require("./models/Product").schema;
-const { OrderSchema } = require("./models/Order");
-const Razorpay = require("razorpay");
+const cors=require("cors");
+const UserSchema =require("./models/User");
+const sendMail=require("./mailsend");
+const otpGenerator=require ("otp-generator");
+const ProductSchema=require("./models/Product").schema;
+const {OrderSchema}=require("./models/Order");
+const Razorpay=require("razorpay");
 
-/*const fs=require("fs");*/
-const app = express();
-const PORT = process.env.PORT || 3001;
+const app=express();
+const PORT=process.env.PORT ||3001;
+
+const multer=require("multer");
+const cloudinary=require("cloudinary").v2;
+const {CloudinaryStorage}=require("multer-storage-cloudinary")
 
 app.use(express.json());
-const allowedOrigins = [
-  "http://localhost:5173",
+const allowedOrigins=[
+   "http://localhost:5173",
+  "http://127.0.0.1:5173",
   "https://bighaat-clone-website.onrender.com"
 ];
 
-
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed"));
-    }
-  },
-  credentials: true
-}));
+origin:function (origin,callback){
+  if(!origin || allowedOrigins.includes(origin)){
+    callback(null,true);
+  }else{
+    callback(new Error("Cors not allowed"));
+  }
+},credentials:true}));
 
-/*
-const multer=require("multer");
-const path=require("path");
-const storage=multer.diskStorage({
-destination:function(req,file,cb){
-cb(null,"uploads/");
-},
-filename:function(req,file,cb){
-cb(null,Date.now()+path.extname(file.originalname));
-}
-});
-const upload=multer({storage:storage});
-app.use("/uploads",express.static("uploads"));*/
-
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const multer = require("multer");
+// const multer=require("multer");
+// const path=require("path");
+// const storage=multer.diskStorage({
+// destination:function(req,file,cb){
+// cb(null,"uploads/");
+// },
+// filename:function(req,file,cb){
+// cb(null,Date.now()+path.extname(file.originalname));
+// }
+// });
+// const upload=multer({storage:storage});
+// app.use("/uploads",express.static("uploads"));
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:process.env.CLOUDINARY_API_KEY,
+  api_secret:process.env.CLOUDINARY_API_SECRET,
 });
 
-const parser = multer({
-  storage: new CloudinaryStorage({
+const parser= multer({
+  storage:new CloudinaryStorage({
     cloudinary,
-    params: {
-       folder: "products",
-      format: async (req, file) => {
-        
-        const ext = file.mimetype.split("/")[1].toLowerCase();      
-        const allowedFormats = ["jpeg", "jpg", "png", "webp"];
-        return allowedFormats.includes(ext) ? ext : "png"; 
+    params:{
+      folder:"products",
+      format:async(req,file)=>{
+        const ext=file.mimetype.split("/")[1].toLowerCase();
+        const allowedFormats=["jpeg","jpg","png","webp"];
+        return allowedFormats.includes(ext)?ext:"png";
       },
-      public_id: (req, file) => `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`
+      public_id:(req,file)=>`${Date.now()}-${file.originalname.replace(/\s+/g,"_")}`
     }
   })
 });
 
-const userDB = mongoose.createConnection(process.env.USER_DB_URI);
-const adminDB = mongoose.createConnection(process.env.ADMIN_DB_URI);
-
-userDB.once("open", () => console.log("Login DB Connected"));
-adminDB.once("open", () => console.log("Admin DB Connected"));
-
-const UserModel = userDB.model("users", UserSchema);
-const ProductModel = adminDB.model("products", ProductSchema);
-const OrderModel = adminDB.model("orders", OrderSchema);
-
-
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
+const razorpay=new Razorpay({
+  key_id:process.env.RAZORPAY_KEY_ID,
+   key_secret:process.env.RAZORPAY_KEY_SECRET,
 });
- 
-function generateOTP() {
-  return otpGenerator.generate(4, {
-    upperCaseAlphabets: false,
-    lowerCaseAlphabets: false,
-    specialChars: false,
+
+const userDB=mongoose.createConnection(process.env.USER_DB_URI);
+const adminDB=mongoose.createConnection(process.env.ADMIN_DB_URI);
+
+userDB.once("open",()=>console.log("Login DB Connected"));
+adminDB.once("open",()=>console.log("Admin DB Connected"));
+
+const UserModel=userDB.model("users",UserSchema);
+const ProductModel=adminDB.model("products",ProductSchema);
+const OrderModel=adminDB.model("orders",OrderSchema);
+
+function generateOTP(){
+  return otpGenerator.generate(4,{
+    upperCaseAlphabets:false,
+    lowerCaseAlphabets:false,
+    specialChars:false,
   });
 }
 
-function createOTP() {
-  const otp = generateOTP();
-  const expiry = Date.now() + 5 * 60 * 1000;
-  return { otp, expiry };
+function createOTP(){
+  const otp=generateOTP();
+  const expiry=Date.now()+5*60*1000;
+  return {otp,expiry};
 }
 
-app.post("/login", async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email required" });
+app.post("/login",async(req,res)=>{
+  try{
+    const{email}=req.body;
+    if(!email){
+      return res.status(400).json({error:"Email required"});
     }
-    let user = await UserModel.findOne({ email });
-    const now = new Date();
-
-    if (user && user.otp && user.otpExpires > now) {
+    let user=await UserModel.findOne({email});
+    const now=new Date();
+    if(user && user.otp && user.otpExpires>now){
       await sendMail(
         email,
-        "Your OTP for Login",
-        `<h3>${user.otp} is your login OTP. It is valid for the next 5 minutes. Do not share your OTP with anyone.</h3>`
+        "Your Otp for Login",
+        `<h3>${user.otp} is your login OTP.It is valid for the next  Minutes.Do not share your OTP.</h3>`
       );
-      return res.json({ message: "OTP resent successfully" });
+      return res.json({message:"OTP Sent Succesfully"});
     }
-    const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+    const otp=generateOTP();
+    const otpExpires=new Date(Date.now()+5*60*1000);
 
-    if (!user) {
-      user = await UserModel.create({ email, otp, otpExpires });
-    } else {
-      user.otp = otp;
-      user.otpExpires = otpExpires;
+    if(!user){
+      user=await UserModel.create({email,otp,otpExpires});
+    }else{
+      user.otp=otp;
+      user.otpExpires=otpExpires;
       await user.save();
     }
     await sendMail(
       email,
-      "Your OTP for Login",
-      `<h5>${otp} is your login OTP. It is valid for the next 5 minutes. Do not share your OTP with anyone.</h5>`
-    );
-    res.json({ message: "OTP sent successfully" });
-  } catch (err) {
-    console.error("SERVER ERROR:", err);
-    res.status(500).json({ error: "Server error" });
-  }
+       "Your Otp for Login",
+        `<h3>${otp} is your login OTP.It is valid for the next  Minutes.Do not share your OTP.</h3>`
+      );
+      res.json({message:"OTP Sent Succesfully"});
+    }catch(err){
+      console.error("SERVER ERROR:",err);
+      res.status(500).json({error:"Server Error"});
+    }
 });
 
-app.post("/verify-otp", async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-    const user = await UserModel.findOne({ email });
+app.post("/verify-otp",async(req,res)=>{
+  try{
+    const {email,otp}=req.body;
+    const user=await UserModel.findOne({email});
 
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
+    if(!user){
+      return res.status(400).json({error:"User not found"});
     }
 
-    if (user.otp !== otp) {
-      return res.status(400).json({ error: "Invalid OTP" });
+    if(user.otp !==otp){
+      return res.status(400).json({error:"Invalid Otp"});
     }
 
-    if (user.otpExpires < new Date()) {
-      return res.status(400).json({ error: "OTP expired" });
+    if(user.otpExpires <new Date()){
+      return res.status(400).json({error:"Otp Expired"});
     }
-
     res.json({
-      message: "OTP verified successfully",
-      email: user.email,
-      user_id: user._id  
+      message:"OTP verified Successfully",
+      email:user.email,
+      user_id:user._id
     });
-
-  } catch (err) {
-    console.log("Verification error:", err);
-    res.status(500).json({ error: "Server error" });
+  }catch(err){
+    console.log("Verification error:",err);
+    res.status(500).json({error:"Server Error"})
   }
 });
 
-app.post("/resend-otp", async (req, res) => {
-  try {
-    const { email } = req.body;
-    console.log("Resend OTP route called for:", email);
-    if (!email) {
-      return res.status(400).json({ error: "Email required" });
-    }
-    const user = await UserModel.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
+app.post("/resend-otp",async(req,res)=>{
+  try{
+    const{email}=req.body;
+    console.log("Resend Otp route called for:",email);
+    if(!email){
+      return res.status(400).json({error:"Email Required"});
     }
 
-    const now = new Date();
+    const user=await UserModel.findOne({email});
+    if(!user){
+      return res.status(400).json({error:"User Not found"});
+    }
 
-    if (user.otp && user.otpExpires > now) {
+    const now=new Date();
+
+    if(user.otp && user.otpExpires>now){
       await sendMail(
         email,
-        "Resend- OTP for Login",
-        `<h3>${user.otp} is your login OTP. It is valid for 5 minutes.</h3>`
+        "Your Otp for Login",
+        `<h3>${user.otp} is your login OTP.It is valid for the next  Minutes.Do not share your OTP.</h3>`
       );
-      return res.json({ message: "Same OTP resent successfully" });
+      return res.json({message:" Same OTP Resend Succesfully"});
     }
-
-    const newOtp = generateOTP();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
-    user.otp = newOtp;
-    user.otpExpires = otpExpires;
+    const newOtp=generateOTP();
+    const otpExpires=new Date(Date.now()+5*60*1000);
+    user.otp=newOtp;
+    user.otpExpires=otpExpires;
     await user.save();
     await sendMail(
-      email,
-      "Your OTP for Login-Resend otp",
-      `<h3>${newOtp} is your new login OTP. It is valid for 5 minutes.</h3>`
-    );
-    res.json({ message: "New OTP generated and sent" });
-  } catch (error) {
-    console.error("Resend error:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-app.post("/add-product", parser.single("image"), async (req,res)=>{
-   console.log("Received file:", req.file); 
-  console.log("Request body:", req.body);
-  try {
-    const product = new ProductModel({
-      id: req.body.id,
-      name: req.body.name,
-      brand: req.body.brand,
-      category: req.body.category,
-      subCategory: req.body.subCategory,
-      section: req.body.section,
-      star: req.body.star,
-      newPrice: req.body.newPrice,
-      oldPrice: req.body.oldPrice,
-      discount: req.body.discount,
-      saveAmount: req.body.saveAmount,
-      size: req.body.size,
-      image: req.file ? req.file.path : "",
-      createdAt: new Date(),
-    });
-
-    await product.save();
-    res.json({message:"Product added successfully", product});
-  } catch(err) {
-    console.error(err);
-    res.status(500).json({error:"Server Error"});
-  }
-});
-
-app.get("/products", async (req, res) => {
-  try {
-    const keyword = req.query.keyword
-      ? {
-          name: {
-            $regex: req.query.keyword,
-            $options: "i", 
-          },
-        }
-      : {};
-
-    const products = await ProductModel.find({ ...keyword });
-
-    res.json(products);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-app.delete("/delete-product/:id", async (req, res) => {
-  try {
-    const product = await ProductModel.findById(req.params.id);
-    if (product && product.image) {
-      const parts = product.image.split("/");
-      const publicIdWithExt = parts.slice(-2).join("/"); 
-      const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); 
-
-      await cloudinary.uploader.destroy(publicId);
+        email,
+        "Your Otp for Login",
+        `<h3>${user.otp} is your login OTP.It is valid for the next five Minutes.Do not share your OTP.</h3>`
+      );
+     res.json({message:"New Otp generated"});
+    }catch(error){
+      console.error("Resend Error:",error);
+      res.status(500).json({error:"Server Error"})
     }
-
-    await ProductModel.findByIdAndDelete(req.params.id);
-    res.sendStatus(200);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
 });
 
-app.put("/update-product/:id", parser.single("image"), async (req, res) => {
-  try {
-    const product = await ProductModel.findById(req.params.id);
-    if (!product) return res.status(404).send("Product not found");
+app.post("/add-product",parser.single("image"),async(req,res)=>{
+  console.log("Received file:",req.file);
+  console.log("Request body:",req.body);
+  try{
+    const product=new ProductModel({
+      id:req.body.id,
+      name:req.body.name,
+      brand:req.body.brand,
+      category:req.body.category,
+      subCategory:req.body.subCategory,
+      section:req.body.section,
+      star:req.body.star,
+      newPrice:req.body.newPrice,
+      oldPrice:req.body.oldPrice,
+      discount:req.body.discount,
+      saveAmount:req.body.saveAmount,
+      image:req.file?req.file.path:"",
+      createdAt:new Date(),
+    });
+    await product.save();
+    res.json({message:"Product added successfully",product});
+   }catch(err){
+      console.error(err);
+      res.status(500).json({error:"Server Error"})
+    }
+  });
 
-    const updateData = {
-      id: req.body.id,
-      name: req.body.name,
-      brand: req.body.brand,
-      category: req.body.category,
-      subCategory: req.body.subCategory,
-      section: req.body.section,
-      star: req.body.star,
-      newPrice: req.body.newPrice,
-      oldPrice: req.body.oldPrice,
-      discount: req.body.discount,
-      saveAmount: req.body.saveAmount,
-      size: req.body.size,
+  app.get("/products",async(req,res)=>{
+    try{
+      const keyword=req.query.keyword?{
+        name:{
+          $regex:req.query.keyword,
+          $options:"i",
+        },
+      }:{};
+
+      const products=await ProductModel.find({...keyword});
+
+      res.json(products);
+    }catch(err){
+      console.error(err);
+      res.status(500).json({error:"Server Error"})
+    }
+  });
+
+ app.delete("/delete-product/:id",async(req,res)=>{ 
+try{
+  const product=await ProductModel.findById(req.params.id);
+
+  if(product && product.image){
+    const parts=product.image.split("/");
+    const publicIdWithExt=parts.slice(-2).join("/");
+    const publicId=publicIdWithExt.replace(/\.[^/.]+$/,"");
+
+    await cloudinary.uploader.destroy(publicId);
+  }
+
+  await ProductModel.findByIdAndDelete(req.params.id);
+  res.sendStatus(200);
+}catch(err){
+      console.log(err);
+      res.sendStatus(500)
+    }
+});
+
+app.put("/update-product/:id",parser.single("image"),async(req,res)=>{
+  try{
+    const product=await ProductModel.findById(req.params.id);
+    if(!product)return res.status(404).send("product not found");
+
+    const updateData ={
+      id:req.body.id,
+      name:req.body.name,
+      brand:req.body.brand,
+      category:req.body.category,
+      subCategory:req.body.subCategory,
+      section:req.body.section,
+      star:req.body.star,
+      newPrice:req.body.newPrice,
+      oldPrice:req.body.oldPrice,
+      discount:req.body.discount,
+      saveAmount:req.body.saveAmount,
     };
 
-    if (req.file) {
-      if (product.image && product.image.includes("cloudinary")) {
-        try {
-          const urlParts = product.image.split("/");
+    if(req.file){
+      if(product.image && product.image.includes("cloudinary")){
+        try{
+          const urlParts=product.image.split("/");
+          const uploadIndex=urlParts.indexOf("upload");
+          let publicIdParts=urlParts.slice(uploadIndex +1);
+          if(publicIdParts[0].startsWith("v")){
 
-          const uploadIndex = urlParts.indexOf("upload");
 
-          let publicIdParts = urlParts.slice(uploadIndex + 1);
-
-          if (publicIdParts[0].startsWith("v")) {
-            publicIdParts.shift();
+           publicIdParts.shift();
           }
-
-          const publicId = publicIdParts.join("/").replace(/\.[^/.]+$/, "");
-
-          console.log("Deleting:", publicId);
+          const publicId=publicIdParts.join("/").replace(/\.[^/.]+$/,"");
+          console.log("Deleting:",publicId);
 
           await cloudinary.uploader.destroy(publicId);
-
-        } catch (clErr) {
-          console.error("Cloudinary delete error:", clErr);
+        }catch(clErr){
+          console.error("Cloudinary delete error:",clErr);
         }
       }
-      updateData.image = req.file.path;
-    } else {
-      updateData.image = product.image;
+      updateData.image=req.file.path;
+    }else{
+      updateData.image=product.image;
     }
-    await ProductModel.findByIdAndUpdate(req.params.id, updateData);
+    await ProductModel.findByIdAndUpdate(req.params.id,updateData);
     res.sendStatus(200);
-  } catch (err) {
-    console.error("Update error:", err);
+  }catch(err){
+    console.error("Update error:",err);
     res.status(500).send("Server Error");
-  }
+  }  
 });
 
-app.get("/users", async (req, res) => {
-  try {
-    const users = await UserModel.find();
+app.get("/users",async(req,res)=>{
+  try{
+    const users=await UserModel.find();
     res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
-  }
+  }catch(err){
+    res.status(500).json("Server Error");
+  } 
 });
 
-app.delete("/delete-user/:id", async (req, res) => {
-  try {
+app.delete("/delete-user/:id",async(req,res)=>{
+  try{
     await UserModel.findByIdAndDelete(req.params.id);
-    res.json({ message: "User deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    res.json({message:"User deleted succesfully"});
+  }catch(err){
+    res.status(500).json("Server Error");
   }
 });
 
-app.put("/update-user/:id", async (req, res) => {
-  try {
-    const { email, address } = req.body;
+app.put("/update-user/:id",async(req,res)=>{
+  try{
+    const {email,address}=req.body;
+    const updateUser=await UserModel.findByIdAndUpdate(req.params.id,{$set:{
+      email:email,
+      address:address
+    }
+  },{new:true,runValidators:true}
+);
+if(!updateUser)return res.status(404).json({error:"User not found"});
 
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { 
-        $set: { 
-          email: email,
-          address: address 
-        } 
-      },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
-
-    res.json({ message: "User updated successfully", user: updatedUser });
-  } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ error: "Server error" });
+res.json({message:"User Updated Succesffuly",user:updateUser});
+  }catch(err){
+    console.error("Update error:",err);
+    res.status(500).json({error:"Server error"});
   }
 });
- 
 
-app.get("/products/:id", async (req, res) => {
-  try {
-    const product = await ProductModel.findOne({ id: req.params.id });
+app.get("/products/:id",async(req,res)=>{
+  try{
+    const product=await ProductModel.findOne({id:req.params.id});
 
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+    if(!product){
+      return res.status(404).json({error:"Product not found"});
     }
     res.json(product);
-  } catch (err) {
-    console.log("Error fetching single product:", err);
-    res.status(500).json({ error: "Server error" });
+  }catch(err){
+    console.log("Error fetching single product:",err);
+    res.status(500).json({error:"Server error"});
   }
 });
 
+app.post("/place-order",async(req,res)=>{
+  try{
+    const{
+      user_id,email,items,totalPrice,address,paymentMethod,paymentStatus,razorpay_order_id,
+      razorpay_payment_id}=req.body;
 
-app.post("/place-order", async (req, res) => {
-  try {
-    const {
-      user_id,
-      email,
-      items,
-      totalPrice,
-      address,
-      paymentMethod,
-      paymentStatus,
-      razorpay_order_id,
-      razorpay_payment_id
-    } = req.body;
+      if(!items ||items.length ==0){
+        return res.status(400).json({error:"No items in order"});
+      }
+      const order=new OrderModel({
+        user_id:new mongoose.Types.ObjectId(user_id),
+        email,
+        items,
+        totalPrice,
+        address,
+        paymentMethod,
+        paymentStatus,
+        razorpay_order_id,
+        razorpay_payment_id,
+        status:"Pending",
+        datetime:new Date()
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({ error: "No items in order" });
+      });
+      await order.save();
+      res.json({message:"Order placed successfully"});
+    }catch(err){
+      console.log("Order error:",err);
+      res.status(500).json({error:"Server error"});
     }
-
-    const order = new OrderModel({
-      user_id: new mongoose.Types.ObjectId(user_id),
-      email,
-      items,
-      totalPrice,
-      address,
-      paymentMethod,
-      paymentStatus,
-      razorpay_order_id,
-      razorpay_payment_id,
-      status: "Pending",
-      datetime: new Date()
-    });
-
-    await order.save();
-
-    res.json({ message: "Order placed successfully" });
-  } catch (err) {
-    console.log("Order error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
 });
 
-app.get("/user-orders/:id", async (req, res) => {
-  try {
-   
-    const idFromUrl = req.params.id;
-
-    const mongoUserId = new mongoose.Types.ObjectId(idFromUrl);
-
-    const orders = await OrderModel.find({ user_id: mongoUserId });
-
-    
+app.get("/user-orders/:id",async(req,res)=>{
+  try{
+    const idFromUrl=req.params.id;
+    const mongoUserId=new mongoose.Types.ObjectId(idFromUrl);
+    const orders=await OrderModel.find({user_id:mongoUserId});
     res.json(orders);
-    
-  } catch (err) {
-    console.error("Error fetching user orders:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  }catch(err){
+    console.log("Error fetching the user orders:",err);
+    res.status(500).json({error:"Server error"});
+}})
 
-app.get("/orders", async (req, res) => {
-  try {
+app.get("/orders",async(req,res)=>{
+  try{
     const orders = await OrderModel.find();
     const products = await ProductModel.find();
-    const updatedOrders = orders.map(order => {
-      const items = order.items.map(item => {
-        const product = products.find(p => String(p.id) === String(item.productId));
-        return {...item,productDetails: product
-        };
+    const updatedOrders =orders.map(order =>{
+      const items =order.items.map(item=>{
+        const product = products.find(p=>String(p.id)===String(item.productId));
+        return{...item,productDetails:product};
+
       });
-      return { ...order._doc, items };
+     return{...order._doc,items};
+
     });
-    res.json(updatedOrders);
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
+     res.json(updatedOrders);
+  }catch(err){
+   res.status(500).json({error:"Server error"});
   }
 });
 
-app.get("/order/:id", async (req,res)=>{
+app.get("/order/:id",async(req,res)=>{
   try{
-    const order = await OrderModel.findById(req.params.id);
+    const order=await OrderModel.findById(req.params.id);
     res.json(order);
   }catch(err){
     console.log(err);
@@ -478,22 +436,20 @@ app.get("/order/:id", async (req,res)=>{
   }
 });
 
-app.delete("/delete-order/:id", async (req, res) => {
-  try {
-    const orderId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({ message: "Invalid order id" });
+app.delete("/delete-order/:id",async(req,res)=>{
+  try{
+    const orderId=req.params.id;
+    if(!mongoose.Types.ObjectId.isValid(orderId)){
+      return res.status(400).json({message:"Invalid order id"});
     }
-    const deletedOrder = await OrderModel.findByIdAndDelete(orderId);
-
-    if (!deletedOrder) {
-      return res.status(404).json({ message: "Order not found in database" });
+    const deleteOrder=await OrderModel.findByIdAndDelete(orderId);
+    if(!deleteOrder){
+      return res.status(404).json({message:"Order not found"});
     }
-
-    res.json({ message: "Specific order deleted successfully" });
-  } catch (err) {
-    console.error("Delete error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.json({message:"Specific order deleted Successfully"});
+  }catch(err){
+    console.error("Delete error:",err);
+   res.status(500).json({error:"Server error"});
   }
 });
 
@@ -542,70 +498,63 @@ app.put("/update-order/:id", async (req, res) => {
   }
 });
 
-app.post("/cart-products", async (req, res) => {
-  try {
-    const ids = req.body;
-    const products = await ProductModel.find({id: { $in: ids }});
+app.post("/cart-products",async(req,res)=>{
+  try{
+    const ids=req.body;
+    const products=await ProductModel.find({id:{$in:ids}});
     res.json(products);
-  } catch (err) {
+  }catch(err){
     res.status(500).json({ error: "Server error" });
   }
 });
 
-app.post("/save-address", async (req, res) => {
-  try {
-    const { user_id, address } = req.body;
-    const id = new mongoose.Types.ObjectId(user_id);
-
-    
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      id,
-      { $set: { address: address } }, 
-      { new: true, runValidators: true, strict: false } 
-    );
-
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
-
-    console.log("SUCCESS! Saved Address:", updatedUser.address);
-    res.json(updatedUser.address);
-  } catch (err) {
-    console.error("Save error:", err);
-    res.status(500).json({ error: "Server error" });
+app.post("/save-address",async(req,res)=>{
+  try{
+    const {user_id,address}=req.body;
+    const id=new mongoose.Types.ObjectId(user_id);
+     
+   const updatedUser =await UserModel.findByIdAndUpdate(id,{$set:{address:address}},
+    {new:true,runValidators:true,strict:false}
+   );
+   if(!updatedUser) return res.status(400).json({error:"User not found"});
+   console.log("Success! Saved Address:",updatedUser.address);
+   res.json(updatedUser.address);
+  }catch(err){
+    console.log("Save error:",err);
+    res.status(500).json({error:"Server error"});
   }
 });
 
-app.get("/get-address/:id", async (req, res) => {
-  try {
-    const user = await UserModel.findById(req.params.id).lean();
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+app.get("/get-address/:id",async(req,res)=>{
+  try{
+    const user=await UserModel.findById(req.params.id).lean();
+    if(!user){
+      return res.status(404).json({error:"User not found"});
     }
-    if (user.address && user.address.name) {
+    if(user.address && user.address.name){
       res.json(user.address);
-    } else {
-      res.json({}); 
+    }else{
+      res.json({});
     }
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  }catch(err){
+      res.status(500).json({error:"Server error"});
+    }
+  });
 
-app.post("/create-razorpay-order", async (req, res) => {
-  try {
-    const { amount } = req.body;
 
-    const options = {
-      amount: amount * 100,
-      currency: "INR",
-      receipt: "order_" + Date.now()
+app.post("/create-razorpay-order",async(req,res)=>{
+  try{
+    const {amount}=req.body;
+    const options={
+      amount:amount*100,
+      currency:"INR",
+      receipt:"order_"+Date.now()
     };
-
-    const order = await razorpay.orders.create(options);
+    const order=await razorpay.orders.create(options);
     res.json(order);
-
-  } catch (err) {
-    console.error("Razorpay error:", err);
-    res.status(500).json({ error: "Payment creation failed" });
+  }catch(err){
+    console.error("Razorpay error:",err);
+    res.status(500).json({error:"Payment creation failed"});
   }
 });
 
