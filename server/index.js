@@ -8,6 +8,10 @@ const otpGenerator=require ("otp-generator");
 const ProductSchema=require("./models/Product").schema;
 const {OrderSchema}=require("./models/Order");
 const Razorpay=require("razorpay");
+// https://github.com/foliojs/pdfkit?tab=readme-ov-file
+const pdfService = require("./services/pdfService");
+
+
 
 const app=express();
 const PORT=process.env.PORT ||3001;
@@ -15,6 +19,7 @@ const PORT=process.env.PORT ||3001;
 const multer=require("multer");
 const cloudinary=require("cloudinary").v2;
 const {CloudinaryStorage}=require("multer-storage-cloudinary")
+
 
 app.use(express.json());
 const allowedOrigins=[
@@ -365,57 +370,79 @@ app.get("/products/:id",async(req,res)=>{
   }
 });
 
-app.post("/place-order",async(req,res)=>{
-  try{
-    const{
-      user_id,email,items,totalPrice,address,paymentMethod,paymentStatus,razorpay_order_id,
-      razorpay_payment_id}=req.body;
+app.post("/place-order", async (req, res) => {
+  try {
+    const {
+      user_id,
+      email,
+      items,
+      totalPrice,
+      address,
+      paymentMethod,
+      paymentStatus,
+      razorpay_order_id,
+      razorpay_payment_id,
+    } = req.body;
 
-      if(!items ||items.length ==0){
-        return res.status(400).json({error:"No items in order"});
-      }
-      const order=new OrderModel({
-        user_id:new mongoose.Types.ObjectId(user_id),
-        email,
-        items,
-        totalPrice,
-        address,
-        paymentMethod,
-        paymentStatus,
-        razorpay_order_id,
-        razorpay_payment_id,
-        status:"Pending",
-        datetime:new Date()
+    const order = new OrderModel({
+      user_id: new mongoose.Types.ObjectId(user_id),
+      email,
+      items,
+      totalPrice,
+      address,
+      paymentMethod,
+      paymentStatus,
+      razorpay_order_id,
+      razorpay_payment_id,
+      status: "Pending",
+      datetime: new Date(),
+    });
 
-      });
-      await order.save();
-      if (paymentMethod === "ONLINE" && paymentStatus === "Paid") {
+    await order.save();
 
-  const productList = items.map(item => {
-    return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
-  }).join("");
+     if (paymentMethod === "ONLINE" && paymentStatus === "Paid") {
 
-  const subject = "Payment Successful - Order Confirmed";
+      const buffers = [];
 
-  const message = `
-    <h2>Payment Successful</h2>
-    <p>Your order has been placed successfully.</p>
-    
-    <h3>Order Details:</h3>
-    <ul>${productList}</ul>
+      pdfService.buildPDF(
+        order,
+        (chunk) => buffers.push(chunk),
+        async () => {
+          const pdfData = Buffer.concat(buffers);
 
-    <p><strong>Total:</strong> ₹${totalPrice}</p>
-    <p><strong>Payment Method:</strong> ${paymentMethod}</p>
-  `;
+          const productList = items.map(item =>
+            `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`
+          ).join("");
 
-  await sendMail(email, subject, message);
-}
+          const subject = "Payment Successful & Invoice";
 
-res.json({ message: "Order placed successfully" });
-    }catch(err){
-      console.log("Order error:",err);
-      res.status(500).json({error:"Server error"});
+          const message = `
+            <h2>Payment Successful</h2>
+            <p>Your order has been placed successfully.</p>
+
+            <h3>Order Details:</h3>
+            <ul>${productList}</ul>
+
+            <p><strong>Total:</strong> ₹${totalPrice}</p>
+            <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+          `;
+
+          await sendMail(email, subject, message, [
+            {
+              filename: "invoice.pdf",
+              content: pdfData,
+            },
+          ]);
+        }
+      );
     }
+
+    res.json({ message: "Order placed successfully" });
+
+  } catch (err) {
+    console.log("Order error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 app.get("/user-orders/:id",async(req,res)=>{
@@ -562,7 +589,9 @@ app.get("/get-address/:id",async(req,res)=>{
     }
   });
 
-
+  // https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/
+  // https://stackoverflow.com/questions/78006605/razorpay-payment-integration-in-mern
+  // https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/configure-payment-methods/sample-code/
 app.post("/create-razorpay-order",async(req,res)=>{
   try{
     const {amount}=req.body;
@@ -576,6 +605,25 @@ app.post("/create-razorpay-order",async(req,res)=>{
   }catch(err){
     console.error("Razorpay error:",err);
     res.status(500).json({error:"Payment creation failed"});
+  }
+});
+
+app.get("/invoice/:id", async (req, res) => {
+  try {
+    const order = await OrderModel.findById(req.params.id);
+
+    res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=invoice.pdf",
+    });
+
+    pdfService.buildPDF(
+      order,
+      (chunk) => res.write(chunk),
+      () => res.end()
+    );
+  } catch (err) {
+    res.status(500).json({ error: "Error generating invoice" });
   }
 });
 
