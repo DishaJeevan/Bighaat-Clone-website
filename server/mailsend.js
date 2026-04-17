@@ -9,6 +9,12 @@ async function sendMail(to, sub, msg) {
       from: process.env.EMAIL_FROM,
       subject: sub,
       html: msg,
+      attachments: attachments.map(file => ({
+        content: file.content.toString("base64"),
+        filename: file.filename,
+        type: "application/pdf",
+        disposition: "attachment",
+      })),
     };
 
     await sgMail.send(message);
