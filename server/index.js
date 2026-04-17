@@ -9,7 +9,7 @@ const ProductSchema=require("./models/Product").schema;
 const {OrderSchema}=require("./models/Order");
 const Razorpay=require("razorpay");
 // https://github.com/foliojs/pdfkit?tab=readme-ov-file
-const pdfService = require("./pdf-service");
+const pdfService = require("./pdf-server");
 
 
 
