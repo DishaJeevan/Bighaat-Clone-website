@@ -1,5 +1,23 @@
 const PDFDocument = require("pdfkit");
 
+function roundTwo(n) {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
+// 🔥 Extract GST from inclusive price
+function extractGST(totalPrice, rate) {
+  const r = rate / 100;
+
+  const base = totalPrice / (1 + r);
+  const gst = totalPrice - base;
+
+  return {
+    base: roundTwo(base),
+    gst: roundTwo(gst),
+    total: roundTwo(totalPrice),
+  };
+}
+
 function buildPDF(order, dataCallback, endCallback) {
   const doc = new PDFDocument({ margin: 50 });
 
@@ -8,7 +26,6 @@ function buildPDF(order, dataCallback, endCallback) {
 
   const GST_RATE = 18;
 
- 
   doc.fontSize(16).text("Your Company Name", { align: "center" });
   doc.moveDown();
 
@@ -24,7 +41,6 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveDown(2);
 
-
   const tableTop = doc.y;
 
   const col1 = 50;
@@ -35,11 +51,10 @@ function buildPDF(order, dataCallback, endCallback) {
   const col6 = 520;
 
   doc.font("Helvetica-Bold");
-  doc.fillColor("#000000");
 
   doc.text("Product", col1, tableTop);
   doc.text("Qty", col2, tableTop);
-  doc.text("Price", col3, tableTop);
+  doc.text("Base", col3, tableTop);
   doc.text("CGST", col4, tableTop);
   doc.text("SGST", col5, tableTop);
   doc.text("Total", col6, tableTop);
@@ -48,28 +63,28 @@ function buildPDF(order, dataCallback, endCallback) {
     .lineTo(550, tableTop + 15)
     .stroke();
 
-  doc.font("Helvetica");
-
   let y = tableTop + 25;
+
+  doc.font("Helvetica");
 
   let subtotal = 0;
   let totalGST = 0;
 
-
   order.items.forEach((item, index) => {
-    const price = item.snapPrice;
+    const price = item.snapPrice; // INCLUSIVE GST price
     const qty = item.quantity;
 
-    const base = price * qty;
-    const gst = (base * GST_RATE) / 100;
+    const totalWithGST = price * qty;
+
+    const { base, gst, total } = extractGST(totalWithGST, GST_RATE);
+
     const cgst = gst / 2;
     const sgst = gst / 2;
-    const total = base + gst;
 
     subtotal += base;
     totalGST += gst;
 
-
+    // zebra row
     if (index % 2 === 0) {
       doc.rect(50, y - 5, 500, 20).fill("#f2f2f2");
       doc.fillColor("#000000");
@@ -77,7 +92,7 @@ function buildPDF(order, dataCallback, endCallback) {
 
     doc.text(item.snapName, col1, y, { width: 140 });
     doc.text(qty, col2, y);
-    doc.text(`₹${price.toFixed(2)}`, col3, y);
+    doc.text(`₹${base.toFixed(2)}`, col3, y);
     doc.text(`₹${cgst.toFixed(2)}`, col4, y);
     doc.text(`₹${sgst.toFixed(2)}`, col5, y);
     doc.text(`₹${total.toFixed(2)}`, col6, y);
@@ -85,13 +100,11 @@ function buildPDF(order, dataCallback, endCallback) {
     y += 25;
   });
 
-
   doc.moveTo(50, y)
     .lineTo(550, y)
     .stroke();
 
   y += 20;
-
 
   const cgstTotal = totalGST / 2;
   const sgstTotal = totalGST / 2;
@@ -111,8 +124,8 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.font("Helvetica-Bold");
   doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 350, y);
 
-
   doc.moveDown(2);
+
   doc.font("Helvetica");
   doc.text("Thank you for your purchase!", { align: "center" });
 
