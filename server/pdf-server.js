@@ -4,7 +4,7 @@ function roundTwo(n) {
   return Math.round((n + Number.EPSILON) * 100) / 100;
 }
 
-// 🔥 Extract GST from inclusive price
+
 function extractGST(totalPrice, rate) {
   const r = rate / 100;
 
@@ -84,7 +84,7 @@ function buildPDF(order, dataCallback, endCallback) {
     subtotal += base;
     totalGST += gst;
 
-    // zebra row
+
     if (index % 2 === 0) {
       doc.rect(50, y - 5, 500, 20).fill("#f2f2f2");
       doc.fillColor("#000000");
