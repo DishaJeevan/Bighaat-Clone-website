@@ -41,7 +41,6 @@ function buildPDF(order, dataCallback, endCallback) {
   const paymentMethod = order.paymentMethod;
   const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
-  
   const logoPath = path.join(__dirname, "images", "bighaat-logo.png");
   doc.image(logoPath, 50, 45, { width: 150 });
 
@@ -55,13 +54,10 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, 135).lineTo(545, 135).lineWidth(1).stroke("#cccccc");
 
- 
   doc.fillColor("black").fontSize(16).font("Helvetica-Bold").text("OFFICIAL RECEIPT", 50, 155);
 
- 
   doc.fontSize(10).font("Helvetica-Bold");
   let gridY = 190;
-  
   
   doc.text("Invoice #:", 50, gridY);
   doc.font("Helvetica").text(invoiceNo, 130, gridY);
@@ -78,28 +74,14 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.font("Helvetica-Bold").text("Status:", 50, gridY + 72);
   doc.font("Helvetica").text(paymentStatus, 130, gridY + 72);
 
-
   const col2X = 330;
   const col2ValueX = 430;
   doc.font("Helvetica-Bold").text("Shipping:", col2X, gridY);
   doc.font("Helvetica").text("Standard Delivery", col2ValueX, gridY);
 
-  doc.font("Helvetica-Bold").text("Estimated:", col2X, gridY + 18);
-  doc.font("Helvetica").text("3–5 Days", col2ValueX, gridY + 18);
-
-  doc.font("Helvetica-Bold").text("Shipping Cost:", col2X, gridY + 36);
-  doc.font("Helvetica").text("Free", col2ValueX, gridY + 36);
-
   doc.font("Helvetica-Bold").text("GSTIN:", col2X, gridY + 54);
   doc.font("Helvetica").text(gstin, col2ValueX, gridY + 54);
 
-  doc.font("Helvetica-Bold").text("Support:", col2X, gridY + 72);
-  doc.font("Helvetica").text("support@bighaat.com", col2ValueX, gridY + 72);
-  
-  doc.font("Helvetica-Bold").text("Phone:", col2X, gridY + 90);
-  doc.font("Helvetica").text("+91 9876543210", col2ValueX, gridY + 90);
-
-  
   let billedY = gridY + 120;
   doc.font("Helvetica-Bold").fontSize(11).text("Billed To:", 50, billedY);
   doc.font("Helvetica").fontSize(10);
@@ -111,64 +93,60 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, currentY);
   currentY += 15;
   doc.text(`${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`, 50, currentY);
-  if (addr.landmark) {
-    currentY += 15;
-    doc.text(`Landmark: ${addr.landmark}`, 50, currentY);
-  }
-  currentY += 15;
-  doc.text(`Phone: ${addr.phone || ""}`, 50, currentY);
 
-  
+  // --- Table Header ---
   let tableY = currentY + 30;
   doc.rect(50, tableY, 495, 25).fill("#f2f2f2");
-  doc.fillColor("black").font("Helvetica-Bold").text("Item", 60, tableY + 8);
-  doc.text("Qty", 300, tableY + 8, { width: 50, align: "center" });
-  doc.text("Price", 380, tableY + 8, { width: 70, align: "right" });
+  doc.fillColor("black").font("Helvetica-Bold");
+  
+  // Design kept, just added CGST/SGST columns
+  doc.text("Item", 60, tableY + 8);
+  doc.text("Qty", 210, tableY + 8, { width: 30, align: "center" });
+  doc.text("Price", 250, tableY + 8, { width: 60, align: "right" });
+  doc.text("CGST", 320, tableY + 8, { width: 60, align: "right" });
+  doc.text("SGST", 390, tableY + 8, { width: 60, align: "right" });
   doc.text("Total", 470, tableY + 8, { width: 70, align: "right" });
 
   let itemY = tableY + 32;
-  let subtotal = 0;
-  let totalGST = 0;
+  let totalSubtotal = 0;
+  let totalGST_Acc = 0;
 
   doc.font("Helvetica");
   order.items.forEach((item) => {
     const price = Number(item.snapPrice);
     const qty = Number(item.quantity);
-    const totalWithGST = price * qty;
-    const { base, gst, total } = extractGST(totalWithGST, GST_RATE);
+    const lineTotal = roundTwo(price * qty);
+    
+    const { base, gst } = extractGST(lineTotal, GST_RATE);
+    const cgst = roundTwo(gst / 2);
+    const sgst = roundTwo(gst - cgst);
 
-    subtotal += base;
-    totalGST += gst;
+    totalSubtotal += base;
+    totalGST_Acc += gst;
 
-    doc.text(item.snapName, 60, itemY, { width: 230 });
-    doc.text(qty.toString(), 300, itemY, { width: 50, align: "center" });
-    doc.text(`₹${price.toFixed(2)}`, 380, itemY, { width: 70, align: "right" });
-    doc.text(`₹${total.toFixed(2)}`, 470, itemY, { width: 70, align: "right" });
+    doc.text(item.snapName, 60, itemY, { width: 140 });
+    doc.text(qty.toString(), 210, itemY, { width: 30, align: "center" });
+    doc.text(`₹${price.toFixed(2)}`, 250, itemY, { width: 60, align: "right" });
+    doc.text(`₹${cgst.toFixed(2)}`, 320, itemY, { width: 60, align: "right" });
+    doc.text(`₹${sgst.toFixed(2)}`, 390, itemY, { width: 60, align: "right" });
+    doc.text(`₹${lineTotal.toFixed(2)}`, 470, itemY, { width: 70, align: "right" });
 
     itemY += 25;
   });
 
   doc.moveTo(50, itemY).lineTo(545, itemY).lineWidth(0.5).stroke("#cccccc");
 
-  
-  const grandTotal = subtotal + totalGST;
+  // --- Final Summary Section ---
   let totalsY = itemY + 20;
+  const finalGrandTotal = totalSubtotal + totalGST_Acc;
 
-  doc.text("Subtotal:", 350, totalsY, { width: 100, align: "right" });
-  doc.text(`₹${subtotal.toFixed(2)}`, 470, totalsY, { width: 70, align: "right" });
+  doc.text("Shipping:", 350, totalsY, { width: 100, align: "right" });
+  doc.text("FREE", 470, totalsY, { width: 70, align: "right" });
 
-  doc.text(`GST (${GST_RATE}%):`, 350, totalsY + 20, { width: 100, align: "right" });
-  doc.text(`₹${totalGST.toFixed(2)}`, 470, totalsY + 20, { width: 70, align: "right" });
-
-  doc.text("Shipping:", 350, totalsY + 40, { width: 100, align: "right" });
-  doc.text("FREE", 470, totalsY + 40, { width: 70, align: "right" });
-
-  
-  doc.rect(320, totalsY + 60, 225, 35).fill("#f2f2f2");
+  doc.rect(320, totalsY + 20, 225, 35).fill("#f2f2f2");
   doc.fillColor("black").font("Helvetica-Bold").fontSize(12);
-  doc.text("Grand Total:", 330, totalsY + 72);
-  doc.text(`₹${grandTotal.toFixed(2)}`, 445, totalsY + 72, { width: 95, align: "right" });
-
+  doc.text("Grand Total:", 330, totalsY + 32);
+  doc.text(`₹${finalGrandTotal.toFixed(2)}`, 445, totalsY + 32, { width: 95, align: "right" });
 
   doc.fontSize(10).font("Helvetica").fillColor("#333333");
   doc.text("Thank you for shopping with BigHaat!", 50, 730, { align: "center" });
