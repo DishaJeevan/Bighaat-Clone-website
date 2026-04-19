@@ -400,7 +400,7 @@ app.post("/place-order", async (req, res) => {
 
     await order.save();
 
-     if (paymentMethod === "ONLINE" && paymentStatus === "Paid") {
+     if ((paymentMethod === "ONLINE" && paymentStatus === "Paid") || paymentMethod === "COD") {
 
       const buffers = [];
 
@@ -414,7 +414,7 @@ app.post("/place-order", async (req, res) => {
             `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`
           ).join("");
 
-          const subject = "Payment Successful & Invoice";
+         const subject = paymentMethod === "COD" ? "Order Confirmed - Cash on Delivery" : "Payment Successful & Invoice";
 
           const message = `
             <h2>Payment Successful</h2>
