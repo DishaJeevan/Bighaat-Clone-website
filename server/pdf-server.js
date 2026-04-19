@@ -41,7 +41,6 @@ function buildPDF(order, dataCallback, endCallback) {
   const paymentMethod = order.paymentMethod;
   const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
-  
   const logoPath = path.join(__dirname, "images", "bighaat-logo.png");
   doc.image(logoPath, 50, 45, { width: 150 });
 
@@ -55,17 +54,14 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, 135).lineTo(545, 135).lineWidth(1).stroke("#cccccc");
 
- 
   doc.fillColor("black").fontSize(16).font("Helvetica-Bold").text("OFFICIAL RECEIPT", 50, 155);
 
- 
   doc.fontSize(10).font("Helvetica-Bold");
   let gridY = 190;
-  
-  
+
   doc.text("Invoice #:", 50, gridY);
   doc.font("Helvetica").text(invoiceNo, 130, gridY);
-  
+
   doc.font("Helvetica-Bold").text("Order ID:", 50, gridY + 18);
   doc.font("Helvetica").text(order._id, 130, gridY + 18);
 
@@ -77,7 +73,6 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.font("Helvetica-Bold").text("Status:", 50, gridY + 72);
   doc.font("Helvetica").text(paymentStatus, 130, gridY + 72);
-
 
   const col2X = 330;
   const col2ValueX = 430;
@@ -95,15 +90,14 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.font("Helvetica-Bold").text("Support:", col2X, gridY + 72);
   doc.font("Helvetica").text("support@bighaat.com", col2ValueX, gridY + 72);
-  
+
   doc.font("Helvetica-Bold").text("Phone:", col2X, gridY + 90);
   doc.font("Helvetica").text("+91 9876543210", col2ValueX, gridY + 90);
 
-  
   let billedY = gridY + 120;
   doc.font("Helvetica-Bold").fontSize(11).text("Billed To:", 50, billedY);
   doc.font("Helvetica").fontSize(10);
-  
+
   const addr = order.address || {};
   let currentY = billedY + 18;
   doc.text(addr.name || "Customer Name", 50, currentY);
@@ -118,7 +112,6 @@ function buildPDF(order, dataCallback, endCallback) {
   currentY += 15;
   doc.text(`Phone: ${addr.phone || ""}`, 50, currentY);
 
-  
   let tableY = currentY + 30;
   doc.rect(50, tableY, 495, 25).fill("#f2f2f2");
   doc.fillColor("black").font("Helvetica-Bold").text("Item", 60, tableY + 8);
@@ -150,25 +143,28 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, itemY).lineTo(545, itemY).lineWidth(0.5).stroke("#cccccc");
 
-  
   const grandTotal = subtotal + totalGST;
   let totalsY = itemY + 20;
+
+  const cgstTotal = totalGST / 2;
+  const sgstTotal = totalGST / 2;
 
   doc.text("Subtotal:", 350, totalsY, { width: 100, align: "right" });
   doc.text(`₹${subtotal.toFixed(2)}`, 470, totalsY, { width: 70, align: "right" });
 
-  doc.text(`GST (${GST_RATE}%):`, 350, totalsY + 20, { width: 100, align: "right" });
-  doc.text(`₹${totalGST.toFixed(2)}`, 470, totalsY + 20, { width: 70, align: "right" });
+  doc.text(`CGST (9%):`, 350, totalsY + 20, { width: 100, align: "right" });
+  doc.text(`₹${cgstTotal.toFixed(2)}`, 470, totalsY + 20, { width: 70, align: "right" });
 
-  doc.text("Shipping:", 350, totalsY + 40, { width: 100, align: "right" });
-  doc.text("FREE", 470, totalsY + 40, { width: 70, align: "right" });
+  doc.text(`SGST (9%):`, 350, totalsY + 40, { width: 100, align: "right" });
+  doc.text(`₹${sgstTotal.toFixed(2)}`, 470, totalsY + 40, { width: 70, align: "right" });
 
-  
-  doc.rect(320, totalsY + 60, 225, 35).fill("#f2f2f2");
+  doc.text("Shipping:", 350, totalsY + 60, { width: 100, align: "right" });
+  doc.text("FREE", 470, totalsY + 60, { width: 70, align: "right" });
+
+  doc.rect(320, totalsY + 80, 225, 35).fill("#f2f2f2");
   doc.fillColor("black").font("Helvetica-Bold").fontSize(12);
-  doc.text("Grand Total:", 330, totalsY + 72);
-  doc.text(`₹${grandTotal.toFixed(2)}`, 445, totalsY + 72, { width: 95, align: "right" });
-
+  doc.text("Grand Total:", 330, totalsY + 92);
+  doc.text(`₹${grandTotal.toFixed(2)}`, 445, totalsY + 92, { width: 95, align: "right" });
 
   doc.fontSize(10).font("Helvetica").fillColor("#333333");
   doc.text("Thank you for shopping with BigHaat!", 50, 730, { align: "center" });
