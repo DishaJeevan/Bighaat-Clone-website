@@ -47,7 +47,7 @@ function buildPDF(order, dataCallback, endCallback) {
   const paymentMethod = order.paymentMethod;
   const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
-  const logoPath = path.join(__dirname, "images", "bighaat-logo.webp");
+  const logoPath = path.join(__dirname, "images", "bighaat-logo.png");
 
   
   doc.image(logoPath, 50, 40, { width: 160 });
