@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit");
+const path = require("path");
 
 function roundTwo(n) {
   return Math.round((n + Number.EPSILON) * 100) / 100;
@@ -30,6 +31,8 @@ function generateGSTIN() {
   return gst;
 }
 
+
+
 function buildPDF(order, dataCallback, endCallback) {
   const doc = new PDFDocument({ margin: 50 });
 
@@ -42,129 +45,123 @@ function buildPDF(order, dataCallback, endCallback) {
   const gstin = generateGSTIN();
 
   const paymentMethod = order.paymentMethod;
-  const paymentStatus =
-    paymentMethod === "COD" ? "Pending" : "Paid";
+  const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
-  const shippingCost = 0;
-  const estimatedDays = "1week";
-
- 
-  doc.fontSize(18).text("BigHaat Agro Pvt Ltd", { align: "left" });
-
-  doc.fontSize(10).text(`Invoice #: ${invoiceNo}`, 400, 50);
-  doc.text(`Order ID: ${order._id}`, 400, 65);
-  doc.text(`Date: ${new Date(order.datetime).toLocaleDateString("en-IN")}`, 400, 80);
-  doc.text(`Payment: ${paymentMethod}`, 400, 95);
-  doc.text(`Status: ${paymentStatus}`, 400, 110);
-  doc.text(`Shipping: Standard Delivery`, 400, 125);
-  doc.text(`Estimated: ${estimatedDays}`, 400, 140);
-  doc.text(`Shipping Cost: ${shippingCost === 0 ? "Free" : shippingCost}`, 400, 155);
-  doc.text(`GSTIN: ${gstin}`, 400, 170);
-
-  doc.moveDown(2);
+  const logoPath = path.join(__dirname, "images", "bighaat-logo.webp");
 
   
-  doc.font("Helvetica-Bold").text("Corporate Office:");
+  doc.image(logoPath, 50, 40, { width: 160 });
+
+  doc.fontSize(10);
+
+  doc.text(`Invoice #: ${invoiceNo}`, 380, 50);
+  doc.text(`Order ID: ${order._id}`, 380, 65);
+  doc.text(`Date: ${new Date(order.datetime).toLocaleDateString("en-IN")}`, 380, 80);
+  doc.text(`Payment: ${paymentMethod}`, 380, 95);
+  doc.text(`Status: ${paymentStatus}`, 380, 110);
+  doc.text(`Shipping: Standard Delivery`, 380, 125);
+  doc.text(`Estimated: 3–5 Days`, 380, 140);
+  doc.text(`Shipping Cost: Free`, 380, 155);
+  doc.text(`GSTIN: ${gstin}`, 380, 170);
+
+  doc.moveTo(50, 200).lineTo(550, 200).stroke();
+
+ 
+  doc.fontSize(16).font("Helvetica-Bold");
+  doc.text("OFFICIAL RECEIPT", 50, 220);
+
+ 
+  doc.fontSize(10).font("Helvetica-Bold");
+  doc.text("Corporate Office:", 350, 220);
+
   doc.font("Helvetica");
-  doc.text("BigHaat Agro Pvt Ltd");
-  doc.text("19/2, SKR Tower,");
-  doc.text("15th Cross, 4th Phase,");
-  doc.text("Dollars Layout, J.P.Nagar,");
-  doc.text("Bangalore - 560078");
-  doc.text("Karnataka, India");
-  doc.text("CIN: U74900KA2015PTC082769");
+  doc.text("BigHaat Agro Pvt Ltd", 350, 235);
+  doc.text("19/2, SKR Tower,", 350, 250);
+  doc.text("15th Cross, 4th Phase,", 350, 265);
+  doc.text("Dollars Layout, J.P.Nagar,", 350, 280);
+  doc.text("Bangalore - 560078", 350, 295);
+  doc.text("Karnataka, India", 350, 310);
+  doc.text("CIN: U74900KA2015PTC082769", 350, 325);
 
-  doc.moveDown();
-
-  doc.font("Helvetica-Bold").text("Billed To:");
-  doc.font("Helvetica");
-
+  // ---------------- BILLED ----------------
   const addr = order.address || {};
 
-  doc.text(addr.name || "");
-  doc.text(`${addr.flat || ""}, ${addr.street || ""}`);
-  doc.text(`${addr.city || ""}, ${addr.district || ""}`);
-  doc.text(`${addr.state || ""} - ${addr.pincode || ""}`);
-  if (addr.landmark) doc.text(`Landmark: ${addr.landmark}`);
-  doc.text(`Phone: ${addr.phone || ""}`);
+  doc.font("Helvetica-Bold").text("Billed To:", 50, 260);
+  doc.font("Helvetica");
 
-  doc.moveDown(2);
+  let y = 275;
 
+  doc.text(addr.name || "", 50, y); y += 15;
+  doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, y); y += 15;
+  doc.text(`${addr.city || ""}, ${addr.district || ""}`, 50, y); y += 15;
+  doc.text(`${addr.state || ""} - ${addr.pincode || ""}`, 50, y); y += 15;
+  if (addr.landmark) {
+    doc.text(`Landmark: ${addr.landmark}`, 50, y);
+    y += 15;
+  }
+  doc.text(`Phone: ${addr.phone || ""}`, 50, y);
 
-  const tableTop = doc.y;
+  let tableY = 360;
 
-  const col1 = 50;
-  const col2 = 250;
-  const col3 = 320;
-  const col4 = 420;
+  doc.rect(50, tableY, 500, 25).fill("#dddddd");
 
-  doc.font("Helvetica-Bold");
+  doc.fillColor("black").font("Helvetica-Bold");
+  doc.text("Item", 60, tableY + 7);
+  doc.text("Qty", 280, tableY + 7);
+  doc.text("Price", 360, tableY + 7);
+  doc.text("Total", 450, tableY + 7);
 
-  doc.text("Item", col1, tableTop);
-  doc.text("Qty", col2, tableTop);
-  doc.text("Price", col3, tableTop);
-  doc.text("Total", col4, tableTop);
-
-  doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
-
-  let y = tableTop + 25;
+  tableY += 35;
 
   doc.font("Helvetica");
 
   let subtotal = 0;
   let totalGST = 0;
 
-  order.items.forEach((item, i) => {
-    if (y > 750) {
-      doc.addPage();
-      y = 50;
-    }
-
+  order.items.forEach((item) => {
     const price = Number(item.snapPrice);
     const qty = Number(item.quantity);
 
     const totalWithGST = price * qty;
-
     const { base, gst, total } = extractGST(totalWithGST, GST_RATE);
 
     subtotal += base;
     totalGST += gst;
 
-    doc.text(item.snapName, col1, y, { width: 180 });
-    doc.text(qty, col2, y);
-    doc.text(`₹${price}`, col3, y);
-    doc.text(`₹${total.toFixed(2)}`, col4, y);
+    doc.text(item.snapName, 60, tableY);
+    doc.text(qty.toString(), 280, tableY);
+    doc.text(`₹${price}`, 360, tableY);
+    doc.text(`₹${total.toFixed(2)}`, 450, tableY);
 
-    y += 20;
+    tableY += 25;
   });
 
-  doc.moveTo(50, y).lineTo(550, y).stroke();
+  doc.moveTo(50, tableY).lineTo(550, tableY).stroke();
 
-  y += 20;
+
+  tableY += 20;
 
   const grandTotal = subtotal + totalGST;
 
-  doc.text(`Subtotal: ₹${subtotal.toFixed(2)}`, 350, y);
-  y += 15;
+  doc.rect(300, tableY, 250, 100).stroke();
 
-  doc.text(`GST (18%): ₹${totalGST.toFixed(2)}`, 350, y);
-  y += 15;
-
-  doc.text(`Shipping: FREE`, 350, y);
-  y += 15;
+  doc.font("Helvetica");
+  doc.text(`Subtotal: ₹${subtotal.toFixed(2)}`, 320, tableY + 15);
+  doc.text(`GST (18%): ₹${totalGST.toFixed(2)}`, 320, tableY + 35);
+  doc.text(`Shipping: FREE`, 320, tableY + 55);
 
   doc.font("Helvetica-Bold");
-  doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 350, y);
+  doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 320, tableY + 75);
 
-  doc.moveDown(2);
+ 
+  doc.moveDown(4);
 
-  
   doc.font("Helvetica");
-  doc.text("Support: support@bighaat.com");
-  doc.text("Phone: +91 9876543210");
+  doc.text("Thank you for shopping with BigHaat!", 50, tableY + 130, {
+    align: "center",
+  });
 
-  doc.moveDown();
-  doc.text("Thank you for shopping with BigHaat!", {
+  doc.text("This is a system-generated invoice.", 50, tableY + 150, {
     align: "center",
   });
 
