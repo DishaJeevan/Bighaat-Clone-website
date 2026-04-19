@@ -17,7 +17,6 @@ function extractGST(totalPrice, rate) {
   };
 }
 
-
 function generateInvoiceNumber(orderId) {
   return "INV-" + Date.now() + "-" + orderId.toString().slice(-4);
 }
@@ -30,8 +29,6 @@ function generateGSTIN() {
   }
   return gst;
 }
-
-
 
 function buildPDF(order, dataCallback, endCallback) {
   const doc = new PDFDocument({ margin: 50 });
@@ -49,61 +46,97 @@ function buildPDF(order, dataCallback, endCallback) {
 
   const logoPath = path.join(__dirname, "images", "bighaat-logo.png");
 
-  
-  doc.image(logoPath, 50, 40, { width: 160 });
 
-  doc.fontSize(10);
+  doc.image(logoPath, 50, 40, { width: 140 });
 
-  doc.text(`Invoice #: ${invoiceNo}`, 380, 50);
-  doc.text(`Order ID: ${order._id}`, 380, 65);
-  doc.text(`Date: ${new Date(order.datetime).toLocaleDateString("en-IN")}`, 380, 80);
-  doc.text(`Payment: ${paymentMethod}`, 380, 95);
-  doc.text(`Status: ${paymentStatus}`, 380, 110);
-  doc.text(`Shipping: Standard Delivery`, 380, 125);
-  doc.text(`Estimated: 3–5 Days`, 380, 140);
-  doc.text(`Shipping Cost: Free`, 380, 155);
-  doc.text(`GSTIN: ${gstin}`, 380, 170);
+  let rightY = 50;
+  const rightX = 350;
 
-  doc.moveTo(50, 200).lineTo(550, 200).stroke();
+  doc.fontSize(10).font("Helvetica");
+
+  doc.text(`Invoice #: ${invoiceNo}`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Order ID: ${order._id}`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Date: ${new Date(order.datetime).toLocaleDateString("en-IN")}`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Payment: ${paymentMethod}`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Status: ${paymentStatus}`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Shipping: Standard Delivery`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Estimated: 3–5 Days`, rightX, rightY);
+  rightY += 15;
+  doc.text(`Shipping Cost: Free`, rightX, rightY);
+  rightY += 15;
+  doc.text(`GSTIN: ${gstin}`, rightX, rightY);
 
  
+  doc.moveTo(50, 180).lineTo(550, 180).stroke();
+
+ 
+  let leftY = 200;
+
   doc.fontSize(16).font("Helvetica-Bold");
-  doc.text("OFFICIAL RECEIPT", 50, 220);
+  doc.text("OFFICIAL RECEIPT", 50, leftY);
+
+  leftY += 30;
 
  
-  doc.fontSize(10).font("Helvetica-Bold");
-  doc.text("Corporate Office:", 350, 220);
+  doc.fontSize(10).font("Helvetica");
+
+  doc.text(`Invoice #: ${invoiceNo}`, 50, leftY);
+  leftY += 15;
+  doc.text(`Order ID: ${order._id}`, 50, leftY);
+  leftY += 15;
+  doc.text(`Date: ${new Date(order.datetime).toLocaleDateString("en-IN")}`, 50, leftY);
+  leftY += 15;
+  doc.text(`Payment: ${paymentMethod}`, 50, leftY);
+  leftY += 15;
+  doc.text(`Status: ${paymentStatus}`, 50, leftY);
+
+ 
+  let companyY = 200;
+
+  doc.font("Helvetica-Bold");
+  doc.text("Corporate Office:", 320, companyY);
 
   doc.font("Helvetica");
-  doc.text("BigHaat Agro Pvt Ltd", 350, 235);
-  doc.text("19/2, SKR Tower,", 350, 250);
-  doc.text("15th Cross, 4th Phase,", 350, 265);
-  doc.text("Dollars Layout, J.P.Nagar,", 350, 280);
-  doc.text("Bangalore - 560078", 350, 295);
-  doc.text("Karnataka, India", 350, 310);
-  doc.text("CIN: U74900KA2015PTC082769", 350, 325);
+  companyY += 15;
+  doc.text("BigHaat Agro Pvt Ltd", 320, companyY);
+  companyY += 15;
+  doc.text("19/2, SKR Tower,", 320, companyY);
+  companyY += 15;
+  doc.text("15th Cross, 4th Phase,", 320, companyY);
+  companyY += 15;
+  doc.text("Dollars Layout, J.P.Nagar,", 320, companyY);
+  companyY += 15;
+  doc.text("Bangalore - 560078", 320, companyY);
+  companyY += 15;
+  doc.text("Karnataka, India", 320, companyY);
 
-  // ---------------- BILLED ----------------
+  
   const addr = order.address || {};
+  let billY = Math.max(leftY, companyY) + 30;
 
-  doc.font("Helvetica-Bold").text("Billed To:", 50, 260);
+  doc.font("Helvetica-Bold").text("Billed To:", 50, billY);
   doc.font("Helvetica");
 
-  let y = 275;
+  billY += 15;
+  doc.text(addr.name || "", 50, billY);
+  billY += 15;
+  doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, billY);
+  billY += 15;
+  doc.text(`${addr.city || ""}, ${addr.district || ""}`, 50, billY);
+  billY += 15;
+  doc.text(`${addr.state || ""} - ${addr.pincode || ""}`, 50, billY);
+  billY += 15;
+  doc.text(`Phone: ${addr.phone || ""}`, 50, billY);
 
-  doc.text(addr.name || "", 50, y); y += 15;
-  doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, y); y += 15;
-  doc.text(`${addr.city || ""}, ${addr.district || ""}`, 50, y); y += 15;
-  doc.text(`${addr.state || ""} - ${addr.pincode || ""}`, 50, y); y += 15;
-  if (addr.landmark) {
-    doc.text(`Landmark: ${addr.landmark}`, 50, y);
-    y += 15;
-  }
-  doc.text(`Phone: ${addr.phone || ""}`, 50, y);
+  let tableY = billY + 40;
 
-  let tableY = 360;
-
-  doc.rect(50, tableY, 500, 25).fill("#dddddd");
+  doc.rect(50, tableY, 500, 25).fill("#eeeeee");
 
   doc.fillColor("black").font("Helvetica-Bold");
   doc.text("Item", 60, tableY + 7);
@@ -138,30 +171,29 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, tableY).lineTo(550, tableY).stroke();
 
-
   tableY += 20;
 
   const grandTotal = subtotal + totalGST;
 
-  doc.rect(300, tableY, 250, 100).stroke();
+  doc.rect(300, tableY, 250, 90).stroke();
 
   doc.font("Helvetica");
   doc.text(`Subtotal: ₹${subtotal.toFixed(2)}`, 320, tableY + 15);
-  doc.text(`GST (18%): ₹${totalGST.toFixed(2)}`, 320, tableY + 35);
-  doc.text(`Shipping: FREE`, 320, tableY + 55);
+  doc.text(`GST (18%): ₹${totalGST.toFixed(2)}`, 320, tableY + 30);
+  doc.text(`Shipping: FREE`, 320, tableY + 45);
 
   doc.font("Helvetica-Bold");
-  doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 320, tableY + 75);
+  doc.text(`Grand Total: ₹${grandTotal.toFixed(2)}`, 320, tableY + 65);
 
  
-  doc.moveDown(4);
+  doc.moveDown();
 
   doc.font("Helvetica");
-  doc.text("Thank you for shopping with BigHaat!", 50, tableY + 130, {
+  doc.text("Thank you for shopping with BigHaat!", 50, tableY + 120, {
     align: "center",
   });
 
-  doc.text("This is a system-generated invoice.", 50, tableY + 150, {
+  doc.text("This is a system-generated invoice.", 50, tableY + 140, {
     align: "center",
   });
 
