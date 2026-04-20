@@ -109,54 +109,51 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.text(`${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`, 50, currentY);
 
   
-  let tableY = currentY + 30;
+ let tableY = currentY + 30;
   doc.rect(50, tableY, 495, 25).fill("#f2f2f2");
   doc.fillColor("black").font("Helvetica-Bold");
   
- 
   doc.text("Item", 60, tableY + 8);
-  doc.text("Qty", 210, tableY + 8, { width: 30, align: "center" });
-  doc.text("Price", 250, tableY + 8, { width: 60, align: "right" });
-  doc.text("CGST", 320, tableY + 8, { width: 60, align: "right" });
-  doc.text("SGST", 390, tableY + 8, { width: 60, align: "right" });
-  doc.text("Total", 470, tableY + 8, { width: 70, align: "right" });
+  doc.text("Qty", 185, tableY + 8, { width: 30, align: "center" });
+  doc.text("Price", 220, tableY + 8, { width: 60, align: "right" });
+  doc.text("Base", 285, tableY + 8, { width: 60, align: "right" }); 
+  doc.text("CGST", 345, tableY + 8, { width: 55, align: "right" });
+  doc.text("SGST", 405, tableY + 8, { width: 55, align: "right" });
+  doc.text("Total", 475, tableY + 8, { width: 65, align: "right" });
 
   let itemY = tableY + 32;
   let totalSubtotal = 0;
   let totalGST_Acc = 0;
+  doc.font("Helvetica").fontSize(9);
 
-  doc.font("Helvetica");
+  
 order.items.forEach((item) => {
+    const price = Number(item.snapPrice);
     const qty = Number(item.quantity);
-    const lineTotal = roundTwo(Number(item.snapPrice) * qty); 
+    const lineTotal = roundTwo(price * qty);
     
-    
+  
     const { base, gst } = extractGST(lineTotal, GST_RATE);
-    
-    
-    const unitBasePrice = base / qty; 
-    
     const cgst = roundTwo(gst / 2);
     const sgst = roundTwo(gst - cgst);
 
     totalSubtotal += base;
     totalGST_Acc += gst;
 
-    const nameHeight = doc.heightOfString(item.snapName, { width: 140 });
+    const nameHeight = doc.heightOfString(item.snapName, { width: 120 });
 
-    doc.text(item.snapName, 60, itemY, { width: 140 });
-    doc.text(qty.toString(), 210, itemY, { width: 30, align: "center" });
-    
- 
-    doc.text(`${unitBasePrice.toFixed(2)}`, 250, itemY, { width: 60, align: "right" });
-    
-    doc.text(`${cgst.toFixed(2)}`, 320, itemY, { width: 60, align: "right" });
-    doc.text(`${sgst.toFixed(2)}`, 390, itemY, { width: 60, align: "right" });
-    doc.text(`${lineTotal.toFixed(2)}`, 470, itemY, { width: 70, align: "right" });
+   
+    doc.text(item.snapName, 60, itemY, { width: 120 });
+    doc.text(qty.toString(), 185, itemY, { width: 30, align: "center" });
+    doc.text(`${price.toFixed(2)}`, 220, itemY, { width: 60, align: "right" });
+    doc.text(`${base.toFixed(2)}`, 285, itemY, { width: 60, align: "right" }); // NEW DATA POINT
+    doc.text(`${cgst.toFixed(2)}`, 345, itemY, { width: 55, align: "right" });
+    doc.text(`${sgst.toFixed(2)}`, 405, itemY, { width: 55, align: "right" });
+    doc.text(`${lineTotal.toFixed(2)}`, 475, itemY, { width: 65, align: "right" });
 
     itemY += Math.max(nameHeight, 20) + 10;
 
-    if (itemY > 750) {
+    if (itemY > 730) {
       doc.addPage();
       itemY = 50;
     }
