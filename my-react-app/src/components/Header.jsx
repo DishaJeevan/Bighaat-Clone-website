@@ -116,15 +116,6 @@ useEffect(() => {
 </div>
 
         <div className="right-links">
-          <Link to="/track-order">
-            <i className="fa-regular fa-truck"></i>
-            Track Order
-          </Link>
-
-          <Link to="/wishlist">
-            <i className="fa-regular fa-heart"></i>
-            Wishlist
-          </Link>
 
           <div className="user-section" onClick={() => setShowUserDropdown(!showUserDropdown)}>
 
