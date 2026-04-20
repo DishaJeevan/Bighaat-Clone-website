@@ -126,32 +126,36 @@ function buildPDF(order, dataCallback, endCallback) {
   let totalGST_Acc = 0;
 
   doc.font("Helvetica");
- order.items.forEach((item) => {
-    const price = Number(item.snapPrice);
-   const qty = Number(item.quantity);
-    const lineTotal = roundTwo(price * qty);
+order.items.forEach((item) => {
+    const qty = Number(item.quantity);
+    const lineTotal = roundTwo(Number(item.snapPrice) * qty); 
+    
     
     const { base, gst } = extractGST(lineTotal, GST_RATE);
+    
+    
+    const unitBasePrice = base / qty; 
+    
     const cgst = roundTwo(gst / 2);
     const sgst = roundTwo(gst - cgst);
 
     totalSubtotal += base;
     totalGST_Acc += gst;
 
-    
     const nameHeight = doc.heightOfString(item.snapName, { width: 140 });
 
     doc.text(item.snapName, 60, itemY, { width: 140 });
     doc.text(qty.toString(), 210, itemY, { width: 30, align: "center" });
-    doc.text(`${price.toFixed(2)}`, 250, itemY, { width: 60, align: "right" });
+    
+ 
+    doc.text(`${unitBasePrice.toFixed(2)}`, 250, itemY, { width: 60, align: "right" });
+    
     doc.text(`${cgst.toFixed(2)}`, 320, itemY, { width: 60, align: "right" });
     doc.text(`${sgst.toFixed(2)}`, 390, itemY, { width: 60, align: "right" });
     doc.text(`${lineTotal.toFixed(2)}`, 470, itemY, { width: 70, align: "right" });
 
-   
     itemY += Math.max(nameHeight, 20) + 10;
 
-  
     if (itemY > 750) {
       doc.addPage();
       itemY = 50;
