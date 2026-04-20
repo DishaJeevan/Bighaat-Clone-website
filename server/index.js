@@ -554,7 +554,7 @@ app.put("/update-order/:id", async (req, res) => {
             </tr>
           </thead>
           <tbody>
-            ${productRows}
+            ${productList}
           </tbody>
         </table>
 
