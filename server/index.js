@@ -529,13 +529,38 @@ app.put("/update-order/:id", async (req, res) => {
       const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
 
       const productList = order.items.map(item => {
-        return `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`;
+       return `
+          <tr>
+            <td>${item.snapName}</td>
+            <td>${item.quantity}</td>
+            <td>₹${item.snapPrice}</td>
+          </tr>
+        `;
       }).join("");
 
       const subject = `Order Update: ${status}`;
-      const message = `<p>Your order status is: ${status}<br/><ul>${productList}</ul>
-          Total: ₹${amount} <br/>
-          Date: ${date} <br/> </p>`;
+
+    
+      const message = `
+        <h2>Order Status Update</h2>
+        <p>Your order status is: <strong>${status}</strong></p>
+
+        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productRows}
+          </tbody>
+        </table>
+
+        <p><strong>Total:</strong> ₹${amount}</p>
+        <p><strong>Date:</strong> ${date}</p>
+      `;
       await sendMail(order.email, subject, message);
     }  
     res.json({ message: "Order updated successfully" });
