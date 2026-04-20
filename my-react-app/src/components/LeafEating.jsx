@@ -27,98 +27,7 @@ function LeafEating() {
   return (
     <div className="seeds-page">
       <div className="main-container">
-        <div className="sidebar">
-          <h2>Filters</h2>
-
-          <details open>
-            <summary>
-              CATEGORIES
-              <i className="fa-solid fa-angle-down"></i>
-            </summary>
-            <div className="content">
-              <label><input type="checkbox" /> Seeds</label>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              BRANDS
-              <i className="fa-solid fa-angle-down"></i>
-            </summary>
-            <div className="content">
-              <label><input type="checkbox" /> Aqunata</label>
-              <label><input type="checkbox" /> AgroHaat</label>
-              <label><input type="checkbox" /> Pioneer Agro</label>
-              <label><input type="checkbox" /> Solar</label>
-              <label><input type="checkbox" /> Sarpan Hybrid Seeds Co</label>
-            </div>
-          </details>
-
-          <details open>
-            <summary>
-              PRICE
-              <i className="fa-solid fa-angle-down"></i>
-            </summary>
-            <div className="content">
-              <input type="range" min="0" max="20000" className="range" />
-              <div className="price-box">
-                <select>
-                  <option>₹0</option>
-                  <option>₹1000</option>
-                  <option>₹5000</option>
-                </select>
-                <span>to</span>
-                <select>
-                  <option>₹20000</option>
-                  <option>₹15000</option>
-                  <option>₹10000</option>
-                </select>
-              </div>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              RATING
-              <i className="fa-solid fa-angle-down"></i>
-            </summary>
-            <div className="content">
-              <label><input type="checkbox" /> 5 Star</label>
-              <label><input type="checkbox" /> 4 Star</label>
-              <label><input type="checkbox" /> 3 Star</label>
-              <label><input type="checkbox" /> 2 Star</label>
-              <label><input type="checkbox" /> 1 Star</label>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              AVAILABILITY
-              <i className="fa-solid fa-angle-down"></i>
-            </summary>
-            <div className="content">
-              <label><input type="checkbox" /> In Stock</label>
-              <label><input type="checkbox" /> Out of Stock</label>
-            </div>
-          </details>
-        </div>
-
-        <div className="content-area">
-          <div className="page-header">
-            <div className="title-section">
-              <h1>Leaf Eating Caterpillar <span>({products.length})</span></h1>
-            </div>
-
-            <div className="sort-section">
-              <div className="sort-box">
-                <span>Sort By:</span>
-                <select>
-                  <option>Best Selling</option>
-                  <option>Price Low to High</option>
-                  <option>Price High to Low</option>
-                </select>
-              </div>
-            </div>
+        
           </div>
 
           <div className="products-grid-menu">
@@ -163,20 +72,9 @@ function LeafEating() {
             <div className="end-box">You have reached the end...</div>
           </div>
 
-          <div className="description">
-            <h3>Crop Protection</h3>
-            <p>
-              Products are used to kill and control all harmful organisms during
-              the cultivation and to improve the yield and the quality of their
-              crop growth. It contains one or more active substances and other
-              co-formulated can be either biological or chemical products. Bio
-              and Organic Plant protection products are available with various
-              top brands.
-            </p>
-          </div>
+          
         </div>
-      </div>
-    </div>
+    
   );
 }
 
