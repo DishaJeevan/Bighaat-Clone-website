@@ -526,8 +526,10 @@ app.put("/update-order/:id", async (req, res) => {
 
     if (status === "Processed" || status === "Delivered"|| status === "Shipped"|| status === "Pending") {
       const amount = order.totalPrice;
-      const date = order.datetime ? new Date(order.datetime).toLocaleString() : "N/A";
-
+      const date = new Date(order.datetime).toLocaleString("en-IN", {
+           timeZone: "Asia/Kolkata",
+           hour12: false,
+         });
       const productList = order.items.map(item => {
        return `
           <tr>
