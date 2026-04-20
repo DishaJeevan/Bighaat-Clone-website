@@ -22,7 +22,7 @@ function AdminDashboard() {
     <div>
       <div className="nav-container">
         <nav className="admin-nav">
-          <Link to="/" className="admin-logo">
+          <Link to="/admin/dashboard" className="admin-logo">
             <img src="/images/bighaat-logo.webp" alt="BigHaat Logo" />
             <span className="admin-tag">Admin</span>
           </Link>
@@ -55,9 +55,115 @@ function AdminDashboard() {
       ): location.pathname === "/admin/manage-orders" ? (
         <ManageOrder />
       ) : (
-        <div className="welcome-dashboard-card">
-          <h2>Welcome to Admin Dashboard</h2>
+       
+        <div className="dashboard-main-content">
+  <div className="dashboard-header">
+    <div className="header-text">
+      <h2>Welcome to Admin Dashboard</h2>
+      <p>BIGHAAT CLONE</p>
+    </div>
+  </div>
+
+  <div className="stats-grid">
+    <div className="stat-card">
+      <div className="stat-icon-box blue-bg">
+        <i className="fa-solid fa-box-open"></i>
+      </div>
+      <div className="stat-details">
+        <span className="stat-count">10</span>
+        <span className="stat-label">Total Products</span>
+      </div>
+    </div>
+
+    <div className="stat-card">
+      <div className="stat-icon-box green-bg">
+        <i className="fa-solid fa-cart-shopping"></i>
+      </div>
+      <div className="stat-details">
+        <span className="stat-count">21</span>
+        <span className="stat-label">Total Orders</span>
+      </div>
+    </div>
+
+    <div className="stat-card">
+      <div className="stat-icon-box purple-bg">
+        <i className="fa-solid fa-users"></i>
+      </div>
+      <div className="stat-details">
+        <span className="stat-count">5</span>
+        <span className="stat-label">Registered Users</span>
+      </div>
+    </div>
+
+    <div className="stat-card">
+      <div className="stat-icon-box orange-bg">
+        <i className="fa-solid fa-dollar-sign"></i>
+      </div>
+      <div className="stat-details">
+        <span className="stat-count">$1299.75</span>
+        <span className="stat-label">Total Revenue</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="dashboard-lower-section">
+    <div className="graph-card">
+      <div className="card-header">
+        <h4>Revenue Trend </h4>
+      </div>
+      <div className="mock-graph-container">
+        
+        <div className="graph-grid-line"></div>
+        <div className="graph-grid-line"></div>
+        <div className="graph-grid-line"></div>
+        <div className="graph-curve-svg">
+          <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+            <path 
+              d="M0,130 C50,120 100,140 150,135 C200,130 250,20 300,50 C350,80 400,110 450,105 L500,100" 
+              fill="none" 
+              stroke="#009640" 
+              strokeWidth="3"
+            />
+            <path 
+              d="M0,130 C50,120 100,140 150,135 C200,130 250,20 300,50 C350,80 400,110 450,105 L500,100 L500,150 L0,150 Z" 
+              fill="url(#greenGradient)" 
+            />
+            <defs>
+              <linearGradient id="greenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style={{stopColor:'#009640', stopOpacity:0.2}} />
+                <stop offset="100%" style={{stopColor:'#009640', stopOpacity:0}} />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
+      </div>
+    </div>
+
+    <div className="orders-card">
+      <div className="orders-card-header">
+        <h3>Recent Orders</h3>
+        <Link to="/admin/manage-orders" className="view-all-link">View All</Link>
+      </div>
+      <div className="table-responsive">
+        <table className="dashboard-mini-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>#EB83F5</td><td>4/18/2026</td><td>$89.99</td><td><span className="status-tag">Placed</span></td></tr>
+            <tr><td>#A11A40</td><td>4/18/2026</td><td>$59.99</td><td><span className="status-tag">Placed</span></td></tr>
+            <tr><td>#BE7778</td><td>4/17/2026</td><td>$8.99</td><td><span className="status-tag">Placed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
       )}
     </div>
     </div>  
