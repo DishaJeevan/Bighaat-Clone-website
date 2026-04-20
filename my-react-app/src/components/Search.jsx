@@ -77,15 +77,7 @@ function Search () {
   </div>
   </div>
 
-  <div class="description">
-    <h3>Crop Protection</h3>
-    <p>
-      Products are used to kill and control all harmful organisms during the cultivation 
-      and to improve the yield and the quality of their crop growth. It contains one or more 
-      active substances and other co-formulated can be either biological or chemical products. 
-      Bio and Organic Plant protection products are available with various top brands.
-    </p>
-  </div>
+ 
       </div>
 
     </div>
