@@ -126,9 +126,9 @@ function buildPDF(order, dataCallback, endCallback) {
   let totalGST_Acc = 0;
 
   doc.font("Helvetica");
-  order.items.forEach((item) => {
+ order.items.forEach((item) => {
     const price = Number(item.snapPrice);
-    const qty = Number(item.quantity);
+   const qty = Number(item.quantity);
     const lineTotal = roundTwo(price * qty);
     
     const { base, gst } = extractGST(lineTotal, GST_RATE);
@@ -138,6 +138,9 @@ function buildPDF(order, dataCallback, endCallback) {
     totalSubtotal += base;
     totalGST_Acc += gst;
 
+    
+    const nameHeight = doc.heightOfString(item.snapName, { width: 140 });
+
     doc.text(item.snapName, 60, itemY, { width: 140 });
     doc.text(qty.toString(), 210, itemY, { width: 30, align: "center" });
     doc.text(`${price.toFixed(2)}`, 250, itemY, { width: 60, align: "right" });
@@ -145,7 +148,14 @@ function buildPDF(order, dataCallback, endCallback) {
     doc.text(`${sgst.toFixed(2)}`, 390, itemY, { width: 60, align: "right" });
     doc.text(`${lineTotal.toFixed(2)}`, 470, itemY, { width: 70, align: "right" });
 
-    itemY += 25;
+   
+    itemY += Math.max(nameHeight, 20) + 10;
+
+  
+    if (itemY > 750) {
+      doc.addPage();
+      itemY = 50;
+    }
   });
 
   doc.moveTo(50, itemY).lineTo(545, itemY).lineWidth(0.5).stroke("#cccccc");
@@ -171,7 +181,7 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.fontSize(10).font("Helvetica").fillColor("#333333");
   doc.text("Thank you for shopping with BigHaat!", 50, 730, { align: "center" });
-  doc.fontSize(9).text("This is a system-generated invoice.", 50, 745, { align: "center" });
+
 
   doc.end();
 }
