@@ -163,22 +163,31 @@ order.items.forEach((item) => {
 
   
   let totalsY = itemY + 20;
+  
+ 
   const finalGrandTotal = totalSubtotal + totalGST_Acc;
 
-
-  doc.font("Helvetica").fontSize(10);
-  doc.text("Subtotal:", 350, totalsY, { width: 100, align: "right" });
-  doc.text(`${totalSubtotal.toFixed(2)}`, 470, totalsY, { width: 70, align: "right" });
+  doc.font("Helvetica").fontSize(10).fillColor("black");
 
   
-  doc.text("Shipping:", 350, totalsY + 18, { width: 100, align: "right" });
-  doc.text("FREE", 470, totalsY + 18, { width: 70, align: "right" });
+  doc.text("Taxable Subtotal:", 350, totalsY, { width: 100, align: "right" });
+  doc.text(`${totalSubtotal.toFixed(2)}`, 470, totalsY, { width: 70, align: "right" });
+
+ 
+  doc.text("Total Tax (GST 18%):", 350, totalsY + 18, { width: 100, align: "right" });
+  doc.text(`${totalGST_Acc.toFixed(2)}`, 470, totalsY + 18, { width: 70, align: "right" });
 
 
-  doc.rect(320, totalsY + 45, 225, 35).fill("#f2f2f2");
+  doc.text("Shipping:", 350, totalsY + 36, { width: 100, align: "right" });
+  doc.text("FREE", 470, totalsY + 36, { width: 70, align: "right" });
+
+  // 4. Grand Total Box (Adjusted Y position to make room for the tax line)
+  const grandTotalBoxY = totalsY + 60;
+  doc.rect(320, grandTotalBoxY, 225, 35).fill("#f2f2f2");
+  
   doc.fillColor("black").font("Helvetica-Bold").fontSize(12);
-  doc.text("Grand Total:", 330, totalsY + 57);
-  doc.text(`${finalGrandTotal.toFixed(2)}`, 445, totalsY + 57, { width: 95, align: "right" });
+  doc.text("Grand Total:", 330, grandTotalBoxY + 12);
+  doc.text(`${finalGrandTotal.toFixed(2)}`, 445, grandTotalBoxY + 12, { width: 95, align: "right" });
 
   doc.fontSize(10).font("Helvetica").fillColor("#333333");
   doc.text("Thank you for shopping with BigHaat!", 50, 730, { align: "center" });
