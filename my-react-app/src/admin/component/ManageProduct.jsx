@@ -115,7 +115,19 @@ useEffect(() => {
                 <td>₹{p.saveAmount}</td>
                  
                 <td>{p.size}</td>
-                <td>{p.createdAt ? new Date(p.createdAt).toLocaleString() : "N/A"}</td>
+             
+             <td>
+              {p.updatedAt
+                ? new Date(p.updatedAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                  })
+                : p.createdAt
+                ? new Date(p.createdAt).toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                  })
+                : "N/A"}
+            </td>
+        
                 <td className="action-btns">
 
                 <button className="edit-btn" onClick={() => navigate(`/admin/edit-product/${p._id}`)}>
