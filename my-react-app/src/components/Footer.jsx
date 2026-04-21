@@ -33,19 +33,19 @@ function Footer() {
               <img src="images/qrcode.webp" alt="download qr code" />
             </div>
             <div class="social-media-icons">
-              <a href="#">
+              <a href="https://www.instagram.com/bighaatindia/">
                 <img src="images/instagram.jfif" />
               </a>
-              <a href="#">
+              <a href="https://www.facebook.com/BigHaat.India">
                 <img src="images/facebook.png" />
               </a>
-              <a href="#">
+              <a href="https://www.youtube.com/channel/UCfefXq8CEFAXQlSTVFExx8Q">
                 <img src="images/youtube.png" />
               </a>
-              <a href="#">
+              <a href="https://x.com/bighaatindia">
                 <img src="images/x.png" />
               </a>
-              <a href="#">
+              <a href="https://www.linkedin.com/company/bighaat-india/?original_referer=https%3A%2F%2Fwww%2Ebighaat%2Ecom%2F&originalSubdomain=in">
                 <img src="images/linkedin.png" />
               </a>
             </div>
@@ -54,38 +54,33 @@ function Footer() {
             <h2>Quick Links</h2>
             <ul>
               <li>
-                <a href="#">About us</a>
+                <a href="/about">About us</a>
               </li>
               <li>
-                <a href="#">Reach Us</a>
+                <a href="/seedsmenue">Seeds</a>
               </li>
               <li>
-                <a href="#">Media Links</a>
+                <a href="/cropprotection">Crop Protection</a>
               </li>
               <li>
-                <a href="#">Privacy Policy</a>
+                <a href="/cropnutrition">Crop Nutrition</a>
               </li>
               <li>
-                <a href="#">Return & Refund Policy</a>
+                <a href="/equipments">Equipments</a>
               </li>
               <li>
-                <a href="#">Terms of Service</a>
+                <a href="/animalhusbandry">Animl Husbandry</a>
               </li>
               <li>
-                <a href="#">Grievance Redressal</a>
+                <a href="/organic">Organic</a>
               </li>
               <li>
-                <a href="#">Careers</a>
+                <a href="/growth-promoters">Growth Promoterss</a>
               </li>
               <li>
-                <a href="#">Shipping/Delivery Policy</a>
+                <a href="/services">Shipping/Delivery Policy</a>
               </li>
-              <li>
-                <a href="#">FAQ</a>
-              </li>
-              <li>
-                <a href="#">Sitemap</a>
-              </li>
+             
             </ul>
           </div>
           <div class="footer-contact">
