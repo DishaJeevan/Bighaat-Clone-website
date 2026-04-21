@@ -411,21 +411,20 @@ app.post("/place-order", async (req, res) => {
         async () => {
           const pdfData = Buffer.concat(buffers);
 
-          const productList = items.map(item =>
-            `<li>${item.snapName} (x${item.quantity}) - ₹${item.snapPrice}</li>`
-          ).join("");
+         
 
          const subject = paymentMethod === "COD" ? "Order Confirmed - Cash on Delivery" : "Payment Successful & Invoice";
 
           const message = `
-            <h2>Payment Successful</h2>
+            <h2><strong>Payment Successful</strong></h2>
             <p>Your order has been placed successfully.</p>
 
-            <h3>Order Details:</h3>
-            <ul>${productList}</ul>
+          
 
-            <p><strong>Total:</strong> ₹${totalPrice}</p>
-            <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+              <p><strong>Total:</strong> ₹${totalPrice}</p>
+              <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+            
+              <p><strong>Please find your invoice attached.</strong></p>
           `;
 
           await sendMail(email, subject, message, [
@@ -545,7 +544,7 @@ app.put("/update-order/:id", async (req, res) => {
 
     
       const message = `
-        <h2>Order Status Update</h2>
+        <h2><strong>Order Status Update</strong></h2>
         <p>Your order status is: <strong>${status}</strong></p>
 
         <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
