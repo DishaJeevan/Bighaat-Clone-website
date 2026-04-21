@@ -34,7 +34,7 @@ function ManageOrder() {
         <table className="table table-bordered product-table">
           <thead>
             <tr>
-              <th>User ID</th>
+              <th>Order ID</th>
               <th>Email</th>
               <th>Total Orders</th>
               <th>Total Amount</th>
