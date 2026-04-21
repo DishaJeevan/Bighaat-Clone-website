@@ -6,9 +6,7 @@ function Navbar() {
     <nav>
        <div className="nav-container"></div>
       <ul className="menu">
-        <li>
-          <Link to="/brands">BRANDS</Link>
-        </li>
+        
         <li>
           <Link to="/seedsmenue">SEEDS</Link>
         </li>
@@ -34,7 +32,7 @@ function Navbar() {
           <Link to="/services">SERVICES</Link>
         </li>
         <li>
-          <Link to="/vedica">VEDICA</Link>
+          <Link to="/vedica">ABOUT US</Link>
         </li>
         <li>
           <Link to="/blogs">BLOGS</Link>
