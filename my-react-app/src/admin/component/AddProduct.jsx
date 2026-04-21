@@ -43,6 +43,10 @@ function  AddProduct (){
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+   if (!product.name || !product.newPrice || !product.category) {
+    alert("Please fill Name, Price and Category");
+    return;
+  }
 
   const formData = new FormData();
   
