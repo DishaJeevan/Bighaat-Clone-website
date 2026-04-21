@@ -73,7 +73,7 @@ function Tapas() {
               <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
   <div className="product-card" key={product.id}>
     <Link to={`/product/${product.id}`}>
-      <i className="fa-regular fa-heart"></i>
+      
     </Link>
 
     <div className="discount-tapas">{product.discount}</div>
@@ -81,6 +81,9 @@ function Tapas() {
     <div className="image-offer">
       <img src={product.image} alt={product.name} />
     </div>
+    <div className="rating-star-menu">
+                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
+                  </div>
 
     <div className="content-card">
       <h4>{product.name}</h4>
@@ -116,7 +119,7 @@ function Tapas() {
 <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
   <div className="product-card" key={product.id}>
     <Link to={`/product/${product.id}`}>
-      <i className="fa-regular fa-heart"></i>
+      
     </Link>
 
     <div className="discount-tapas">{product.discount}</div>
@@ -124,6 +127,9 @@ function Tapas() {
     <div className="image-offer">
       <img src={product.image} alt={product.name} />
     </div>
+    <div className="rating-star-menu">
+                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
+                  </div>
 
     <div className="content-card">
       <h4>{product.name}</h4>
@@ -159,7 +165,7 @@ function Tapas() {
               <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
   <div className="product-card" key={product.id}>
     <Link to={`/product/${product.id}`}>
-      <i className="fa-regular fa-heart"></i>
+    
     </Link>
 
     <div className="discount-tapas">{product.discount}</div>
@@ -167,6 +173,9 @@ function Tapas() {
     <div className="image-offer">
       <img src={product.image} alt={product.name} />
     </div>
+    <div className="rating-star-menu">
+                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
+                  </div>
 
     <div className="content-card">
       <h4>{product.name}</h4>
