@@ -40,7 +40,7 @@ function SmartFarming() {
     <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
   <div className="product-card" key={`${product.id}-${index}`}>
       <Link to={`/product/${product.id}`}>
-        <i className="fa-regular fa-heart"></i>
+       
       </Link>
 
       {product.discount && <div className="discount">{product.discount}% OFF</div>}
@@ -50,7 +50,7 @@ function SmartFarming() {
       </div>
 
       <div className="rating-star-menu">
-                    {product.star}
+                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
                   </div>
 
       <div className="content-card">
