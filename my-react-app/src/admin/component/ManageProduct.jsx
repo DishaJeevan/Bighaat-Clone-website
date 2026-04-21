@@ -85,7 +85,6 @@ useEffect(() => {
               <th>Category</th>
               <th>SubCategory</th>
               <th>Section</th>
-          
               <th>New Price</th>
               <th>Old Price</th>
               <th>Discount</th>
@@ -111,9 +110,6 @@ useEffect(() => {
                 <td>₹{p.oldPrice}</td>
                 <td>{p.discount}%</td>
                 <td>₹{p.saveAmount}</td>
-                 
-                <td>{p.size}</td>
-             
              <td>
               {p.updatedAt
                 ? new Date(p.updatedAt).toLocaleString("en-IN", {
