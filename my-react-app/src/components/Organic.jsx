@@ -39,16 +39,14 @@ useEffect(() => {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              <a href="#">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
+             
 
               <div className="image-offer-menu">
                 <img src={product.image} />
               </div>
 
             <div className="rating-star-menu">
-                {product.star}
+                  ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
               </div>
               <div className="content-card-menu">
                 <h4>{product.name}</h4>
@@ -75,15 +73,7 @@ useEffect(() => {
   </div>
   </div>
 
-  <div class="description">
-    <h3>Crop Protection</h3>
-    <p>
-      Products are used to kill and control all harmful organisms during the cultivation 
-      and to improve the yield and the quality of their crop growth. It contains one or more 
-      active substances and other co-formulated can be either biological or chemical products. 
-      Bio and Organic Plant protection products are available with various top brands.
-    </p>
-    </div>
+ 
       </div>
     </div>
     </div>
