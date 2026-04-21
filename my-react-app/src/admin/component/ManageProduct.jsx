@@ -90,7 +90,6 @@ useEffect(() => {
               <th>Old Price</th>
               <th>Discount</th>
               <th>Save Amount</th>
-              <th>Size</th>
               <th>Date Added</th>
               <th>Action</th>
             </tr>
@@ -108,7 +107,6 @@ useEffect(() => {
                 <td>{p.category}</td>
                 <td>{p.subCategory}</td>
                 <td>{p.section}</td>
-                <td>{p.star}</td>
                 <td>₹{p.newPrice}</td>
                 <td>₹{p.oldPrice}</td>
                 <td>{p.discount}%</td>
