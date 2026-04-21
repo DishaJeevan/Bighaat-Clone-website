@@ -14,6 +14,7 @@ const ProductSchema = new mongoose.Schema({
  saveAmount:String,
  size:String,
  image:String,
-createdAt: { type: Date, default: Date.now }
+createdAt: { type: Date, default: Date.now },
+ updatedAt: { type: Date }
 });
 module.exports = mongoose.model("products", ProductSchema);
