@@ -18,21 +18,31 @@ function AdminDashboard() {
   const [totalProducts, setTotalProducts] = useState(0);
 const [totalOrders, setTotalOrders] = useState(0);
 const [totalUsers, setTotalUsers] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
 useEffect(() => {
   const fetchDashboardData = async () => {
     try {
-   
       const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
       const productsRes = await axios.get("https://bighaat-clone.onrender.com/products");
       const usersRes = await axios.get("https://bighaat-clone.onrender.com/users");
 
       const orders = ordersRes.data;
 
-    
+     
       setTotalOrders(orders.length);
       setTotalProducts(productsRes.data.length);
       setTotalUsers(usersRes.data.length);
+
+    
+      const revenue = orders
+        .filter(order => 
+    order.paymentStatus === "Paid" ||
+    (order.paymentMethod === "COD" && order.status === "Delivered")
+  )
+        .reduce((sum, order) => sum + order.totalPrice, 0);
+
+      setTotalRevenue(revenue);
 
       
       const latest = [...orders]
@@ -138,7 +148,7 @@ useEffect(() => {
         <i className="fa-solid fa-dollar-sign"></i>
       </div>
       <div className="stat-details">
-        <span className="stat-count">$1299.75</span>
+        <span className="stat-count">₹{totalRevenue}</span>
         <span className="stat-label">Total Revenue</span>
       </div>
     </div>
