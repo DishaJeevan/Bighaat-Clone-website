@@ -36,16 +36,14 @@ function Tapascropprotection () {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              <a href="#">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
+              
 
               <div className="image-offer-menu">
                 <img src={product.image} alt={product.name} />
               </div>
 
             <div className="rating-star-menu">
-                {product.star}
+                ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
               </div>
               <div className="content-card-menu">
                 <h4>{product.name}</h4>
