@@ -85,7 +85,7 @@ useEffect(() => {
               <th>Category</th>
               <th>SubCategory</th>
               <th>Section</th>
-              <th>Rating</th>
+          
               <th>New Price</th>
               <th>Old Price</th>
               <th>Discount</th>
