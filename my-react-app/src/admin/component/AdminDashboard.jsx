@@ -11,6 +11,23 @@ import EditOrder from "./EditOrder";
 function AdminDashboard() {
 
   const location = useLocation();
+  const [recentOrders, setRecentOrders] = useState([]);
+
+useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      const res = await axios.get("https://bighaat-clone.onrender.com/orders");
+     
+      const latest = res.data
+        .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
+        .slice(0, 5);
+      setRecentOrders(latest);
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    }
+  };
+  fetchDashboardData();
+}, []);
   const handleLogout=(e)=>{
     e.preventDefault();
     axios.get("https://bighaat-clone.onrender.com/logout")
@@ -155,10 +172,23 @@ function AdminDashboard() {
             </tr>
           </thead>
           <tbody>
-            <tr><td>#EB83F5</td><td>4/18/2026</td><td>$89.99</td><td><span className="status-tag">Placed</span></td></tr>
-            <tr><td>#A11A40</td><td>4/18/2026</td><td>$59.99</td><td><span className="status-tag">Placed</span></td></tr>
-            <tr><td>#BE7778</td><td>4/17/2026</td><td>$8.99</td><td><span className="status-tag">Placed</span></td></tr>
-          </tbody>
+  {recentOrders.map((order) => (
+    <tr key={order._id}>
+  
+      <td style={{ cursor: 'pointer', color: '#009640' }} 
+          onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })}>
+        #{order._id.slice(-6).toUpperCase()}
+      </td>
+      <td>{new Date(order.datetime).toLocaleDateString()}</td>
+      <td>₹{order.totalPrice}</td>
+      <td>
+        <span className={`status-tag ${order.status.toLowerCase()}`}>
+          {order.status}
+        </span>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
     </div>
