@@ -113,7 +113,7 @@ function EditProduct() {
             <option value="growthPromoter">Growth Promoters</option>
         </select>
 
-        <input type="text" name="star" value={formData.star} onChange={handleChange}/>
+       
         <input type="number" name="newPrice" value={formData.newPrice} onChange={handleChange}/>
         <input type="number" name="oldPrice" value={formData.oldPrice} onChange={handleChange}/>
         <input type="text" name="discount" placeholder="Discount" value={formData.discount ||""}/>
