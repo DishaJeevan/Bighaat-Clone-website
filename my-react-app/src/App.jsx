@@ -22,7 +22,7 @@ import Animalhusbandrymenue from "./components/Animalhusbandrymenue";
 import Organic from "./components/Organic";
 import Tapas from "./components/Tapas";
 import Services from "./components/Services";
-import Vedica from "./components/Vedica"; 
+import About from "./components/About"; 
 import Blogs from "./components/Blogs";
 import TrackOrder from "./components/TrackOrder";
 import OfferPage from "./components/OfferPage";
@@ -78,7 +78,7 @@ function App() {
         <Route path="/organic" element={<Organic />} /> 
         <Route path="/tapas" element={<Tapas />} /> 
         <Route path="/services" element={<Services />} /> 
-        <Route path="/vedica" element={<Vedica />} /> 
+        <Route path="/about" element={<About />} /> 
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/track-order" element={<TrackOrder />} />
         <Route path="/wishlist" element={<Wishlist />} />
