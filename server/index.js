@@ -287,6 +287,7 @@ app.put("/update-product/:id",parser.single("image"),async(req,res)=>{
       oldPrice:req.body.oldPrice,
       discount:req.body.discount,
       saveAmount:req.body.saveAmount,
+      updatedAt: new Date(),
     };
 
     if(req.file){
