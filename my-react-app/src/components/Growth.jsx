@@ -55,7 +55,7 @@ function Growth() {
               />
             </div>
 
-            <div className="rating-star-menu">{product.star}</div>
+            <div className="rating-star-menu">  ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}</div>
 
             <div className="content-card">
               <h4>{product.name}</h4>
