@@ -17,7 +17,7 @@ function  AddProduct (){
     oldPrice: "",
     discount: "",
     saveAmount: "",
-    size: "",
+  
     image: null,
   });
 
@@ -147,7 +147,7 @@ return(
           <input  type="number" name="oldPrice" placeholder="Old Price" onChange={handleChange}/>
           <input type="text" name="discount" placeholder="Discount" value={product.discount}/>
           <input type="number" name="saveAmount" placeholder="Save Amount" value={product.saveAmount}/>     
-          <input type="text" name="size" placeholder="Enter sizes" onChange={handleChange}/>
+          
           <input  type="file" name="image"  onChange={handleChange}/>
           <button type="submit">Add Product</button>
       </form>
