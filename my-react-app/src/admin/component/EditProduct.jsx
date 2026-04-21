@@ -118,7 +118,6 @@ function EditProduct() {
         <input type="number" name="oldPrice" value={formData.oldPrice} onChange={handleChange}/>
         <input type="text" name="discount" placeholder="Discount" value={formData.discount ||""}/>
         <input type="number" name="saveAmount" placeholder="Save Amount" value={formData.saveAmount|""}/>
-        <input type="text" name="size" value={formData.size || ""} placeholder="Enter sizes" onChange={handleChange} />
         <input type="file" name="image" onChange={handleChange}/>
 
         <button type="submit">Update Product</button>
