@@ -7,10 +7,13 @@ import EditUser from "./EditUser";
 import axios from "axios";
 import ManageOrder from "./ManageOrder";
 import EditOrder from "./EditOrder";
+import { useEffect, useState } from "react"; 
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
 
   const location = useLocation();
+  const navigate = useNavigate();
   const [recentOrders, setRecentOrders] = useState([]);
 
 useEffect(() => {
