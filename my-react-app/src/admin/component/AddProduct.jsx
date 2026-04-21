@@ -1,7 +1,9 @@
 import {useState} from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function  AddProduct (){
+ const navigate = useNavigate();
  
   const [product, setProduct] = useState({
     id: "",
@@ -70,6 +72,7 @@ function  AddProduct (){
     );
     alert("Product Added Successfully");
     console.log(res.data);
+    navigate("/admin/manage-product");
   } catch (err) {
     console.error("Upload error:", err);
     alert("Failed to add product");
