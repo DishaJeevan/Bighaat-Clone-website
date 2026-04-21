@@ -15,20 +15,37 @@ function AdminDashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const [recentOrders, setRecentOrders] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+const [totalOrders, setTotalOrders] = useState(0);
+const [totalUsers, setTotalUsers] = useState(0);
 
 useEffect(() => {
   const fetchDashboardData = async () => {
     try {
-      const res = await axios.get("https://bighaat-clone.onrender.com/orders");
-     
-      const latest = res.data
+   
+      const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
+      const productsRes = await axios.get("https://bighaat-clone.onrender.com/products");
+      const usersRes = await axios.get("https://bighaat-clone.onrender.com/users");
+
+      const orders = ordersRes.data;
+
+    
+      setTotalOrders(orders.length);
+      setTotalProducts(productsRes.data.length);
+      setTotalUsers(usersRes.data.length);
+
+      
+      const latest = [...orders]
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
         .slice(0, 5);
+
       setRecentOrders(latest);
+
     } catch (err) {
       console.error("Dashboard fetch error:", err);
     }
   };
+
   fetchDashboardData();
 }, []);
   const handleLogout=(e)=>{
@@ -90,7 +107,7 @@ useEffect(() => {
         <i className="fa-solid fa-box-open"></i>
       </div>
       <div className="stat-details">
-        <span className="stat-count">10</span>
+      <span className="stat-count">{totalProducts}</span>
         <span className="stat-label">Total Products</span>
       </div>
     </div>
@@ -100,7 +117,8 @@ useEffect(() => {
         <i className="fa-solid fa-cart-shopping"></i>
       </div>
       <div className="stat-details">
-        <span className="stat-count">21</span>
+       <span className="stat-count">{totalOrders}</span>
+
         <span className="stat-label">Total Orders</span>
       </div>
     </div>
@@ -110,7 +128,7 @@ useEffect(() => {
         <i className="fa-solid fa-users"></i>
       </div>
       <div className="stat-details">
-        <span className="stat-count">5</span>
+      <span className="stat-count">{totalUsers}</span>
         <span className="stat-label">Registered Users</span>
       </div>
     </div>
