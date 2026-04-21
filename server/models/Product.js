@@ -12,7 +12,6 @@ const ProductSchema = new mongoose.Schema({
  oldPrice:String,
  discount:String,
  saveAmount:String,
- size:String,
  image:String,
 createdAt: { type: Date, default: Date.now },
  updatedAt: { type: Date }
