@@ -38,16 +38,14 @@ function NutrientDeficiencies() {
                     {product.discount}% OFF
                   </div>
 
-                  <span className="wishlist-icon">
-                    <i className="fa-regular fa-heart"></i>
-                  </span>
+               
 
                   <div className="image-offer-menu">
                     <img src={product.image} alt={product.name}/>
                   </div>
 
                   <div className="rating-star-menu">
-                    {product.star}
+                      ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
                   </div>
 
                   <div className="content-card-menu">
