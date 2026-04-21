@@ -52,7 +52,7 @@ useEffect(() => {
               </div>
 
             <div className="rating-star-menu">
-                {product.star}
+                  ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
               </div>
               <div className="content-card-menu">
                 <h4>{product.name}</h4>
