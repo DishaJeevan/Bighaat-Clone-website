@@ -12,7 +12,7 @@ function  AddProduct (){
     category: "",
     subCategory: "",
     section: "",
-    star: "",
+   
     newPrice: "",
     oldPrice: "",
     discount: "",
@@ -142,7 +142,7 @@ return(
             <option value="smartFarming">Smart Farming</option>
           </select>
 
-          <input  type="text" name="star" placeholder="Rating" onChange={handleChange}/>
+    
           <input  type="number" name="newPrice" placeholder="New Price" onChange={handleChange}/>
           <input  type="number" name="oldPrice" placeholder="Old Price" onChange={handleChange}/>
           <input type="text" name="discount" placeholder="Discount" value={product.discount}/>
