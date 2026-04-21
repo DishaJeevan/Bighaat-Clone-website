@@ -32,11 +32,9 @@ function Navbar() {
           <Link to="/services">SERVICES</Link>
         </li>
         <li>
-          <Link to="/vedica">ABOUT US</Link>
+          <Link to="/about">ABOUT US</Link>
         </li>
-        <li>
-          <Link to="/blogs">BLOGS</Link>
-        </li>
+       
       </ul>
     </nav>
   );
