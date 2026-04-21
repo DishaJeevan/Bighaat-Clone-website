@@ -29,9 +29,9 @@ function MyAddress({ existingAddress }) {
     axios
       .get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
       .then(res => {
-        if (res.data) {
-          setForm(res.data);
-        }
+        if (res.data && Object.keys(res.data).length > 0) {
+  setForm(res.data);
+}
       });
   }
 }, []);
@@ -40,6 +40,19 @@ function MyAddress({ existingAddress }) {
   };
 
   const saveAddress = async () => {
+     const isAnyFieldEmpty = Object.entries(form).some(
+    ([key, value]) => !value || String(value).trim() === ""
+  );
+
+  if (isAnyFieldEmpty) {
+    alert("Please fill all the details");
+    return;
+  }
+
+  if (!user_id) {
+    alert("User not logged in");
+    return;
+  }
     try {
       await axios.post(
         "https://bighaat-clone.onrender.com/save-address",
