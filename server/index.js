@@ -216,7 +216,6 @@ app.post("/add-product",parser.single("image"),async(req,res)=>{
       category:req.body.category,
       subCategory:req.body.subCategory,
       section:req.body.section,
-      star:req.body.star,
       newPrice:req.body.newPrice,
       oldPrice:req.body.oldPrice,
       discount:req.body.discount,
