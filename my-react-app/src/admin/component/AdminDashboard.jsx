@@ -206,18 +206,19 @@ useEffect(() => {
   {recentOrders.map((order) => (
     <tr key={order._id}>
   
-      <td style={{ cursor: 'pointer', color: '#009640' }} 
-          onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })}>
-        #{order._id.slice(-6).toUpperCase()}
-      </td>
-      <td>{new Date(order.datetime).toLocaleDateString()}</td>
+      <td onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })} style={{ cursor: "pointer", color: "#009640" }}>
+  {order._id.slice(-6).toUpperCase()}
+</td>
+            <td>{new Date(order.datetime).toLocaleDateString()}</td>
+
       <td>₹{order.totalPrice}</td>
+
       <td>
-        <span className={`status-tag ${order.status.toLowerCase()}`}>
+        <span className={`status-tag ${order.status?.toLowerCase()}`}>
           {order.status}
         </span>
       </td>
-    </tr>
+          </tr>
   ))}
 </tbody>
         </table>
