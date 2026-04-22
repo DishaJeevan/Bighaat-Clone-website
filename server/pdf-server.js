@@ -2,21 +2,14 @@ const PDFDocument = require("pdfkit");
 const path = require("path");
 
 function roundTwo(n) {
-  return Math.round((n + Number.EPSILON) * 100) / 100;
+  return Math.round(n * 100) / 100;
 }
 
 function generateInvoiceNumber(orderId) {
   return "INV-" + Date.now() + "-" + orderId.toString().slice(-4);
 }
 
-function generateGSTIN() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let gst = "";
-  for (let i = 0; i < 15; i++) {
-    gst += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return gst;
-}
+const SELLER_GSTIN = "29ABCDE1234F1Z5";
 
 function buildPDF(order, dataCallback, endCallback) {
   const doc = new PDFDocument({ margin: 50, size: "A4" });
@@ -26,7 +19,8 @@ function buildPDF(order, dataCallback, endCallback) {
 
   const GST_RATE = 18;
   const invoiceNo = generateInvoiceNumber(order._id);
-  const gstin = generateGSTIN();
+  const gstin = SELLER_GSTIN;
+
   const paymentMethod = order.paymentMethod;
   const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
@@ -43,7 +37,7 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, 135).lineTo(545, 135).stroke("#cccccc");
 
-  doc.fillColor("black").fontSize(16).font("Helvetica-Bold")
+  doc.fontSize(16).font("Helvetica-Bold")
      .text("OFFICIAL RECEIPT", 50, 155);
 
   let gridY = 190;
@@ -55,8 +49,11 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.font("Helvetica").text(order._id, 130, gridY + 18);
 
   doc.font("Helvetica-Bold").text("Date:", 50, gridY + 36);
-  doc.font("Helvetica")
-     .text(new Date(order.datetime).toLocaleDateString("en-IN"), 130, gridY + 36);
+  doc.font("Helvetica").text(
+    new Date(order.datetime).toLocaleDateString("en-IN"),
+    130,
+    gridY + 36
+  );
 
   doc.font("Helvetica-Bold").text("Payment:", 50, gridY + 54);
   doc.font("Helvetica").text(paymentMethod, 130, gridY + 54);
@@ -99,7 +96,11 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, currentY);
   currentY += 15;
 
-  doc.text(`${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`, 50, currentY);
+  doc.text(
+    `${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`,
+    50,
+    currentY
+  );
 
   let tableY = currentY + 30;
 
@@ -123,14 +124,14 @@ function buildPDF(order, dataCallback, endCallback) {
   order.items.forEach((item) => {
     const price = Number(item.snapPrice);
     const qty = Number(item.quantity);
-    const lineTotal = roundTwo(price * qty);
 
-    // ✅ Inline GST Calculation
+    const lineTotal = price * qty;
+
     const r = GST_RATE / 100;
-    const base = roundTwo(lineTotal / (1 + r));
-    const gst = roundTwo(lineTotal - base);
-    const cgst = roundTwo(gst / 2);
-    const sgst = roundTwo(gst - cgst);
+    const base = lineTotal / (1 + r);
+    const gst = lineTotal - base;
+    const cgst = gst / 2;
+    const sgst = gst - cgst;
 
     totalSubtotal += base;
     totalGST_Acc += gst;
@@ -139,11 +140,11 @@ function buildPDF(order, dataCallback, endCallback) {
 
     doc.text(item.snapName, 60, itemY, { width: 120 });
     doc.text(qty.toString(), 185, itemY, { width: 30, align: "center" });
-    doc.text(`${price.toFixed(2)}`, 220, itemY, { width: 60, align: "right" });
-    doc.text(`${base.toFixed(2)}`, 285, itemY, { width: 60, align: "right" });
-    doc.text(`${cgst.toFixed(2)}`, 345, itemY, { width: 55, align: "right" });
-    doc.text(`${sgst.toFixed(2)}`, 405, itemY, { width: 55, align: "right" });
-    doc.text(`${lineTotal.toFixed(2)}`, 475, itemY, { width: 65, align: "right" });
+    doc.text(price.toFixed(2), 220, itemY, { width: 60, align: "right" });
+    doc.text(base.toFixed(2), 285, itemY, { width: 60, align: "right" });
+    doc.text(cgst.toFixed(2), 345, itemY, { width: 55, align: "right" });
+    doc.text(sgst.toFixed(2), 405, itemY, { width: 55, align: "right" });
+    doc.text(lineTotal.toFixed(2), 475, itemY, { width: 65, align: "right" });
 
     itemY += Math.max(nameHeight, 20) + 10;
 
@@ -162,10 +163,10 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.font("Helvetica").fontSize(10);
 
   doc.text("Taxable Subtotal:", 350, totalsY, { width: 100, align: "right" });
-  doc.text(`${totalSubtotal.toFixed(2)}`, 470, totalsY, { width: 70, align: "right" });
+  doc.text(totalSubtotal.toFixed(2), 470, totalsY, { width: 70, align: "right" });
 
   doc.text("Total Tax (GST 18%):", 350, totalsY + 18, { width: 100, align: "right" });
-  doc.text(`${totalGST_Acc.toFixed(2)}`, 470, totalsY + 18, { width: 70, align: "right" });
+  doc.text(totalGST_Acc.toFixed(2), 470, totalsY + 18, { width: 70, align: "right" });
 
   doc.text("Shipping:", 350, totalsY + 36, { width: 100, align: "right" });
   doc.text("FREE", 470, totalsY + 36, { width: 70, align: "right" });
@@ -175,10 +176,15 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.fillColor("black").font("Helvetica-Bold").fontSize(12);
   doc.text("Grand Total:", 330, grandTotalBoxY + 12);
-  doc.text(`${finalGrandTotal.toFixed(2)}`, 445, grandTotalBoxY + 12, { width: 95, align: "right" });
+  doc.text(finalGrandTotal.toFixed(2), 445, grandTotalBoxY + 12, {
+    width: 95,
+    align: "right",
+  });
 
   doc.fontSize(10).font("Helvetica").fillColor("#333333");
-  doc.text("Thank you for shopping with BigHaat!", 50, 730, { align: "center" });
+  doc.text("Thank you for shopping with BigHaat!", 50, 730, {
+    align: "center",
+  });
 
   doc.end();
 }
