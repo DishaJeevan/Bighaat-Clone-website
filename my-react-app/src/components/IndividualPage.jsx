@@ -56,7 +56,7 @@ useEffect(() => {
         <h1>{product.name}</h1>
         <p className="details-brand"><strong>Brand:</strong> {product.brand}</p>
 
-        <p className="details-rating-row"><span className="stars"><i className="fa-solid fa-star"></i></span>{product.star}</p>
+        <p className="details-rating-row"><span className="stars"></span> ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}</p>
 
         <div className="details-price-row">
           <span className="details-new-price">₹{product.newPrice}</span>
@@ -66,14 +66,7 @@ useEffect(() => {
 
         <p className="save-text">Save ₹{product.oldPrice - product.newPrice}</p>
 
-        <div className="size-section">
-          <label>Select Size:</label>
-          <select>
-            {product.size?.split(",").map((s, i) => (
-              <option key={i}>{s}</option>
-            ))}
-          </select>
-        </div>
+       
 
         <div className="button-row">
 
