@@ -14,7 +14,7 @@ function EditOrder() {
  
   const userId = id || location.pathname.split("/").pop();
 
- const { state } = useLocation(); // Get the state we passed
+ const { state } = useLocation(); 
 const targetOrderId = state?.orderId; 
 
 useEffect(() => {
@@ -24,18 +24,18 @@ useEffect(() => {
       
       if (res.data.length > 0) {
         if (targetOrderId) {
-          // FIND the specific order that matches the one we clicked
+        
           const specificOrder = res.data.find(order => order._id === targetOrderId);
           
           if (specificOrder) {
             setOrders([specificOrder]); 
             setStatus(specificOrder.status);
           } else {
-            // Fallback: if not found, show the latest (your original logic)
+      
             setOrders([res.data[res.data.length - 1]]);
           }
         } else {
-          // If no state was passed, show the latest
+        
           setOrders([res.data[res.data.length - 1]]);
         }
       }
@@ -125,20 +125,20 @@ useEffect(() => {
         </tbody>
       </table>
 
-      <div className="update-section" style={{ marginTop: "30px", padding: "20px", background: "#f9f9f9" }}>
+      <div className="update-section" >
         <form onSubmit={updateOrder}>
-          <label style={{ fontWeight: "bold", marginRight: "10px" }}>Change Order Status:</label>
+          <label>Change Order Status:</label>
           <select 
             value={status} 
             onChange={(e) => setStatus(e.target.value)}
-            style={{ padding: "5px", borderRadius: "4px" }}
+            
           >
             <option value="Pending">Pending</option>
             <option value="Processed">Processed</option>
             <option value="Shipped">Shipped</option>
             <option value="Delivered">Delivered</option>
           </select>
-          <button type="submit" style={{ marginLeft: "15px", padding: "6px 20px", cursor: "pointer" }}>
+          <button type="submit">
             Update All Orders
           </button>
         </form>
