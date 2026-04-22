@@ -189,4 +189,4 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.end();
 }
 
-module.exports = { buildPDF };  now explain each line
+module.exports = { buildPDF };  
