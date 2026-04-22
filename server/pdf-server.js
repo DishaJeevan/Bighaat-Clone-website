@@ -1,5 +1,3 @@
-
-
 const PDFDocument = require("pdfkit");
 const path = require("path");
 
@@ -191,4 +189,4 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.end();
 }
 
-module.exports = { buildPDF };
+module.exports = { buildPDF };  now explain each line
