@@ -1,10 +1,6 @@
 const PDFDocument = require("pdfkit");
 const path = require("path");
 
-function roundTwo(n) {
-  return Math.round(n * 100) / 100;
-}
-
 function generateInvoiceNumber(orderId) {
   return "INV-" + Date.now() + "-" + orderId.toString().slice(-4);
 }
@@ -21,12 +17,13 @@ function buildPDF(order, dataCallback, endCallback) {
   const invoiceNo = generateInvoiceNumber(order._id);
   const gstin = SELLER_GSTIN;
 
-  const paymentMethod = order.paymentMethod;
+  const paymentMethod = order.paymentMethod || "N/A";
   const paymentStatus = paymentMethod === "COD" ? "Pending" : "Paid";
 
   const logoPath = path.join(__dirname, "images", "bighaat-logo.png");
   doc.image(logoPath, 50, 45, { width: 150 });
 
+  // Header
   doc.fontSize(10).font("Helvetica-Bold").text("Corporate Office:", 350, 45);
   doc.font("Helvetica").fontSize(9);
   doc.text("BigHaat Agro Pvt Ltd", 350, 58);
@@ -37,8 +34,7 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, 135).lineTo(545, 135).stroke("#cccccc");
 
-  doc.fontSize(16).font("Helvetica-Bold")
-     .text("OFFICIAL RECEIPT", 50, 155);
+  doc.fontSize(16).font("Helvetica-Bold").text("OFFICIAL RECEIPT", 50, 155);
 
   let gridY = 190;
 
@@ -82,6 +78,7 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.font("Helvetica-Bold").text("Phone:", col2X, gridY + 90);
   doc.font("Helvetica").text("+91 9876543210", col2ValueX, gridY + 90);
 
+  // Billing
   let billedY = gridY + 120;
 
   doc.font("Helvetica-Bold").fontSize(11).text("Billed To:", 50, billedY);
@@ -102,6 +99,7 @@ function buildPDF(order, dataCallback, endCallback) {
     currentY
   );
 
+  // Table
   let tableY = currentY + 30;
 
   doc.rect(50, tableY, 495, 25).fill("#f2f2f2");
@@ -116,35 +114,36 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.text("Total", 475, tableY + 8, { width: 65, align: "right" });
 
   let itemY = tableY + 32;
-  let totalSubtotal = 0;
-  let totalGST_Acc = 0;
+  let subtotal = 0;
+  let totalGST = 0;
 
   doc.font("Helvetica").fontSize(9);
 
-  order.items.forEach((item) => {
-    const price = Number(item.snapPrice);
-    const qty = Number(item.quantity);
+  (order.items || []).forEach((item) => {
+    const price = Number(item.snapPrice || 0);
+    const qty = Number(item.quantity || 0);
 
-    const lineTotal = price * qty;
+    const total = price * qty;
 
     const r = GST_RATE / 100;
-    const base = lineTotal / (1 + r);
-    const gst = lineTotal - base;
+    const base = total / (1 + r);
+    const gst = total - base;
+
     const cgst = gst / 2;
-    const sgst = gst - cgst;
+    const sgst = gst / 2;
 
-    totalSubtotal += base;
-    totalGST_Acc += gst;
+    subtotal += base;
+    totalGST += gst;
 
-    const nameHeight = doc.heightOfString(item.snapName, { width: 120 });
+    const nameHeight = doc.heightOfString(item.snapName || "", { width: 120 });
 
-    doc.text(item.snapName, 60, itemY, { width: 120 });
+    doc.text(item.snapName || "", 60, itemY, { width: 120 });
     doc.text(qty.toString(), 185, itemY, { width: 30, align: "center" });
     doc.text(price.toFixed(2), 220, itemY, { width: 60, align: "right" });
     doc.text(base.toFixed(2), 285, itemY, { width: 60, align: "right" });
     doc.text(cgst.toFixed(2), 345, itemY, { width: 55, align: "right" });
     doc.text(sgst.toFixed(2), 405, itemY, { width: 55, align: "right" });
-    doc.text(lineTotal.toFixed(2), 475, itemY, { width: 65, align: "right" });
+    doc.text(total.toFixed(2), 475, itemY, { width: 65, align: "right" });
 
     itemY += Math.max(nameHeight, 20) + 10;
 
@@ -156,32 +155,31 @@ function buildPDF(order, dataCallback, endCallback) {
 
   doc.moveTo(50, itemY).lineTo(545, itemY).stroke("#cccccc");
 
-  let totalsY = itemY + 20;
-
-  const finalGrandTotal = totalSubtotal + totalGST_Acc;
+  const totalsY = itemY + 20;
+  const finalGrandTotal = subtotal + totalGST;
 
   doc.font("Helvetica").fontSize(10);
 
   doc.text("Taxable Subtotal:", 350, totalsY, { width: 100, align: "right" });
-  doc.text(totalSubtotal.toFixed(2), 470, totalsY, { width: 70, align: "right" });
+  doc.text(subtotal.toFixed(2), 470, totalsY, { width: 70, align: "right" });
 
   doc.text("Total Tax (GST 18%):", 350, totalsY + 18, { width: 100, align: "right" });
-  doc.text(totalGST_Acc.toFixed(2), 470, totalsY + 18, { width: 70, align: "right" });
+  doc.text(totalGST.toFixed(2), 470, totalsY + 18, { width: 70, align: "right" });
 
   doc.text("Shipping:", 350, totalsY + 36, { width: 100, align: "right" });
   doc.text("FREE", 470, totalsY + 36, { width: 70, align: "right" });
 
-  const grandTotalBoxY = totalsY + 60;
-  doc.rect(320, grandTotalBoxY, 225, 35).fill("#f2f2f2");
+  const boxY = totalsY + 60;
+  doc.rect(320, boxY, 225, 35).fill("#f2f2f2");
 
   doc.fillColor("black").font("Helvetica-Bold").fontSize(12);
-  doc.text("Grand Total:", 330, grandTotalBoxY + 12);
-  doc.text(finalGrandTotal.toFixed(2), 445, grandTotalBoxY + 12, {
+  doc.text("Grand Total:", 330, boxY + 12);
+  doc.text(finalGrandTotal.toFixed(2), 445, boxY + 12, {
     width: 95,
     align: "right",
   });
 
-  doc.fontSize(10).font("Helvetica").fillColor("#333333");
+  doc.fontSize(10).font("Helvetica").fillColor("#333");
   doc.text("Thank you for shopping with BigHaat!", 50, 730, {
     align: "center",
   });
