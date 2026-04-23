@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function ManageProduct() {
   const [products, setProducts] = useState([]);
-   const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState("");
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -39,7 +39,6 @@ function ManageProduct() {
     const filtered = res.data.filter((p) =>
       p.name?.toLowerCase().includes(searchText.toLowerCase())
     );
-
     setProducts(filtered);
   } catch (err) {
     console.error(err);
@@ -62,18 +61,17 @@ useEffect(() => {
 
   return (
     <div className="manage-product-card">
-      
       <h2 className="manage-card-title" >Manage Products </h2>
       <div className="manage-search-box">
         <input type="text" placeholder="Search Product name" value={keyword} onChange={(e) => setKeyword(e.target.value)} onKeyDown={(e) => {
         if (e.key === "Enter") {
           handleSearch();
         }
-    }}/>  
+        }}/>  
          <button onClick={handleSearch}>
-    <i className="fa-solid fa-magnifying-glass"></i>
-  </button>
-        </div>
+          <i className="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
       <div className="manage-table-container">      
         <table className="table table-bordered product-table">
           <thead>
@@ -110,31 +108,23 @@ useEffect(() => {
                 <td>₹{p.oldPrice}</td>
                 <td>{p.discount}%</td>
                 <td>₹{p.saveAmount}</td>
-             <td>
-              {p.updatedAt
-                ? new Date(p.updatedAt).toLocaleString("en-IN", {
-                    timeZone: "Asia/Kolkata",
-                  })
-                : p.createdAt
-                ? new Date(p.createdAt).toLocaleString("en-IN", {
-                    timeZone: "Asia/Kolkata",
-                  })
-                : "N/A"}
-            </td>
+                 <td>
+                  {p.updatedAt? new Date(p.updatedAt).toLocaleString("en-IN", {timeZone: "Asia/Kolkata", }): p.createdAt ? new Date(p.createdAt).toLocaleString("en-IN", {timeZone: "Asia/Kolkata", }) : "N/A"}
+                 </td>
         
-                <td className="action-btns">
+                  <td className="action-btns">
+  
+                  <button className="edit-btn" onClick={() => navigate(`/admin/edit-product/${p._id}`)}>
+                    <i className="fas fa-edit"></i>
+                  </button>
 
-                <button className="edit-btn" onClick={() => navigate(`/admin/edit-product/${p._id}`)}>
-                  <i className="fas fa-edit"></i>
-                </button>
-
-                <button className="delete-btn" onClick={() => deleteProduct(p._id)}>
-                  <i className="fas fa-trash"></i>
-                </button>
-              </td>
-              </tr>
-            ))}
-          </tbody>
+                  <button className="delete-btn" onClick={() => deleteProduct(p._id)}>
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </td>
+                </tr>
+              ))}
+            </tbody>
         </table>
       </div>
     </div>
