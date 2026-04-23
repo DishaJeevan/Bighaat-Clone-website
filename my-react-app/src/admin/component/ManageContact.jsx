@@ -12,11 +12,11 @@ function ManageContact() {
   }, []);
 
   return (
-    <div className="manage-contact">
-      <h2>Contact Messages</h2>
+      <div className="manage-product-card"> 
+      <h2 className="manage-card-title">Manage Contacts</h2>
 
-      <div className="table-responsive">
-        <table className="dashboard-mini-table">
+      <div className="manage-table-container"> 
+        <table className="table table-bordered product-table"> 
           <thead>
             <tr>
               <th>Name</th>
@@ -27,14 +27,24 @@ function ManageContact() {
           </thead>
 
           <tbody>
-            {contacts.map((c) => (
-              <tr key={c._id}>
-                <td>{c.name}</td>
-                <td>{c.email}</td>
-                <td>{c.message}</td>
-                <td>{new Date(c.createdAt).toLocaleString()}</td>
+            {contacts.length === 0 ? (
+              <tr>
+                <td colSpan="4">No messages found</td>
               </tr>
-            ))}
+            ) : (
+              contacts.map((c) => (
+                <tr key={c._id}>
+                  <td>{c.name}</td>
+                  <td>{c.email}</td>
+                  <td>{c.message}</td>
+                  <td>
+                    {new Date(c.createdAt).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                    })}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
