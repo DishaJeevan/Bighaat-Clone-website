@@ -13,6 +13,7 @@ function AdminRoutes() {
       <Route path="manage-users" element={<AdminDashboard />} />
       <Route path="edit-user/:id" element={<AdminDashboard />} />
       <Route path="manage-orders" element={<AdminDashboard />} />
+      <Route path="manage-contact" element={<AdminDashboard />} />
       <Route path="edit-order/:id" element={<AdminDashboard />} />
       <Route path="user-orders/:id" element={<AdminDashboard />} />
     </Routes>
