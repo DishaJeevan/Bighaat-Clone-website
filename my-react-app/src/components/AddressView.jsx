@@ -7,17 +7,14 @@ import { CartContext } from "../components/CartContext";
 function AddressView() {
 const navigate = useNavigate();
   const [address, setAddress] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-
+  const [loading, setLoading] = useState(true);
   const user_id = localStorage.getItem("user_id");
-const { openCart } = useContext(CartContext);
+  const { openCart } = useContext(CartContext);
+  
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const res = await axios.get(
-          `https://bighaat-clone.onrender.com/get-address/${user_id}`
-        );
+        const res = await axios.get( `https://bighaat-clone.onrender.com/get-address/${user_id}`);
         setAddress(res.data);
       } catch (err) {
         console.log(err);
@@ -29,61 +26,48 @@ const { openCart } = useContext(CartContext);
     fetchAddress();
     }, [user_id]);
 
+        // const handleUpdate = () => fetchAddress();
+        // window.addEventListener("address_updated", handleUpdate);
     
-    // const handleUpdate = () => fetchAddress();
-    // window.addEventListener("address_updated", handleUpdate);
-
-    // return () => window.removeEventListener("address_updated", handleUpdate);
-  // , [user_id]
- if (loading) {
-    return <p>Loading address...</p>;
-  }
-
-  if (!address || !address.name) {
-    return <p>No address found</p>;
-  }
+        // return () => window.removeEventListener("address_updated", handleUpdate);
+      // , [user_id]
   
-
+     if (loading) {
+        return <p>Loading address...</p>;
+      }
+    
+      if (!address || !address.name) {
+        return <p>No address found</p>;
+      }
+      
   return(
 
-<div className="address-card">
-  <h3> Your Details</h3>
-    <p><strong>Name:</strong>{address.name}</p>
-
-    <p><strong>Phone:</strong> {address.phone}</p>
-
-    <p> <strong>Flat:</strong>{address.flat}</p>
-     
-       <p><strong>Street:</strong>{address.street}</p>
+    <div className="address-card">
+      <h3> Your Details</h3>
+        <p><strong>Name:</strong>{address.name}</p>
+        <p><strong>Phone:</strong> {address.phone}</p>
+        <p> <strong>Flat:</strong>{address.flat}</p>     
+        <p><strong>Street:</strong>{address.street}</p>
+        <p><strong>City:</strong> {address.city}</p>
+         <p><strong>District: </strong>{address.district}</p>
+        <p><strong>Address:</strong>{address.state} - {address.pincode} </p>
     
-
-    <p><strong>City:</strong> {address.city}</p>
-     <p><strong>District: </strong>{address.district}</p>
+        {address.landmark && (
+          <p><strong>Landmark:</strong> {address.landmark}</p>
+        )}
     
+        <div className="address-buttons">
+          <button onClick={() => {
+              openCart();           
+              navigate("/checkout-address"); 
+                  }}
+                >
+            Move to Checkout
+          </button>
 
-    <p><strong>Address:</strong>
-      {address.state} - {address.pincode}
-    </p>
-
-    {address.landmark && (
-      <p><strong>Landmark:</strong> {address.landmark}</p>
-    )}
-
-    <div className="address-buttons">
-      <button
-  onClick={() => {
-    openCart();           
-    navigate("/checkout-address"); 
-  }}
->
-  Move to Checkout
-</button>
-
-      <button
-        onClick={() =>
+      <button onClick={() =>
           navigate("/edit-address", { state: { address } })
-        }
-      >
+      }>
         Edit Address
       </button>
     </div>
