@@ -154,7 +154,7 @@ const [totalUsers, setTotalUsers] = useState(0);
         <ManageUsers />
       ): location.pathname === "/admin/manage-orders" ? (
         <ManageOrder />
-      )  : location.pathname === "/admin/manage-contact" ? (
+    ) : location.pathname === "/admin/manage-contact" ? (
   <ManageContact />
 ) : (
        
