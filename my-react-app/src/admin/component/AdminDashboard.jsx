@@ -7,6 +7,7 @@ import EditUser from "./EditUser";
 import axios from "axios";
 import ManageOrder from "./ManageOrder";
 import EditOrder from "./EditOrder";
+import ManageContact from "./ManageContact";
 import { useEffect, useState } from "react"; 
 import {LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,ResponsiveContainer} from "recharts";
 import { PieChart, Pie, Cell, Legend } from "recharts";
@@ -134,6 +135,7 @@ const [totalUsers, setTotalUsers] = useState(0);
           <Link to="/admin/manage-product">Manage Product</Link>
           <Link to="/admin/manage-orders">Manage Order</Link>
           <Link to="/admin/manage-users">Manage Users</Link>
+          <Link to="/admin/manage-contact">ContactForm</Link>
         </div>
 
       {location.pathname.startsWith("/admin/edit-product") ? (
@@ -152,7 +154,9 @@ const [totalUsers, setTotalUsers] = useState(0);
         <ManageUsers />
       ): location.pathname === "/admin/manage-orders" ? (
         <ManageOrder />
-      ) : (
+      ) :location.pathname === "/admin/manage-contact" ? (
+  <ManageContact />
+) (
        
         <div className="dashboard-main-content">
   <div className="dashboard-header">
