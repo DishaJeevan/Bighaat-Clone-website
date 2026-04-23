@@ -655,16 +655,14 @@ app.get("/invoice/:id", async (req, res) => {
   }
 });
 
-app.post("/contact", async (req, res) => {
+app.post("/contacts", async (req, res) => {
   try {
     const { name, email, message } = req.body;
 
-  
     if (!name || !email || !message) {
       return res.status(400).json({ error: "All fields required" });
     }
 
-   
     const contact = new ContactModel({
       name,
       email,
@@ -673,11 +671,20 @@ app.post("/contact", async (req, res) => {
     });
 
     await contact.save();
-
     res.json({ message: "Message saved successfully" });
 
   } catch (err) {
     console.error("Contact error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/contacts", async (req, res) => {
+  try {
+    const contacts = await ContactModel.find();
+    res.json(contacts);
+  } catch (err) {
+    console.error("Fetch contacts error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
