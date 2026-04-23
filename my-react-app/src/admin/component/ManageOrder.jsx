@@ -58,22 +58,18 @@ function ManageOrder() {
                 ? `${o.address.flat}, ${o.address.street}, ${o.address.city}`
                 : "No Address"}
             </td>
-                <td>{o.paymentMethod || "N/A"}</td>
-<td>
-  <span style={{
-    color:
-      o.paymentStatus === "Paid" ? "green" :
-      o.paymentStatus === "Failed" ? "red" : "orange"
-  }}>
-    {o.paymentStatus}
-  </span>
-</td>
+              <td>{o.paymentMethod || "N/A"}</td>
+              <td>
+                <span style={{color:o.paymentStatus === "Paid" ? "green" :o.paymentStatus === "Failed" ? "red" : "orange"}}>
+                  {o.paymentStatus}
+                </span>
+              </td>
                 <td>
                   <button className="edit-btn" onClick={() => {
-  navigate(`/admin/user-orders/${o.user_id}`, { state: { orderId: o._id } });
-}}>
-  <i className="fas fa-edit"></i>
-</button>
+                      navigate(`/admin/user-orders/${o.user_id}`, { state: { orderId: o._id } });
+                    }}>
+                      <i className="fas fa-edit"></i>
+                   </button>
 
                   <button  className="delete-btn" onClick={() => deleteOrder(o._id)}>
                     <i className="fas fa-trash"></i>
