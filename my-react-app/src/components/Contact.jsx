@@ -40,33 +40,36 @@ function Contact() {
     <input
       type="text"
       name="name"
+      placeholder="NAME"
       value={form.name}
       onChange={handleChange}
       required
     />
-    <label>Name</label>
+    
   </div>
 
   <div className="input-group">
     <input
       type="email"
       name="email"
+      placeholder="EMAIL"
       value={form.email}
       onChange={handleChange}
       required
     />
-    <label>Email</label>
+    
   </div>
 
   <div className="input-group">
     <textarea
       name="message"
+      placeholder="MESSAGE"
       value={form.message}
       onChange={handleChange}
       rows="4"
       required
     ></textarea>
-    <label>Message</label>
+    
   </div>
 
   <button type="submit" className="submit-btn">
