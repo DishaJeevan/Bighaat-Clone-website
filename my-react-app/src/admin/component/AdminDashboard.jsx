@@ -8,6 +8,8 @@ import axios from "axios";
 import ManageOrder from "./ManageOrder";
 import EditOrder from "./EditOrder";
 import { useEffect, useState } from "react"; 
+import {LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,ResponsiveContainer} from "recharts";
+import { PieChart, Pie, Cell, Legend } from "recharts";
 
 
 function AdminDashboard() {
@@ -19,8 +21,12 @@ function AdminDashboard() {
 const [totalOrders, setTotalOrders] = useState(0);
 const [totalUsers, setTotalUsers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [revenueData, setRevenueData] = useState([]);
+  const [orderStatusData, setOrderStatusData] = useState([]);
+  const COLORS = ["#28a745", "#ffc107", "#007bff", "#dc3545"];
 
-useEffect(() => {
+
+  useEffect(() => {
   const fetchDashboardData = async () => {
     try {
       const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
@@ -29,27 +35,68 @@ useEffect(() => {
 
       const orders = ordersRes.data;
 
-     
       setTotalOrders(orders.length);
       setTotalProducts(productsRes.data.length);
       setTotalUsers(usersRes.data.length);
 
-    
+   
       const revenue = orders
-        .filter(order => 
-    order.paymentStatus === "Paid" ||
-    (order.paymentMethod === "COD" && order.status === "Delivered")
-  )
+        .filter(order =>
+          order.paymentStatus === "Paid" ||
+          (order.paymentMethod === "COD" && order.status === "Delivered")
+        )
         .reduce((sum, order) => sum + order.totalPrice, 0);
 
       setTotalRevenue(revenue);
 
-      
+    
       const latest = [...orders]
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
         .slice(0, 5);
 
       setRecentOrders(latest);
+
+  
+      const grouped = {};
+
+      orders.forEach(order => {
+        const date = new Date(order.datetime).toLocaleDateString();
+
+        if (
+          order.paymentStatus === "Paid" ||
+          (order.paymentMethod === "COD" && order.status === "Delivered")
+        ) {
+          if (!grouped[date]) grouped[date] = 0;
+          grouped[date] += order.totalPrice;
+        }
+      });
+
+      const formatted = Object.keys(grouped).map(date => ({
+        date,
+        revenue: grouped[date]
+      }));
+
+      setRevenueData(formatted);
+
+ 
+      const statusCount = {};
+
+      orders.forEach(order => {
+        const status = order.status || "Unknown";
+
+        if (!statusCount[status]) {
+          statusCount[status] = 0;
+        }
+
+        statusCount[status]++;
+      });
+
+      const pieData = Object.keys(statusCount).map(status => ({
+        name: status,
+        value: statusCount[status]
+      }));
+
+      setOrderStatusData(pieData);
 
     } catch (err) {
       console.error("Dashboard fetch error:", err);
@@ -58,12 +105,16 @@ useEffect(() => {
 
   fetchDashboardData();
 }, []);
-  const handleLogout=(e)=>{
-    e.preventDefault();
-    axios.get("https://bighaat-clone.onrender.com/logout")
-    .then(res =>console.log(res))
-    .catch(err => console.log(err))
+  
+  const handleLogout = async () => {
+  try {
+    await axios.get("https://bighaat-clone.onrender.com/logout");
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+    navigate("/");
   }
+};
 
   return (
     <div>
@@ -155,37 +206,47 @@ useEffect(() => {
   </div>
 
   <div className="dashboard-lower-section">
-    <div className="graph-card">
-      <div className="card-header">
-        <h4>Revenue Trend </h4>
-      </div>
-      <div className="mock-graph-container">
-        
-        <div className="graph-grid-line"></div>
-        <div className="graph-grid-line"></div>
-        <div className="graph-grid-line"></div>
-        <div className="graph-curve-svg">
-          <svg viewBox="0 0 500 150" preserveAspectRatio="none">
-            <path 
-              d="M0,130 C50,120 100,140 150,135 C200,130 250,20 300,50 C350,80 400,110 450,105 L500,100" 
-              fill="none" 
-              stroke="#009640" 
-              strokeWidth="3"
-            />
-            <path 
-              d="M0,130 C50,120 100,140 150,135 C200,130 250,20 300,50 C350,80 400,110 450,105 L500,100 L500,150 L0,150 Z" 
-              fill="url(#greenGradient)" 
-            />
-            <defs>
-              <linearGradient id="greenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style={{stopColor:'#009640', stopOpacity:0.2}} />
-                <stop offset="100%" style={{stopColor:'#009640', stopOpacity:0}} />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
+  
+  <div className="graph-card">
+    <div className="card-header">
+      <h4>Revenue Trend</h4>
     </div>
+
+    <ResponsiveContainer width="100%" height={250}>
+      <LineChart data={revenueData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="revenue" stroke="#009640" />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+
+  <div className="graph-card">
+    <div className="card-header">
+      <h4>Order Status</h4>
+    </div>
+
+    <ResponsiveContainer width="100%" height={250}>
+      <PieChart>
+        <Pie
+          data={orderStatusData}
+          dataKey="value"
+          nameKey="name"
+          outerRadius={80}
+          label
+        >
+          {orderStatusData.map((entry, index) => (
+            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+
+</div>
 
     <div className="orders-card">
       <div className="orders-card-header">
@@ -224,11 +285,10 @@ useEffect(() => {
         </table>
       </div>
     </div>
-  </div>
-</div>
+           </div>
       )}
     </div>
-    </div>  
+  </div> 
   );
 }
 
