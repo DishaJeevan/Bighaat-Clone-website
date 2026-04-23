@@ -75,7 +75,7 @@ function App() {
         <Route path="/cropprotection" element={<Cropprotectionmenue />} /> 
         <Route path="/cropnutrition" element={<Cropnutritionmenue />} /> 
         <Route path="/equipments" element={<Equipmentsmenue />} /> 
-       <Route path="/animalhusbandry" element={<Animalhusbandrymenue />} />
+        <Route path="/animalhusbandry" element={<Animalhusbandrymenue />} />
         <Route path="/organic" element={<Organic />} /> 
         <Route path="/tapas" element={<Tapas />} /> 
         <Route path="/services" element={<Services />} /> 
@@ -100,12 +100,12 @@ function App() {
         <Route path="/offer-page" element={<OfferPage />} />
         <Route path="/best-selling" element={<BestPage />} />
         <Route path="/search/:keyword" element={<Search />} />
-          <Route path="/orders" element={<Order />} />
-          <Route path="/my-address" element={<AddressView />} />
-<Route path="/checkout-address" element={<CheckoutAddress />} />
-<Route path="/edit-address" element={<MyAddress/>} />
+        <Route path="/orders" element={<Order />} />
+        <Route path="/my-address" element={<AddressView />} />
+        <Route path="/checkout-address" element={<CheckoutAddress />} />
+        <Route path="/edit-address" element={<MyAddress/>} />
         <Route path="/payment" element={<PaymentPage />} />
-         <Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer/>
         {isCartOpen && <Cart />}
