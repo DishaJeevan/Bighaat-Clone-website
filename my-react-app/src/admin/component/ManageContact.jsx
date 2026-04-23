@@ -9,12 +9,11 @@ function ManageContact() {
       .get("https://bighaat-clone.onrender.com/contacts")
       .then((res) => setContacts(res.data))
       .catch((err) => console.log(err));
-  }, []);
+    }, []);
 
   return (
       <div className="manage-product-card"> 
       <h2 className="manage-card-title">Manage Contacts</h2>
-
       <div className="manage-table-container"> 
         <table className="table table-bordered product-table"> 
           <thead>
@@ -25,7 +24,6 @@ function ManageContact() {
               <th>Date</th>
             </tr>
           </thead>
-
           <tbody>
             {contacts.length === 0 ? (
               <tr>
@@ -37,11 +35,7 @@ function ManageContact() {
                   <td>{c.name}</td>
                   <td>{c.email}</td>
                   <td>{c.message}</td>
-                  <td>
-                    {new Date(c.createdAt).toLocaleString("en-IN", {
-                      timeZone: "Asia/Kolkata",
-                    })}
-                  </td>
+                  <td>{new Date(c.createdAt).toLocaleString("en-IN", {timeZone: "Asia/Kolkata",})}</td>
                 </tr>
               ))
             )}
