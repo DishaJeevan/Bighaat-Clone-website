@@ -19,7 +19,7 @@ function Contact() {
     e.preventDefault();
 
     try {
-      await axios.post("https://bighaat-clone.onrender.com/contact", form);
+      await axios.post("https://bighaat-clone.onrender.com/contacts", form);
       setStatus(" Message sent!");
       setForm({ name: "", email: "", message: "" });
     } catch {
