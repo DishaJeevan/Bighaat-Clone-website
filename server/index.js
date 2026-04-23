@@ -10,6 +10,7 @@ const {OrderSchema}=require("./models/Order");
 const Razorpay=require("razorpay");
 // https://github.com/foliojs/pdfkit?tab=readme-ov-file
 const pdfService = require("./pdf-server");
+const ContactSchema = require("./models/Contact");
 
 
 
@@ -85,6 +86,7 @@ adminDB.once("open",()=>console.log("Admin DB Connected"));
 const UserModel=userDB.model("users",UserSchema);
 const ProductModel=adminDB.model("products",ProductSchema);
 const OrderModel=adminDB.model("orders",OrderSchema);
+const ContactModel = adminDB.model("contacts", ContactSchema);
 
 function generateOTP(){
   return otpGenerator.generate(4,{
@@ -650,6 +652,33 @@ app.get("/invoice/:id", async (req, res) => {
     );
   } catch (err) {
     res.status(500).json({ error: "Error generating invoice" });
+  }
+});
+
+app.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+  
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "All fields required" });
+    }
+
+   
+    const contact = new ContactModel({
+      name,
+      email,
+      message,
+      createdAt: new Date()
+    });
+
+    await contact.save();
+
+    res.json({ message: "Message saved successfully" });
+
+  } catch (err) {
+    console.error("Contact error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
