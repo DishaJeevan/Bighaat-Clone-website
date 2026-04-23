@@ -6,21 +6,20 @@ function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-  useEffect(() => {
-      const fetchProduct = async () => {
-        try {
-          const res = await axios.get("https://bighaat-clone.onrender.com/products");
-          const product = res.data.find((p) => p._id === id);
-          if (product) {
-            setFormData(product); 
+    useEffect(() => {
+        const fetchProduct = async () => {
+          try {
+            const res = await axios.get("https://bighaat-clone.onrender.com/products");
+            const product = res.data.find((p) => p._id === id);
+            if (product) {
+              setFormData(product); 
+            }
+          } catch (err) {
+            console.error("Error fetching product:", err);
           }
-        } catch (err) {
-          console.error("Error fetching product:", err);
-        }
-      };
-
-      fetchProduct();
-    }, [id]);
+        };
+        fetchProduct();
+      }, [id]);
 
       function handleChange(e) {
         const name = e.target.name;
@@ -46,14 +45,14 @@ function EditProduct() {
           e.preventDefault();
           const data = new FormData();        
           for (let key in formData) {        
-            if (key === "image") {
-              if (formData.image instanceof File) {
-                data.append("image", formData.image);       
-              }      
-            } else {     
-              data.append(key, formData[key]);        
+                if (key === "image") {
+                  if (formData.image instanceof File) {
+                    data.append("image", formData.image);       
+                  }      
+                } else {     
+                  data.append(key, formData[key]);        
+              }
           }
-      }
         try {     
           await axios.put(`https://bighaat-clone.onrender.com/update-product/${id}`, data,{ headers: { "Content-Type": "multipart/form-data" } } );
           alert("Product Updated Successfully");      
