@@ -51,6 +51,7 @@ import MyAddress from "./components/MyAddress";
 import CheckoutAddress from "./components/CheckoutAddress";
 import AddressView from "./components/AddressView";
 import PaymentPage from "./components/PaymentPage";
+import Contact from "./components/Contact";
 
 
 
@@ -104,6 +105,7 @@ function App() {
 <Route path="/checkout-address" element={<CheckoutAddress />} />
 <Route path="/edit-address" element={<MyAddress/>} />
         <Route path="/payment" element={<PaymentPage />} />
+         <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer/>
         {isCartOpen && <Cart />}
