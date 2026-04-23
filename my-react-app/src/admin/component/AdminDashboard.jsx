@@ -19,8 +19,8 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [recentOrders, setRecentOrders] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
-const [totalOrders, setTotalOrders] = useState(0);
-const [totalUsers, setTotalUsers] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [revenueData, setRevenueData] = useState([]);
   const [orderStatusData, setOrderStatusData] = useState([]);
@@ -33,39 +33,29 @@ const [totalUsers, setTotalUsers] = useState(0);
       const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
       const productsRes = await axios.get("https://bighaat-clone.onrender.com/products");
       const usersRes = await axios.get("https://bighaat-clone.onrender.com/users");
-
       const orders = ordersRes.data;
 
       setTotalOrders(orders.length);
       setTotalProducts(productsRes.data.length);
       setTotalUsers(usersRes.data.length);
 
-   
       const revenue = orders
         .filter(order =>
-          order.paymentStatus === "Paid" ||
-          (order.paymentMethod === "COD" && order.status === "Delivered")
+          order.paymentStatus === "Paid" ||(order.paymentMethod === "COD" && order.status === "Delivered")
         )
         .reduce((sum, order) => sum + order.totalPrice, 0);
 
       setTotalRevenue(revenue);
-
-    
       const latest = [...orders]
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
         .slice(0, 5);
-
       setRecentOrders(latest);
 
-  
       const grouped = {};
-
       orders.forEach(order => {
         const date = new Date(order.datetime).toLocaleDateString();
-
         if (
-          order.paymentStatus === "Paid" ||
-          (order.paymentMethod === "COD" && order.status === "Delivered")
+          order.paymentStatus === "Paid" ||(order.paymentMethod === "COD" && order.status === "Delivered")
         ) {
           if (!grouped[date]) grouped[date] = 0;
           grouped[date] += order.totalPrice;
@@ -76,19 +66,15 @@ const [totalUsers, setTotalUsers] = useState(0);
         date,
         revenue: grouped[date]
       }));
-
       setRevenueData(formatted);
 
  
       const statusCount = {};
-
       orders.forEach(order => {
         const status = order.status || "Unknown";
-
         if (!statusCount[status]) {
           statusCount[status] = 0;
         }
-
         statusCount[status]++;
       });
 
@@ -96,9 +82,7 @@ const [totalUsers, setTotalUsers] = useState(0);
         name: status,
         value: statusCount[status]
       }));
-
       setOrderStatusData(pieData);
-
     } catch (err) {
       console.error("Dashboard fetch error:", err);
     }
@@ -158,7 +142,7 @@ const [totalUsers, setTotalUsers] = useState(0);
   <ManageContact />
 ) : (
        
-        <div className="dashboard-main-content">
+ <div className="dashboard-main-content">
   <div className="dashboard-header">
     <div className="header-text">
       <h2>Welcome to Admin Dashboard</h2>
@@ -203,14 +187,13 @@ const [totalUsers, setTotalUsers] = useState(0);
         <i className="fa-solid fa-dollar-sign"></i>
       </div>
       <div className="stat-details">
-        <span className="stat-count">₹{totalRevenue}</span>
+        <span className="stat-count">{totalRevenue}</span>
         <span className="stat-label">Total Revenue</span>
       </div>
     </div>
   </div>
 
   <div className="dashboard-lower-section">
-  
   <div className="graph-card">
     <div className="card-header">
       <h4>Revenue Trend</h4>
@@ -234,13 +217,7 @@ const [totalUsers, setTotalUsers] = useState(0);
 
     <ResponsiveContainer width="100%" height={250}>
       <PieChart>
-        <Pie
-          data={orderStatusData}
-          dataKey="value"
-          nameKey="name"
-          outerRadius={80}
-          label
-        >
+        <Pie data={orderStatusData} dataKey="value" nameKey="name" outerRadius={80} label>
           {orderStatusData.map((entry, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
           ))}
@@ -249,7 +226,6 @@ const [totalUsers, setTotalUsers] = useState(0);
       </PieChart>
     </ResponsiveContainer>
   </div>
-
 </div>
 
     <div className="orders-card">
@@ -268,28 +244,28 @@ const [totalUsers, setTotalUsers] = useState(0);
             </tr>
           </thead>
           <tbody>
-  {recentOrders.map((order) => (
-    <tr key={order._id}>
+              {recentOrders.map((order) => (
+                <tr key={order._id}>
+              
+                  <td onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })} style={{ cursor: "pointer", color: "#009640" }}>
+                    {order._id.slice(-6).toUpperCase()}
+                  </td>
+                  <td>{new Date(order.datetime).toLocaleDateString()}</td>
   
-      <td onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })} style={{ cursor: "pointer", color: "#009640" }}>
-  {order._id.slice(-6).toUpperCase()}
-</td>
-            <td>{new Date(order.datetime).toLocaleDateString()}</td>
-
-      <td>₹{order.totalPrice}</td>
-
-      <td>
-        <span className={`status-tag ${order.status?.toLowerCase()}`}>
-          {order.status}
-        </span>
-      </td>
-          </tr>
-  ))}
-</tbody>
+                  <td>₹{order.totalPrice}</td>
+            
+                  <td>
+                    <span className={`status-tag ${order.status?.toLowerCase()}`}>
+                      {order.status}
+                    </span>
+                </td>
+              </tr>
+          ))}
+        </tbody>
         </table>
       </div>
     </div>
-           </div>
+    </div>
       )}
     </div>
   </div> 
