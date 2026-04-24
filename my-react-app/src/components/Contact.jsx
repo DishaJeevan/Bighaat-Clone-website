@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 
-
 function Contact() {
   const [form, setForm] = useState({
     name: "",
@@ -17,7 +16,6 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await axios.post("https://bighaat-clone.onrender.com/contacts", form);
       setStatus(" Message sent!");
@@ -36,51 +34,27 @@ function Contact() {
         </p>
 
         <form className="contact-form" onSubmit={handleSubmit}>
-  <div className="input-group">
-    <input
-      type="text"
-      name="name"
-      placeholder="NAME"
-      value={form.name}
-      onChange={handleChange}
-      required
-    />
-    
-  </div>
+        <div className="input-group">
+          <input type="text" name="name" placeholder="NAME" value={form.name} onChange={handleChange} required />          
+        </div>
 
-  <div className="input-group">
-    <input
-      type="email"
-      name="email"
-      placeholder="EMAIL"
-      value={form.email}
-      onChange={handleChange}
-      required
-    />
-    
-  </div>
+          <div className="input-group">
+            <input type="email" name="email" placeholder="EMAIL" value={form.email} onChange={handleChange} required/>          
+          </div>
+        
+          <div className="input-group">
+            <textarea name="message" placeholder="MESSAGE" value={form.message} onChange={handleChange} rows="4" required ></textarea>            
+          </div>
 
-  <div className="input-group">
-    <textarea
-      name="message"
-      placeholder="MESSAGE"
-      value={form.message}
-      onChange={handleChange}
-      rows="4"
-      required
-    ></textarea>
-    
-  </div>
-
-  <button type="submit" className="submit-btn">
-    Send Message
-  </button>
-</form>
-
-<p>{status}</p>
+          <button type="submit" className="submit-btn">
+            Send Message
+          </button>
+        </form>
+        
+        <p>{status}</p>
       </div>
-    </div>
-  );
+   </div>
+);
 }
 
 export default Contact;
