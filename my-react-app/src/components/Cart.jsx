@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const navigate = useNavigate();
-
   const { cart, cartWithDetails, total, increaseQty, decreaseQty, closeCart, clearCart } = useContext(CartContext);
 //   const placeOrder = async () => {
 //     try {
@@ -44,7 +43,7 @@ function Cart() {
             <h2>No Products Added to Cart</h2>
             <Link to="/"><button className="continue-btn" onClick={closeCart}>Continue Shopping</button></Link>
           </div>
-       ) : (
+           ) : (
            cartWithDetails.map((item) => (
             <div key={item.id} className="cart-item">
               <img src={item.image} alt={item.name}/>
@@ -53,10 +52,7 @@ function Cart() {
                 <p className="price">₹{item.newPrice}</p>
                 <div className="qty-box">
                   <button onClick={() => decreaseQty(item.id)}>
-                    {item.qty === 1
-                      ? <i className="fa-solid fa-trash"></i> 
-                      : <i className="fa-solid fa-minus"></i>
-                    }
+                    {item.qty === 1 ? <i className="fa-solid fa-trash"></i> : <i className="fa-solid fa-minus"></i>}
                   </button>
                   <span>{item.qty}</span>
                   <button onClick={() => increaseQty(item.id)}>
@@ -82,17 +78,12 @@ function Cart() {
           </div>
 
           <div className="total-price">₹{total}</div>
-         <button 
-  className="proceed-btn" 
- 
-   onClick={() => {
-  closeCart();
-  navigate("/checkout-address");
-}}
-  
->
-  Proceed
-</button>
+         <button className="proceed-btn" onClick={() => {
+              closeCart();
+              navigate("/checkout-address");
+          }}>
+            Proceed
+          </button>  
         </div>
       )}
     </div>
