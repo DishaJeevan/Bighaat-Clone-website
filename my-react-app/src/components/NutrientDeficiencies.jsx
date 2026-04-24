@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
@@ -12,9 +11,8 @@ function NutrientDeficiencies() {
       try {
         const res = await axios.get("https://bighaat-clone.onrender.com/products");
         const filtered = res.data.filter(
-        (p) => p.subCategory === "nutrient-deficiencies"
+          (p) => p.subCategory === "nutrient-deficiencies"
         );
-
       setProducts(filtered);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -26,9 +24,7 @@ function NutrientDeficiencies() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-       
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -37,9 +33,7 @@ function NutrientDeficiencies() {
                   <div className="discount-menu">
                     {product.discount}% OFF
                   </div>
-
-               
-
+                  
                   <div className="image-offer-menu">
                     <img src={product.image} alt={product.name}/>
                   </div>
@@ -59,8 +53,7 @@ function NutrientDeficiencies() {
 
                     <p className="save-button">Save ₹{product.saveAmount}</p>
                   </div>
-
-                  
+             
                 </div>
               </Link>
             ))}
@@ -69,10 +62,9 @@ function NutrientDeficiencies() {
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
           </div>
-
           
         </div>
-     
+    
   );
 }
 
