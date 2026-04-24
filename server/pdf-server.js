@@ -96,11 +96,7 @@ function buildPDF(order, dataCallback, endCallback) {
   doc.text(`${addr.flat || ""}, ${addr.street || ""}`, 50, currentY);
   currentY += 15;
 
-  doc.text(
-    `${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`,
-    50,
-    currentY
-  );
+  doc.text(`${addr.city || ""}, ${addr.district || ""}, ${addr.state || ""} - ${addr.pincode || ""}`,50,currentY);
 
   let tableY = currentY + 30;
 
