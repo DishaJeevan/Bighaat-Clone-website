@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
@@ -12,7 +11,7 @@ function LeafEating() {
       try {
         const res = await axios.get("https://bighaat-clone.onrender.com/products");
         const filtered = res.data.filter(
-        (p) => p.subCategory === "leaf-eating"
+          (p) => p.subCategory === "leaf-eating"
         );
 
       setProducts(filtered);
@@ -26,9 +25,7 @@ function LeafEating() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-        
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -60,9 +57,7 @@ function LeafEating() {
                     </div>
 
                      <p className="save-button">Save ₹{product.saveAmount}</p>
-                  </div>
-
-                  
+                  </div>              
                 </div>
               </Link>
             ))}
@@ -70,9 +65,7 @@ function LeafEating() {
 
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
-          </div>
-
-          
+          </div>          
         </div>
     
   );
