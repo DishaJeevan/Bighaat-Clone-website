@@ -1,39 +1,32 @@
-
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-
 function Equipmentsmenue () {
   const [products, setProducts] = useState([]);
 
-useEffect(() => {
-  const getProducts = async () => {
-    try {
-      const res = await axios.get("https://bighaat-clone.onrender.com/products");
-      const filtered = res.data.filter(
-        (p) => p.subCategory  === "equipments"
-      );
-
-      setProducts(filtered);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  getProducts();
-}, []);
+    useEffect(() => {
+      const getProducts = async () => {
+        try {
+          const res = await axios.get("https://bighaat-clone.onrender.com/products");
+          const filtered = res.data.filter(
+            (p) => p.subCategory  === "equipments"
+          );
+    
+          setProducts(filtered);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+    
+      getProducts();
+    }, []);
+  
   return (
   <div className="equipments-page">
-    <div className="main-container">
-
-   
-      
-        </div>
-
-        
+    <div className="main-container"></div>     
+    
         <div className="products-grid-menu">
 
           {products.map((product) => (
@@ -43,9 +36,6 @@ useEffect(() => {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              <a href="#">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
 
               <div className="image-offer-menu">
                 <img src={product.image} />
@@ -64,26 +54,18 @@ useEffect(() => {
                 </div>
 
                  <p className="save-button">Save ₹{product.saveAmount}</p>
-              </div>
-
-             
-                  
+              </div>               
               </div>
            </Link>
           ))}
 
         </div>
           <div class="end-section">
-
-  <div class="end-box">
-    You have reached the end...
-  </div>
-  </div>
-
-  
-      </div>
-
-    
+            <div class="end-box">
+              You have reached the end...
+            </div>
+         </div>  
+      </div>   
   );
 }
 
