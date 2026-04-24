@@ -4,10 +4,8 @@ import { useNavigate,useLocation } from "react-router-dom";
 
 function MyAddress({ existingAddress }) {
   const navigate = useNavigate();
-   const location = useLocation();
-
+  const location = useLocation();
   const user_id = localStorage.getItem("user_id");
-
   const addressData = existingAddress || location.state?.address;
 
   const [form, setForm] = useState(
@@ -26,15 +24,15 @@ function MyAddress({ existingAddress }) {
 
   useEffect(() => {
   if (!addressData) {
-    axios
-      .get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+    axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
       .then(res => {
         if (res.data && Object.keys(res.data).length > 0) {
-  setForm(res.data);
-}
-      });
+    setForm(res.data);
+   }
+  });
   }
 }, []);
+  
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -54,20 +52,14 @@ function MyAddress({ existingAddress }) {
     return;
   }
     try {
-      await axios.post(
-        "https://bighaat-clone.onrender.com/save-address",
-        {
+      await axios.post("https://bighaat-clone.onrender.com/save-address", {
           user_id,
           address: form
         }
-      );
-
-     
+      ); 
       window.dispatchEvent(new Event("address_updated"));
-
       alert("Address saved");
       navigate("/my-address");
-
     } catch (err) {
       console.log(err);
       alert("Error saving address");
@@ -132,10 +124,7 @@ function MyAddress({ existingAddress }) {
         Save Address
       </button>
 
-      <button
-        className="cancel-btn"
-        onClick={() => navigate("/my-address")}
-      >
+      <button className="cancel-btn" onClick={() => navigate("/my-address")} >
         Cancel
       </button>
     </div>
