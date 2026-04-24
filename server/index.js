@@ -12,15 +12,12 @@ const Razorpay=require("razorpay");
 const pdfService = require("./pdf-server");
 const ContactSchema = require("./models/Contact");
 
-
-
 const app=express();
 const PORT=process.env.PORT ||3001;
 
 const multer=require("multer");
 const cloudinary=require("cloudinary").v2;
 const {CloudinaryStorage}=require("multer-storage-cloudinary")
-
 
 app.use(express.json());
 const allowedOrigins=[
@@ -190,6 +187,7 @@ app.post("/resend-otp",async(req,res)=>{
       );
       return res.json({message:" Same OTP Resend Succesfully"});
     }
+     
     const newOtp=generateOTP();
     const otpExpires=new Date(Date.now()+5*60*1000);
     user.otp=newOtp;
@@ -403,28 +401,18 @@ app.post("/place-order", async (req, res) => {
     await order.save();
 
      if ((paymentMethod === "ONLINE" && paymentStatus === "Paid") || paymentMethod === "COD") {
-
       const buffers = [];
-
       pdfService.buildPDF(
         order,
         (chunk) => buffers.push(chunk),
         async () => {
           const pdfData = Buffer.concat(buffers);
-
-         
-
          const subject = paymentMethod === "COD" ? "Order Confirmed - Cash on Delivery" : "Payment Successful & Invoice";
-
           const message = `
             <h2><strong>Payment Successful</strong></h2>
             <p>Your order has been placed successfully.</p>
-
-          
-
               <p><strong>Total:</strong> ₹${totalPrice}</p>
-              <p><strong>Payment Method:</strong> ${paymentMethod}</p>
-            
+              <p><strong>Payment Method:</strong> ${paymentMethod}</p>         
               <p><strong>Please find your invoice attached.</strong></p>
           `;
 
@@ -506,15 +494,10 @@ app.delete("/delete-order/:id",async(req,res)=>{
 app.put("/update-order/:id", async (req, res) => {
   try {
     const { status } = req.body;
-
-    const updateData = { status };
-
-   
+    const updateData = { status }; 
     if (status === "Delivered") {
       updateData.paymentStatus = "Paid";
     }
-
- 
     const order = await OrderModel.findByIdAndUpdate(
       req.params.id, 
       updateData, 
@@ -541,9 +524,7 @@ app.put("/update-order/:id", async (req, res) => {
         `;
       }).join("");
 
-      const subject = `Order Update: ${status}`;
-
-    
+      const subject = `Order Update: ${status}`;  
       const message = `
         <h2><strong>Order Status Update</strong></h2>
         <p>Your order status is: <strong>${status}</strong></p>
@@ -560,7 +541,6 @@ app.put("/update-order/:id", async (req, res) => {
             ${productList}
           </tbody>
         </table>
-
         <p><strong>Total:</strong> ₹${amount}</p>
         <p><strong>Date:</strong> ${date}</p>
       `;
