@@ -35,7 +35,6 @@ return (
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              <a href="#"><i class="fa-regular fa-heart"></i></a>
 
               <div className="image-offer-menu">
                 <img src={product.image} />
