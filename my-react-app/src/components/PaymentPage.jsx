@@ -7,22 +7,16 @@ function PaymentPage() {
   const { cartWithDetails, total, clearCart, closeCart } = useContext(CartContext);
   const navigate = useNavigate();
   const location = useLocation();
-
   const user_id = localStorage.getItem("user_id");
   const email = localStorage.getItem("email");
-
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [address, setAddress] = useState(location.state?.address);
 
-  // ✅ FETCH ADDRESS + VALIDATE USER
   useEffect(() => {
-    // 🔴 If no login → redirect
     if (!user_id) {
       navigate("/login");
       return;
     }
-
-    // 🔴 If address not passed → fetch from DB
     if (!address) {
       axios
         .get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
@@ -35,7 +29,6 @@ function PaymentPage() {
           }
         })
         .catch((err) => {
-          // 🔴 If user deleted or invalid
           if (err.response?.status === 404) {
             localStorage.clear();
             alert("User not found. Please login again.");
@@ -45,15 +38,12 @@ function PaymentPage() {
     }
   }, [user_id, address, navigate]);
 
-  // ✅ PLACE ORDER
   const placeOrder = async (paymentData = {}) => {
-    // 🔴 IMPORTANT: address validation
     if (!address) {
-      alert("Address missing. Please add address.");
+      alert(" Please fill address.");
       navigate("/checkout-address");
       return;
     }
-
     const items = cartWithDetails.map((item) => ({
       productId: item.id,
       quantity: item.qty,
@@ -72,25 +62,20 @@ function PaymentPage() {
       paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
       ...paymentData,
     });
-
+    
     alert("Order placed");
     clearCart();
     closeCart();
     navigate("/orders");
   };
 
-  // ✅ ONLINE PAYMENT
   const handleOnlinePayment = async () => {
     if (!address) {
       alert("Address missing");
       return;
     }
 
-    const { data } = await axios.post(
-      "https://bighaat-clone.onrender.com/create-razorpay-order",
-      { amount: total }
-    );
-
+    const { data } = await axios.post("https://bighaat-clone.onrender.com/create-razorpay-order",{ amount: total });
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY,
       amount: data.amount,
@@ -114,29 +99,16 @@ function PaymentPage() {
 
       <div className="payment-options">
         <label>
-          <input
-            type="radio"
-            value="COD"
-            checked={paymentMethod === "COD"}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
+          <input type="radio" value="COD" checked={paymentMethod === "COD"} onChange={(e) => setPaymentMethod(e.target.value)} />
           Cash on Delivery
         </label>
 
         <label>
-          <input
-            type="radio"
-            value="ONLINE"
-            checked={paymentMethod === "ONLINE"}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
+          <input type="radio" value="ONLINE" checked={paymentMethod === "ONLINE"} onChange={(e) => setPaymentMethod(e.target.value)} />
           Pay Online (UPI / Card / NetBanking)
         </label>
 
-        <button
-          className="pay-btn"
-          disabled={!address} // ✅ prevent early click
-          onClick={() => {
+        <button className="pay-btn" disabled={!address} onClick={() => {
             if (paymentMethod === "COD") {
               placeOrder();
             } else {
