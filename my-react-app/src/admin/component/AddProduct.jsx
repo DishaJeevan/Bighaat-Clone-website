@@ -40,7 +40,7 @@ function  AddProduct (){
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-   if (!product.name || !product.newPrice || !product.category) {
+   if (!product.name || !product.newPrice) {
     alert("Please fill Name, Price and Category");
     return;
   }
