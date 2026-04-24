@@ -14,7 +14,6 @@ function GreenLeaves() {
         const filtered = res.data.filter(
         (p) => p.subCategory === "green-leaves"
         );
-
       setProducts(filtered);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -37,9 +36,7 @@ function GreenLeaves() {
                   <div className="discount-menu">
                     {product.discount}% OFF
                   </div>
-
-                 
-
+                  
                   <div className="image-offer-menu">
                     <img src={product.image}alt={product.name}/>
                   </div>
@@ -58,9 +55,8 @@ function GreenLeaves() {
                     </div>
 
                      <p className="save-button">Save ₹{product.saveAmount}</p>
-                  </div>
-
-                 
+                  </div>             
+                  
                 </div>
               </Link>
             ))}
@@ -68,11 +64,8 @@ function GreenLeaves() {
 
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
-          </div>
-
-         
+          </div>       
         </div>
-    
   );
 }
 
