@@ -36,10 +36,7 @@ function PestCategories() {
 
         </div>
         <div class="indias-popular">
-        <img
-          src="images/fotter-beforeimg1.png"
-          alt="largest agricultural platform"
-        />
+        <img src="images/fotter-beforeimg1.png" alt="largest agricultural platform"/>
       </div>
       </div>
     </>
