@@ -22,11 +22,10 @@ function Animalhusbandrymenue() {
 
   getProducts();
 }, []);
+  
   return (
     <div className="animalhusbandry-page">
-      <div className="main-container">
-       
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -50,20 +49,15 @@ function Animalhusbandrymenue() {
                     <span className="new-price-menu">₹{product.newPrice}</span>
                     <span className="old-price-menu">₹{product.oldPrice}</span>
                   </div>
-                <p className="save-button">Save ₹{product.saveAmount}</p>
-                  
-                </div>
-
-                
+                <p className="save-button">Save ₹{product.saveAmount}</p>                  
+                </div>             
               </div>
               </Link>
             ))}
           </div>
           <div class="end-section">
             <div class="end-box">You have reached the end...</div>
-          </div>
-
-         
+          </div>      
         </div>
      
   );
