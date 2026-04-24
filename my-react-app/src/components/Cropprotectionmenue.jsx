@@ -21,15 +21,8 @@ function Cropprotectionmenue  () {
   }, []);
   return (
   <div className="cropprotection-page">
-    <div className="main-container">
-
-   
-      
-        
-        </div>
- 
+    <div className="main-container"></div>
         <div className="products-grid-menu">
-
           {cropprotectionmenue.map((product) => (
              <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
             <div className="product-card-menu" key={product.id}>
@@ -37,10 +30,7 @@ function Cropprotectionmenue  () {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              <a href="#">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
-
+            
               <div className="image-offer-menu">
                 <img src={product.image} alt={product.name}/>
               </div>
@@ -55,30 +45,19 @@ function Cropprotectionmenue  () {
                 <div className="price-menu">
                   <span className="new-price-menu">₹{product.newPrice}</span>
                   <span className="old-price-menu">₹{product.oldPrice}</span>
-                </div>
-
-                
+                </div>             
                  <p className="save-button">Save ₹{product.saveAmount}</p>
-            </div>
-
-           
+            </div>          
               </div>
             </Link>            
-    ))}
- </div>
+              ))}
+           </div>
               <div class="end-section">
-
                 <div class="end-box">
                   You have reached the end...
                 </div>
                 </div>
-
- 
-
-
-      </div>
-
-   
+      </div>  
   );
 }
 
