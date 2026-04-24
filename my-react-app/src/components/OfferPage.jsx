@@ -22,10 +22,7 @@ function OfferPage() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-        
-          </div>
-
+      <div className="main-container"></div>
           <div className="products-grid-menu">
              {offers.map((product) => (
               <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
@@ -33,9 +30,7 @@ function OfferPage() {
                   <div className="discount-menu">
                     {product.discount}% OFF
                   </div>
-
-                 
-
+                  
                   <div className="image-offer-menu">
                     <img src={product.image} alt={product.name}/>
                   </div>
@@ -54,9 +49,7 @@ function OfferPage() {
                     </div>
 
                     <p className="save-button">Save ₹{product.saveAmount}</p>
-                  </div>
-
-                  
+                  </div>             
                 </div>
               </Link>
             ))}
@@ -64,9 +57,7 @@ function OfferPage() {
 
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
-          </div>
-
-          
+          </div>        
         </div>
      
   );
