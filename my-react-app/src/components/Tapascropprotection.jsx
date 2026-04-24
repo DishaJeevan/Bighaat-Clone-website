@@ -3,7 +3,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-
 function Tapascropprotection () {
   const [products, setProducts] = useState([]);
 
@@ -23,10 +22,7 @@ function Tapascropprotection () {
 
   return (
   <div className="tapasprotection-page">
-    <div className="main-container">
-
-      
-         </div>
+    <div className="main-container"></div>
 
         <div className="products-grid-menu">
           {products.map((product) => (
@@ -36,8 +32,7 @@ function Tapascropprotection () {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-              
-
+            
               <div className="image-offer-menu">
                 <img src={product.image} alt={product.name} />
               </div>
@@ -56,7 +51,6 @@ function Tapascropprotection () {
 
                  <p className="save-button">Save ₹{product.saveAmount}</p>
               </div>
-
               
           </div>
           </Link>
@@ -65,12 +59,10 @@ function Tapascropprotection () {
         </div>
 
         <div class="end-section">
-
           <div class="end-box">
             You have reached the end...
           </div>
           </div>
-
          
       </div>
    
