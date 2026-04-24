@@ -1,9 +1,7 @@
-// import {tapasimplements} from "./Data";
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
 
 function Tapasimplements () {
   const [products, setProducts] = useState([]);
@@ -21,14 +19,12 @@ function Tapasimplements () {
     };
     getProducts();
   }, []);
+  
   return (
   <div className="tapasimplents-page">
-    <div className="main-container">
-      
-                    </div>
+    <div className="main-container"></div>
 
         <div className="products-grid-menu">
-
           {products.map((product) => (
             <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
             <div className="product-card-menu" key={product.id}>
@@ -36,7 +32,6 @@ function Tapasimplements () {
               <div className="discount-menu">
                 {product.discount}% OFF
               </div>
-            
 
               <div className="image-offer-menu">
                 <img src={product.image} alt={product.name} />
@@ -57,23 +52,18 @@ function Tapasimplements () {
                  <p className="save-button">Save ₹{product.saveAmount}</p>
               </div>
 
-             
           </div>
           </Link>
           ))}
 
         </div>
 
-      <div class="end-section">
-
-        <div class="end-box">
-          You have reached the end...
+        <div class="end-section">
+          <div class="end-box">
+            You have reached the end...
+          </div>
         </div>
-        </div>
-
-                    </div>
-
-       
+     </div>   
   );
 }
 
