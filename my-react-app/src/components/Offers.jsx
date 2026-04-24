@@ -60,8 +60,7 @@ function Offers() {
 
               <p className="save-button">Save ₹{product.saveAmount}</p>
             </div>
-
-         
+     
           </div>
           </Link>
         ))}
