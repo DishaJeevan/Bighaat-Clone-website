@@ -8,9 +8,9 @@ export function CartProvider({ children }) {
   const location = useLocation();
   const [products, setProducts] = useState([]);
  const getUserCartKey = () => {
-  const email = localStorage.getItem("email");
-  return email ? `cart_${email}` : "cart_guest";
-};
+    const email = localStorage.getItem("email");
+    return email ? `cart_${email}` : "cart_guest";
+ };
 
 const [cart, setCart] = useState(() => {
   const key = getUserCartKey();
@@ -19,10 +19,10 @@ const [cart, setCart] = useState(() => {
 });
 
   function clearCart() {
-  const key = getUserCartKey();
-  setCart([]);
-  localStorage.removeItem(key);
-}
+    const key = getUserCartKey();
+    setCart([]);
+    localStorage.removeItem(key);
+  }
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   useEffect(() => {
@@ -33,20 +33,20 @@ const [cart, setCart] = useState(() => {
   } else {
     localStorage.removeItem(key);
   }
-}, [cart]);
+  }, [cart]);
 
   function addToCart(product) {
-  setCart((prev) => {
-    const item = prev.find((i) => i.id === product.id);
-
-    if (item) {
-      return prev.map((i) =>
-        i.id === product.id ? { ...i, qty: i.qty + 1 } : i
-      );
-    }
-    return [...prev, { id: product.id, qty: 1 }];
-  });
-}
+    setCart((prev) => {
+      const item = prev.find((i) => i.id === product.id);
+  
+      if (item) {
+        return prev.map((i) =>
+          i.id === product.id ? { ...i, qty: i.qty + 1 } : i
+        );
+      }
+      return [...prev, { id: product.id, qty: 1 }];
+    });
+  }
 
   function increaseQty(id) {
     setCart((prev) =>
@@ -71,18 +71,18 @@ const [cart, setCart] = useState(() => {
   }
 
   useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const ids = cart.map(item => item.id);
-      if (ids.length === 0) {
-        setProducts([]);
-        return;
+    const fetchProducts = async () => {
+      try {
+        const ids = cart.map(item => item.id);
+        if (ids.length === 0) {
+          setProducts([]);
+          return;
+        }
+        const res = await axios.post("https://bighaat-clone.onrender.com/cart-products",ids);
+        setProducts(res.data);
+      } catch (err) {
+        console.log(err);
       }
-      const res = await axios.post("https://bighaat-clone.onrender.com/cart-products",ids);
-      setProducts(res.data);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   fetchProducts();
@@ -96,9 +96,7 @@ useEffect(() => {
 
 const cartWithDetails = cart.map((cartItem) => {
   const product = products.find((p) => String(p.id) === String(cartItem.id));
-  return product
-    ? { ...product, qty: cartItem.qty }
-    : null;
+  return product? { ...product, qty: cartItem.qty }: null;
 }).filter(Boolean);
 
 const total = cartWithDetails.reduce(
