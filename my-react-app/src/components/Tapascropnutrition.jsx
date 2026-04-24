@@ -3,8 +3,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-
-
 function Tapascropnutrition () {
 const [products, setProducts] = useState([]);
 
@@ -20,12 +18,10 @@ useEffect(() => {
   };
   fetchProducts();
 }, []);
+  
   return (
   <div className="tapasnutrition-page">
-    <div className="main-container">
-   
-      
-        </div>
+    <div className="main-container"></div>
 
         <div className="products-grid-menu">
           {products.map((product) => (
@@ -36,7 +32,6 @@ useEffect(() => {
                 {product.discount}% OFF
               </div>
             
-
               <div className="image-offer-menu">
                  <img src={product.image} alt={product.name} />
               </div>
@@ -54,29 +49,18 @@ useEffect(() => {
                 </div>
 
                  <p className="save-button">Save ₹{product.saveAmount}</p>
-              </div>
-
-              
-                
+              </div>             
               </div>
          </Link>
           ))}
-
         </div>
 
       <div class="end-section">
-
         <div class="end-box">
           You have reached the end...
         </div>
-        </div>
-
-       
-
-
-            </div>
-
-         
+      </div>
+    </div>        
   );
 }
 
