@@ -25,20 +25,14 @@ useEffect(() => {
   const fetchAddress = () => {
     const user_id = localStorage.getItem("user_id");
     if(user_id){
-      axios.get(`/get-address/${user_id}`)
-        .then(res => setAddress(res.data));
+      axios.get(`/get-address/${user_id}`).then(res => setAddress(res.data));
     }
   };
-
   fetchAddress();
-
   window.addEventListener("storage", fetchAddress);
-
   return () => window.removeEventListener("storage", fetchAddress);
 }, []);
  
- 
-
 useEffect(() => {
   const fetchProducts = async () => {
     if (!keyword.trim()) {
@@ -67,7 +61,6 @@ useEffect(() => {
 const handleLogout = () => {
   localStorage.removeItem("email");
   localStorage.removeItem("user_id");
-
   setUser(null);
   navigate("/");
 };
@@ -76,9 +69,6 @@ useEffect(() => {
   const email = localStorage.getItem("email");
   setUser(email);
 }, [location]);
-
-
-
 
   return (
     <header>
@@ -97,34 +87,31 @@ useEffect(() => {
               <div className="search-dropdown">
                 
                 {results.map((item) => (
-            <Link to={`/product/${item.id}`} key={item.id} className="dropdown-item">
-              <img src={item.image} />
-              <div>
-                <p>{item.name}</p>
-                <span className="price">₹{item.newPrice}</span>
-                <span className="old-price">₹{item.oldPrice}</span>
-              </div>
+                  <Link to={`/product/${item.id}`} key={item.id} className="dropdown-item">
+                    <img src={item.image} />
+                    <div>
+                      <p>{item.name}</p>
+                      <span className="price">₹{item.newPrice}</span>
+                      <span className="old-price">₹{item.oldPrice}</span>
+                    </div>
               
-           </Link>
-            
-          ))}
-          
-    <div className="show-all" onClick={() => navigate(`/search/${keyword}`)} >Show all results for "{keyword}"</div>
-
-    </div>
-  )}
-</div>
+                 </Link>          
+                  ))}
+                  
+            <div className="show-all" onClick={() => navigate(`/search/${keyword}`)} >Show all results for "{keyword}"</div>
+        
+            </div>
+          )}
+        </div>
 
         <div className="right-links">
-
           <div className="user-section" onClick={() => setShowUserDropdown(!showUserDropdown)}>
 
           {!user ? (
-            <Link to="/Login">
-              <i className="fa-regular fa-user"></i>
+            <Link to="/Login"><i className="fa-regular fa-user"></i>
               Login
             </Link>
-          ) : (
+           ) : (
             <div className="user-info">
               <i className="fa-regular fa-user"></i>
               BigHaat Farmer
@@ -136,10 +123,7 @@ useEffect(() => {
               <p>{user}</p>
               <Link to="/orders">My Orders</Link>
              
-             <p onClick={() => navigate("/my-address")}>
-  My Address
-</p>
-              
+             <p onClick={() => navigate("/my-address")}> My Address</p>           
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
@@ -156,7 +140,7 @@ useEffect(() => {
             Cart
           </div>
         </div>
-</div>
+      </div>
     </header>
   );
 }
