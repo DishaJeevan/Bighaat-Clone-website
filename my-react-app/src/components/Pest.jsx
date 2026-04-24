@@ -10,15 +10,11 @@ function PestCategories() {
           <p>Find solutions for your crop problems.</p>
         </div>
 
-        <div className="offer-view-all">
-          
-        </div>
+        <div className="offer-view-all"> </div>
       </section>
 
       <div className="pest-categories">
         <div className="pest-categories-box">
-
-          
           <Link to="/thrips" className="pest-categories-section">
             <img src="/images/pestimg1.webp" alt="Thrips" />
             <p>Thrips</p>
