@@ -26,9 +26,7 @@ function LightBlight() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-       
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -37,9 +35,7 @@ function LightBlight() {
                   <div className="discount-menu">
                     {product.discount}% OFF
                   </div>
-
-                 
-
+                  
                   <div className="image-offer-menu">
                     <img src={product.image} alt={product.name}/>
                   </div>
@@ -58,9 +54,7 @@ function LightBlight() {
                     </div>
 
                     <p className="save-button">Save ₹{product.saveAmount}</p>
-                  </div>
-
-                  
+                  </div>                  
                 </div>
               </Link>
             ))}
@@ -69,8 +63,7 @@ function LightBlight() {
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
           </div>
-
-          
+      
         </div>
     
   );
