@@ -25,7 +25,7 @@ function CheckoutAddress() {
         }
       })
       .finally(() => setLoading(false));
-  }, []);
+    }, []);
 
   // const placeOrder = async () => {
   //   const items = cartWithDetails.map(item => ({
@@ -49,16 +49,13 @@ function CheckoutAddress() {
   //   closeCart();
   //   navigate("/orders");
   // };
+  
  if (loading) {
   return <p>Loading address...</p>;
 }
   
-
  return (
   <div className="checkout-container">
-
-    
-
     {editing || !address ? (
       <div className="checkout-form-card">
         <MyAddress existingAddress={address} />
@@ -68,44 +65,29 @@ function CheckoutAddress() {
         <h2>Delivery Address</h2>
         <div className="address-details">
           <p><strong>Name:</strong> {address.name}</p>
-
           <p><strong>Phone:</strong> {address.phone}</p>
-
           <p><strong>Flat:</strong> {address.flat}</p>
-
           <p><strong>Street:</strong> {address.street}</p>
-
           <p><strong>City:</strong> {address.city}</p>
-
           <p><strong>District:</strong> {address.district}</p>
-
-          <p>
-            <strong>State & Pincode:</strong> {address.state} - {address.pincode}
-          </p>
-
+          <p><strong>State & Pincode:</strong> {address.state} - {address.pincode}</p>
+          
           {address.landmark && (
             <p><strong>Landmark:</strong> {address.landmark}</p>
           )}
         </div> 
 
         <div className="checkout-actions">
-          <button
-            className="edit-btn"
-            onClick={() => setEditing(true)}
-          >
+          <button className="edit-btn" onClick={() => setEditing(true)}>
             Edit Address
           </button>
 
-          <button
-            className="placeorder-btn"
-           onClick={() => {
-            navigate("/payment", { state: { address } });
-           
+          <button className="placeorder-btn" onClick={() => {
+            navigate("/payment", { state: { address } });           
           }}>
-            Proceed to Payment
+          Proceed to Payment
           </button>
         </div>
-
       </div>
     )}
 
