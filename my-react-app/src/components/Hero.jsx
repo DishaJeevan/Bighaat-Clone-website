@@ -25,16 +25,10 @@ function Hero({ images }) {
 
   return (
     <div className="hero_container">
-      <div
-        className="carousel"
-        onMouseEnter={() => setAutoPlay(false)}
-        onMouseLeave={() => setAutoPlay(true)}
-      >
+      <div className="carousel" onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)} >
         <div className="carousel_wrapper">
           {images.map((image, index) => (
-            <div
-              key={index}
-              className={
+            <div key={index} className={
                 index === current ? "carousel_card carousel_card-active" : "carousel_card"
               }
             >
@@ -54,13 +48,11 @@ function Hero({ images }) {
 
       <div className="carousel_pagination">
         {images.map((_, index) => (
-          <div
-            key={index}
-            className={
+          <div key={index} className={
               index === current ? "pagination_dot pagination_dot-active"  : "pagination_dot"
             }
             onClick={() => setCurrent(index)}
-          ></div>
+           ></div>
         ))}
       </div>
     </div>
