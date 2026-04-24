@@ -26,9 +26,7 @@ function Thrips() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-       
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -70,11 +68,8 @@ function Thrips() {
 
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
-          </div>
-
-         
-        </div>
-     
+          </div>      
+        </div>  
   );
 }
 
