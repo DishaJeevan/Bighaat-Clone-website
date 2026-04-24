@@ -6,9 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-
 function Otppage() {
-
   const location = useLocation();
   const email = location.state?.email;
   const [otp, setOtp] = useState("");
@@ -17,43 +15,27 @@ function Otppage() {
   const [counter, setCounter] = useState(0);
 
   const handleVerify = async () => {
-
   try {
-
-    const res = await axios.post("https://bighaat-clone.onrender.com/verify-otp", {
-      email,
-      otp
-    });
-
+    const res = await axios.post("https://bighaat-clone.onrender.com/verify-otp", { email, otp});
     console.log("Response:", res.data);
-
-
     localStorage.setItem("email", res.data.email);
     localStorage.setItem("user_id", res.data.user_id);
-
     navigate("/");
-
   } catch (err) {
-
     setError(err.response.data.error);
-
     setTimeout(() => {
       setError("");
     }, 2000);
-
   }
-
 };
 
    useEffect(() => {
     let timer;
-
     if (counter > 0) {
       timer = setTimeout(() => {
         setCounter(counter - 1);
       }, 1000);
     }
-
     return () => clearTimeout(timer);
   }, [counter]);
 
@@ -100,7 +82,7 @@ function Otppage() {
 
           {error && (
               <div className="otp-error-card">
-                <div className="error-icon">✖</div>
+                <div className="error-icon">X</div>
                 <div className="error-text">{error}</div>
               </div>
             )}
