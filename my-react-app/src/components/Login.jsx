@@ -9,12 +9,11 @@ import {useEffect} from "react";
  
 function Login() {
 
-   const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
   const [savedEmail, setSavedEmail] = useState("");
   
-
    useEffect(() => {
     const lastEmail = localStorage.getItem("lastLoginEmail");
     if (lastEmail) {
@@ -31,6 +30,7 @@ function Login() {
       return true;
     }
   };
+ 
  const handleSubmit = async (e) => {
   e.preventDefault();
   if (!validateEmail(email)) return;
@@ -54,15 +54,12 @@ const handleSavedLogin = () => {
           <div className="saved-login">
            <button type="button" className="saved-button" style={{ backgroundColor: "#2563eb", color: "white" }}  onClick={handleSavedLogin}>
               Login with {savedEmail} <p>Powered by kwik pass</p>
-            </button>
-            
+            </button>            
           </div>
         )}
 
           <h1>Login</h1>
-
-          <div className="card2">
-            
+          <div className="card2">        
             <input type="email"  id="email" name="email" placeholder="Enter email example@gmail.com"  onChange={(e) => {
                 setEmail(e.target.value);
                validateEmail(e.target.value);
