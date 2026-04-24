@@ -12,18 +12,18 @@ function Growth() {
         const res = await axios.get("https://bighaat-clone.onrender.com/products");
         
          const filtered = res.data.filter(
-  (p) => p.subCategory === "growth-promoters"
-);
+              (p) => p.subCategory === "growth-promoters"
+          );
        
-        setProducts(filtered);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      }
-    };
-    getProducts();
-  }, []);
+            setProducts(filtered);
+          } catch (err) {
+            console.error("Error fetching products:", err);
+          }
+        };
+        getProducts();
+      }, []);
 
-  const homeProducts = products.slice(0, 5); 
+   const homeProducts = products.slice(0, 5); 
 
   return (
     <>
@@ -42,17 +42,12 @@ function Growth() {
         {homeProducts.map((product, index) => (
           <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
           <div className="product-card" key={`${product.id}-${index}`}>
-            <Link to={`/product/${product.id}`}>
-              <i className="fa-regular fa-heart"></i>
-            </Link>
+            <Link to={`/product/${product.id}`}> </Link>
 
             <div className="discount">{product.discount}% OFF</div>
 
             <div className="image-offer">
-              <img
-                src={product.image}
-                alt={product.name}
-              />
+              <img src={product.image} alt={product.name}/>
             </div>
 
             <div className="rating-star-menu">  ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}</div>
@@ -68,9 +63,7 @@ function Growth() {
 
               <p className="save-button">Save ₹{product.saveAmount}</p>
             </div>
-
           </div>
-
           </Link>
         ))}
       </section>
