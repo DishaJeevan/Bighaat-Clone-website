@@ -59,54 +59,53 @@ function Tapas() {
       </section>
 
       <section className="implements-home">
-              <div className="offers-price">
-                <h1>Implements</h1>
-              </div>
+         <div className="offers-price">
+           <h1>Implements</h1>
+          </div>
       
-              <div className="offer-view-all">
-                <Link to="/tapasimplements">View All</Link>
-              </div>
+           <div className="offer-view-all">
+             <Link to="/tapasimplements">View All</Link>
+            </div>
             </section>
       
             <section className="implements-price">
              {implementsProducts.slice(0,5).map((product) => (
               <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
-  <div className="product-card" key={product.id}>
-    <Link to={`/product/${product.id}`}>
-      
-    </Link>
-
-    <div className="discount-tapas">{product.discount}</div>
-
-    <div className="image-offer">
-      <img src={product.image} alt={product.name} />
-    </div>
-    <div className="rating-star-menu">
+                <div className="product-card" key={product.id}>
+                  <Link to={`/product/${product.id}`}>
+                    
+                  </Link>
+              
+                  <div className="discount-tapas">{product.discount}</div>
+              
+                  <div className="image-offer">
+                    <img src={product.image} alt={product.name} />
+                  </div>
+                  <div className="rating-star-menu">
                      ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
                   </div>
 
-    <div className="content-card">
-      <h4>{product.name}</h4>
-      <p className="brand">{product.brand}</p>
-
-      <div className="price">
-        <span className="new-price">₹{product.newPrice}</span>
-        <span className="old-price">₹{product.oldPrice}</span>
-      </div>
-
-      <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
-    </div>
-
-   
-  </div>
-  </Link>
-))}
+                  <div className="content-card">
+                    <h4>{product.name}</h4>
+                    <p className="brand">{product.brand}</p>
+              
+                    <div className="price">
+                      <span className="new-price">₹{product.newPrice}</span>
+                      <span className="old-price">₹{product.oldPrice}</span>
+                    </div>
+              
+                    <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
+                  </div>
+              
+                 
+                </div>
+                </Link>
+              ))}
             </section>
 
             <section className="protection-home">
               <div className="offers-price">
-                <h1>Crop Protection</h1>
-                
+                <h1>Crop Protection</h1>                
               </div>
       
               <div className="offer-view-all">
@@ -116,83 +115,83 @@ function Tapas() {
       
             <section className="protection-price">
               {protectionProducts.slice(0,5).map((product) => (
-<Link to={`/product/${product.id}`}  key={product.id} className="product-link">
-  <div className="product-card" key={product.id}>
-    <Link to={`/product/${product.id}`}>
-      
-    </Link>
-
-    <div className="discount-tapas">{product.discount}</div>
-
-    <div className="image-offer">
-      <img src={product.image} alt={product.name} />
-    </div>
-    <div className="rating-star-menu">
-                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
-                  </div>
-
-    <div className="content-card">
-      <h4>{product.name}</h4>
-      <p className="brand">{product.brand}</p>
-
-      <div className="price">
-        <span className="new-price">₹{product.newPrice}</span>
-        <span className="old-price">₹{product.oldPrice}</span>
-      </div>
-
-      <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
-    </div>
-
-    
-  </div>
-  </Link>
-))}
-            </section>
-
-            <section className="nutrition-home">
-              <div className="offers-price">
-                <h1>Crop Nutrition</h1>
+                <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
+                  <div className="product-card" key={product.id}>
+                    <Link to={`/product/${product.id}`}>
+                      
+                    </Link>
                 
-              </div>
-      
-              <div className="offer-view-all">
-                <Link to="/tapasnutrition">View All</Link>
-              </div>
+                    <div className="discount-tapas">{product.discount}</div>
+                
+                    <div className="image-offer">
+                      <img src={product.image} alt={product.name} />
+                    </div>
+                    <div className="rating-star-menu">
+                     ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
+                    </div>
+
+                   <div className="content-card">
+                     <h4>{product.name}</h4>
+                     <p className="brand">{product.brand}</p>
+               
+                     <div className="price">
+                       <span className="new-price">₹{product.newPrice}</span>
+                       <span className="old-price">₹{product.oldPrice}</span>
+                     </div>
+               
+                     <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
+                   </div>
+               
+                   
+                 </div>
+                 </Link>
+               ))}
             </section>
-      
-            <section className="nutrition-price">
-             {nutritionProducts.slice(0,5).map((product) => (
-              <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
-  <div className="product-card" key={product.id}>
-    <Link to={`/product/${product.id}`}>
-    
-    </Link>
 
-    <div className="discount-tapas">{product.discount}</div>
-
-    <div className="image-offer">
-      <img src={product.image} alt={product.name} />
-    </div>
-    <div className="rating-star-menu">
+             <section className="nutrition-home">
+               <div className="offers-price">
+                 <h1>Crop Nutrition</h1>
+                 
+               </div>
+       
+               <div className="offer-view-all">
+                 <Link to="/tapasnutrition">View All</Link>
+               </div>
+             </section>
+       
+             <section className="nutrition-price">
+              {nutritionProducts.slice(0,5).map((product) => (
+               <Link to={`/product/${product.id}`}  key={product.id} className="product-link">
+               <div className="product-card" key={product.id}>
+                 <Link to={`/product/${product.id}`}>
+                 
+                 </Link>
+             
+                 <div className="discount-tapas">{product.discount}</div>
+             
+                 <div className="image-offer">
+                   <img src={product.image} alt={product.name} />
+                 </div>
+                 <div className="rating-star-menu">
                      ₹{product.oldPrice} <i className="fa-solid fa-arrow-right"></i> ₹{product.newPrice}
                   </div>
 
-    <div className="content-card">
-      <h4>{product.name}</h4>
-      <p className="brand">{product.brand}</p>
-
-      <div className="price">
-        <span className="new-price">₹{product.newPrice}</span>
-        <span className="old-price">₹{product.oldPrice}</span>
-      </div>
-
-      <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
-    </div>
-
-   
-  </div>
-  </Link>
-))}
+                  <div className="content-card">
+                    <h4>{product.name}</h4>
+                    <p className="brand">{product.brand}</p>
+              
+                    <div className="price">
+                      <span className="new-price">₹{product.newPrice}</span>
+                      <span className="old-price">₹{product.oldPrice}</span>
+                    </div>
+              
+                    <p className="save-button">Save ₹{product.oldPrice - product.newPrice}</p>
+                  </div>
+              
+                 
+                </div>
+                </Link>
+               ))}
             </section>         
     </>
   );
