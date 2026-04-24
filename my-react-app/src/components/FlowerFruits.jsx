@@ -26,9 +26,7 @@ function FlowerFruits() {
 
   return (
     <div className="seeds-page">
-      <div className="main-container">
-        
-          </div>
+      <div className="main-container"></div>
 
           <div className="products-grid-menu">
             {products.map((product) => (
@@ -37,10 +35,6 @@ function FlowerFruits() {
                   <div className="discount-menu">
                     {product.discount}% OFF
                   </div>
-
-                  <span className="wishlist-icon">
-                    <i className="fa-regular fa-heart"></i>
-                  </span>
 
                   <div className="image-offer-menu">
                     <img src={product.image} alt={product.name}/>
@@ -60,9 +54,7 @@ function FlowerFruits() {
                     </div>
 
                      <p className="save-button">Save ₹{product.saveAmount}</p>
-                  </div>
-
-                 
+                  </div>                 
                 </div>
               </Link>
             ))}
@@ -70,9 +62,7 @@ function FlowerFruits() {
 
           <div className="end-section">
             <div className="end-box">You have reached the end...</div>
-          </div>
-
-          
+          </div>       
         </div>
       
   );
