@@ -12,23 +12,22 @@ function IndividualPage() {
   const [showBuyNow,setShowBuyNow] = useState(true);
   const { openCart, addToCart } = useContext(CartContext);
 
- 
-useEffect(() => {
-  const getProduct = async () => {
-    try {
-    
-      const res = await axios.get(`https://bighaat-clone.onrender.com/products/${id}`);
-      setProduct(res.data);
-    } catch (err) {
-      console.log("Error fetching product:", err);
-      setProduct(null);
-    }
-  };
-  
-  if (id) {
-    getProduct();
-  }
-}, [id]); 
+   useEffect(() => {
+      const getProduct = async () => {
+        try {
+        
+          const res = await axios.get(`https://bighaat-clone.onrender.com/products/${id}`);
+          setProduct(res.data);
+        } catch (err) {
+          console.log("Error fetching product:", err);
+          setProduct(null);
+        }
+      };
+      
+      if (id) {
+        getProduct();
+      }
+    }, [id]); 
 
   if (!product) {
     return <h2>Product not found</h2>;
@@ -65,16 +64,12 @@ useEffect(() => {
         </div>
 
         <p className="save-text">Save ₹{product.oldPrice - product.newPrice}</p>
-
-       
-
+     
         <div className="button-row">
-
           <AddToCart product={product} setShowBuyNow={setShowBuyNow} /> 
           {showBuyNow && (
             <button className="buy-btn" onClick={handleBuyNow}>Buy Now</button>
           )}
-
         </div>
 
     </div>
