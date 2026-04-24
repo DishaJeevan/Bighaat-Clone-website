@@ -76,7 +76,7 @@ function Tapas() {
                     
                   </Link>
               
-                  <div className="discount-tapas">{product.discount}</div>
+                  <div className="discount-tapas">{product.discount}%OFF</div>
               
                   <div className="image-offer">
                     <img src={product.image} alt={product.name} />
@@ -121,7 +121,7 @@ function Tapas() {
                       
                     </Link>
                 
-                    <div className="discount-tapas">{product.discount}</div>
+                    <div className="discount-tapas">{product.discount}%OFF</div>
                 
                     <div className="image-offer">
                       <img src={product.image} alt={product.name} />
@@ -167,7 +167,7 @@ function Tapas() {
                  
                  </Link>
              
-                 <div className="discount-tapas">{product.discount}</div>
+                 <div className="discount-tapas">{product.discount}%OFF</div>
              
                  <div className="image-offer">
                    <img src={product.image} alt={product.name} />
