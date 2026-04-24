@@ -19,18 +19,11 @@ function PestProducts() {
 
   return (
     <div className="seeds-page">
-      <h1 style={{ textTransform: "capitalize" }}>
-        {type} ({products.length})
-      </h1>
-
       <div className="products-grid-menu">
         {products.map((product) => (
           <Link to={`/product/${product.id}`} key={product.id}>
             <div className="product-card-menu">
-              <img
-                src={product.image}
-                alt={product.name}
-              />
+              <img src={product.image} alt={product.name}/>
               <h4>{product.name}</h4>
               <p>{product.brand}</p>
               <p>₹{product.newPrice}</p>
