@@ -687,6 +687,24 @@ app.post("/contacts", async (req, res) => {
   }
 });
 
+app.delete("/delete-contact/:id", async (req, res) => {
+  try {
+    const contactId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      return res.status(400).json({ message: "Invalid contact id" });
+    }
+    const deleted = await ContactModel.findByIdAndDelete(contactId);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Contact not found" });
+    }
+    res.json({ message: "Contact deleted successfully" });
+  } catch (err) {
+    console.error("Delete contact error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
