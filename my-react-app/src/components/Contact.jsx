@@ -17,17 +17,22 @@ function Contact() {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) {
-    setStatus(" Please login first");
+  const user_id = localStorage.getItem("user_id");
+  const email = localStorage.getItem("email");
+
+  if (!user_id || !email) {
+    setStatus("Please login first");
     return;
   }
 
   try {
-    await axios.post("https://bighaat-clone.onrender.com/contacts", { 
-      ...form,
-      user_id: user.user_id
-    });
+    await axios.post(
+      "https://bighaat-clone.onrender.com/contacts",
+      {
+        ...form,
+        user_id
+      }
+    );
 
     setStatus("Message sent!");
     setForm({ name: "", email: "", message: "" });
