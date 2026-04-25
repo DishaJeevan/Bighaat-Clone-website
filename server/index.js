@@ -637,30 +637,6 @@ app.get("/invoice/:id", async (req, res) => {
 
 app.post("/contacts", async (req, res) => {
   try {
-    const { name, email, message } = req.body;
-
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: "All fields required" });
-    }
-
-    const contact = new ContactModel({
-      name,
-      email,
-      message,
-      createdAt: new Date()
-    });
-
-    await contact.save();
-    res.json({ message: "Message saved successfully" });
-
-  } catch (err) {
-    console.error("Contact error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-app.post("/contacts", async (req, res) => {
-  try {
     const { name, email, message, user_id } = req.body;
     if (!user_id) {
       return res.status(401).json({ error: "Please login first" });
