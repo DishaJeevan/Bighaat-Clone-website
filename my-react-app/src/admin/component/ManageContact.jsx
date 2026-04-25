@@ -10,6 +10,15 @@ function ManageContact() {
       .then((res) => setContacts(res.data))
       .catch((err) => console.log(err));
     }, []);
+  
+    const deleteContact = async (id) => {
+    try {
+      await axios.delete(`https://bighaat-clone.onrender.com/delete-contact/${id}`);
+      setContacts((prev) => prev.filter((c) => c._id !== id));
+    } catch (err) {
+      console.error("Error deleting contact:", err);
+    }
+  };
 
   return (
       <div className="manage-product-card"> 
@@ -22,12 +31,13 @@ function ManageContact() {
               <th>Email</th>
               <th>Message</th>
               <th>Date</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {contacts.length === 0 ? (
               <tr>
-                <td colSpan="4">No messages found</td>
+                <td colSpan="5">No messages found</td>
               </tr>
             ) : (
               contacts.map((c) => (
@@ -35,7 +45,17 @@ function ManageContact() {
                   <td>{c.name}</td>
                   <td>{c.email}</td>
                   <td>{c.message}</td>
-                  <td>{new Date(c.createdAt).toLocaleString("en-IN", {timeZone: "Asia/Kolkata",})}</td>
+                  <td>
+                    {new Date(c.createdAt).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                    })}
+                  </td>
+          
+                  <td>
+                    <button className="delete-btn" onClick={() => deleteContact(c._id)}>
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
