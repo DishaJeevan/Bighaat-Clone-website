@@ -15,15 +15,27 @@ function Contact() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("https://bighaat-clone.onrender.com/contacts", form);
-      setStatus(" Message sent!");
-      setForm({ name: "", email: "", message: "" });
-    } catch {
-      setStatus("Failed to send");
-    }
-  };
+  e.preventDefault();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    setStatus(" Please login first");
+    return;
+  }
+
+  try {
+    await axios.post("https://bighaat-clone.onrender.com/contacts", { 
+      ...form,
+      user_id: user.user_id
+    });
+
+    setStatus("Message sent!");
+    setForm({ name: "", email: "", message: "" });
+
+  } catch (err) {
+    setStatus(err.response?.data?.error || "Failed to send");
+  }
+};
 
   return (
      <div className="contact-page">
