@@ -659,12 +659,30 @@ app.post("/contacts", async (req, res) => {
   }
 });
 
-app.get("/contacts", async (req, res) => {
+app.post("/contacts", async (req, res) => {
   try {
-    const contacts = await ContactModel.find();
-    res.json(contacts);
+    const { name, email, message, user_id } = req.body;
+    if (!user_id) {
+      return res.status(401).json({ error: "Please login first" });
+    }
+    const user = await UserModel.findById(user_id);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid user" });
+    }
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "All fields required" });
+    }
+    const contact = new ContactModel({
+      name,
+      email,
+      message,
+      user_id,
+      createdAt: new Date()
+    });
+    await contact.save();
+    res.json({ message: "Message saved successfully" });
   } catch (err) {
-    console.error("Fetch contacts error:", err);
+    console.error("Contact error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
