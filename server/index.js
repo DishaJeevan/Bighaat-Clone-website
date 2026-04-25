@@ -663,6 +663,16 @@ app.post("/contacts", async (req, res) => {
   }
 });
 
+app.get("/contacts", async (req, res) => {
+  try {
+    const contacts = await ContactModel.find();
+    res.json(contacts);
+  } catch (err) {
+    console.error("Fetch contacts error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.delete("/delete-contact/:id", async (req, res) => {
   try {
     const contactId = req.params.id;
