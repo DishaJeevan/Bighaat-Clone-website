@@ -9,7 +9,7 @@ import ManageOrder from "./ManageOrder";
 import EditOrder from "./EditOrder";
 import ManageContact from "./ManageContact";
 import { useEffect, useState } from "react"; 
-import {LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,ResponsiveContainer} from "recharts";
+import {LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,ResponsiveContainer, AreaChart, Area, BarChart, Bar} from "recharts";
 import { PieChart, Pie, Cell, Legend } from "recharts";
 
 
@@ -24,6 +24,8 @@ function AdminDashboard() {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [revenueData, setRevenueData] = useState([]);
   const [orderStatusData, setOrderStatusData] = useState([]);
+  const [barData, setBarData] = useState([]);
+  const [areaData, setAreaData] = useState([]);
   const COLORS = ["#28a745", "#ffc107", "#007bff", "#dc3545"];
 
 
@@ -33,6 +35,7 @@ function AdminDashboard() {
       const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
       const productsRes = await axios.get("https://bighaat-clone.onrender.com/products");
       const usersRes = await axios.get("https://bighaat-clone.onrender.com/users");
+
       const orders = ordersRes.data;
 
       setTotalOrders(orders.length);
@@ -41,48 +44,93 @@ function AdminDashboard() {
 
       const revenue = orders
         .filter(order =>
-          order.paymentStatus === "Paid" ||(order.paymentMethod === "COD" && order.status === "Delivered")
+          order.paymentStatus === "Paid" ||
+          (order.paymentMethod === "COD" && order.status === "Delivered")
         )
         .reduce((sum, order) => sum + order.totalPrice, 0);
 
       setTotalRevenue(revenue);
+
+      
       const latest = [...orders]
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
         .slice(0, 5);
+
       setRecentOrders(latest);
 
+    
       const grouped = {};
       orders.forEach(order => {
         const date = new Date(order.datetime).toLocaleDateString();
+
         if (
-          order.paymentStatus === "Paid" ||(order.paymentMethod === "COD" && order.status === "Delivered")
+          order.paymentStatus === "Paid" ||
+          (order.paymentMethod === "COD" && order.status === "Delivered")
         ) {
           if (!grouped[date]) grouped[date] = 0;
           grouped[date] += order.totalPrice;
         }
       });
 
-      const formatted = Object.keys(grouped).map(date => ({
-        date,
-        revenue: grouped[date]
-      }));
-      setRevenueData(formatted);
+      setRevenueData(
+        Object.keys(grouped).map(date => ({
+          date,
+          revenue: grouped[date]
+        }))
+      );
 
- 
       const statusCount = {};
       orders.forEach(order => {
         const status = order.status || "Unknown";
-        if (!statusCount[status]) {
-          statusCount[status] = 0;
-        }
-        statusCount[status]++;
+        statusCount[status] = (statusCount[status] || 0) + 1;
       });
 
-      const pieData = Object.keys(statusCount).map(status => ({
-        name: status,
-        value: statusCount[status]
-      }));
-      setOrderStatusData(pieData);
+      setOrderStatusData(
+        Object.keys(statusCount).map(status => ({
+          name: status,
+          value: statusCount[status]
+        }))
+      );
+
+      
+      const monthlyOrders = {};
+
+orders.forEach(order => {
+  const date = new Date(order.datetime);
+  const month = date.toLocaleString("default", { month: "short" });
+  const monthIndex = date.getMonth(); 
+
+  if (!monthlyOrders[month]) {
+    monthlyOrders[month] = { count: 0, index: monthIndex };
+  }
+
+  monthlyOrders[month].count++;
+});
+
+setBarData(
+  Object.entries(monthlyOrders)
+    .sort((a, b) => a[1].index - b[1].index)
+    .map(([month, data]) => ({
+      month,
+      orders: data.count
+    }))
+);
+
+      const ordersTrend = {};
+      orders.forEach(order => {
+        const date = new Date(order.datetime).toLocaleDateString();
+        ordersTrend[date] = (ordersTrend[date] || 0) + 1;
+      });
+
+      setAreaData(
+        Object.keys(ordersTrend)
+        .sort((a, b) => new Date(a) - new Date(b))
+        .map(date => ({
+          date,
+          orders: ordersTrend[date]
+        }))
+      );
+
     } catch (err) {
       console.error("Dashboard fetch error:", err);
     }
@@ -226,7 +274,35 @@ function AdminDashboard() {
       </PieChart>
     </ResponsiveContainer>
   </div>
-</div>
+   <div className="graph-card">
+    <div className="card-header">
+      <h4>Monthly Orders</h4>
+    </div>
+    <ResponsiveContainer width="100%" height={250}>
+      <BarChart data={barData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="orders" fill="#007bff" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+    <div className="graph-card">
+    <div className="card-header">
+      <h4>Orders Trend</h4>
+    </div>
+    <ResponsiveContainer width="100%" height={250}>
+      <AreaChart data={areaData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Area type="monotone" dataKey="orders" stroke="#28a745" fill="#28a745" />
+      </AreaChart>
+    </ResponsiveContainer>
+  </div>
+ </div>
 
     <div className="orders-card">
       <div className="orders-card-header">
