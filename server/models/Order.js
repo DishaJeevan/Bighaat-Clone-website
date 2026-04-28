@@ -13,7 +13,7 @@ const OrderSchema = new mongoose.Schema({
     snapName: String,
     snapPrice: Number,
     snapImage: String,
-    category: product.category
+    category: Stringy
   }
 ],
   totalPrice: Number,
