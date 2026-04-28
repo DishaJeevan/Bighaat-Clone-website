@@ -118,12 +118,7 @@ console.log("Top Products:", topProducts);
 
 setBarData(topProducts);
 
-const topCategories = Object.entries(categorySales)
-  .map(([category, qty]) => ({ category, quantity: qty }))
-  .sort((a, b) => b.quantity - a.quantity)
-  .slice(0, 5);
 
-setBarData(topCategories);
 
       const ordersTrend = {};
       orders.forEach(order => {
@@ -285,12 +280,12 @@ setBarData(topCategories);
   </div>
    <div className="graph-card">
     <div className="card-header">
-      <h4>Top Categories</h4>
+      <h4>Top Products</h4>
     </div>
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={barData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="category" />
+        <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Bar dataKey="quantity" fill="#007bff" />
