@@ -93,28 +93,26 @@ function AdminDashboard() {
       );
 
       
-      const monthlyOrders = {};
+     const categorySales = {};
 
 orders.forEach(order => {
-  const date = new Date(order.datetime);
-  const month = date.toLocaleString("default", { month: "short" });
-  const monthIndex = date.getMonth(); 
+  order.items?.forEach(item => {
+    const category = item.category || "Others";
 
-  if (!monthlyOrders[month]) {
-    monthlyOrders[month] = { count: 0, index: monthIndex };
-  }
+    if (!categorySales[category]) {
+      categorySales[category] = 0;
+    }
 
-  monthlyOrders[month].count++;
+    categorySales[category] += item.quantity;
+  });
 });
 
-setBarData(
-  Object.entries(monthlyOrders)
-    .sort((a, b) => a[1].index - b[1].index)
-    .map(([month, data]) => ({
-      month,
-      orders: data.count
-    }))
-);
+const topCategories = Object.entries(categorySales)
+  .map(([category, qty]) => ({ category, quantity: qty }))
+  .sort((a, b) => b.quantity - a.quantity)
+  .slice(0, 5);
+
+setBarData(topCategories);
 
       const ordersTrend = {};
       orders.forEach(order => {
@@ -276,15 +274,15 @@ setBarData(
   </div>
    <div className="graph-card">
     <div className="card-header">
-      <h4>Monthly Orders</h4>
+      <h4>Top Categories</h4>
     </div>
     <ResponsiveContainer width="100%" height={250}>
       <BarChart data={barData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
+        <XAxis dataKey="category" />
         <YAxis />
         <Tooltip />
-        <Bar dataKey="orders" fill="#007bff" />
+        <Bar dataKey="quantity" fill="#007bff" />
       </BarChart>
     </ResponsiveContainer>
   </div>
