@@ -93,19 +93,30 @@ function AdminDashboard() {
       );
 
       
-     const categorySales = {};
+     const productSales = {};
 
 orders.forEach(order => {
   order.items?.forEach(item => {
-    const category = item.category || "Others";
+    const name = item.snapName || item.productName;
 
-    if (!categorySales[category]) {
-      categorySales[category] = 0;
+    if (!name) return;
+
+    if (!productSales[name]) {
+      productSales[name] = 0;
     }
 
-    categorySales[category] += item.quantity;
+    productSales[name] += item.quantity || 1;
   });
 });
+
+const topProducts = Object.entries(productSales)
+  .map(([name, qty]) => ({ name, quantity: qty }))
+  .sort((a, b) => b.quantity - a.quantity)
+  .slice(0, 5);
+
+console.log("Top Products:", topProducts); 
+
+setBarData(topProducts);
 
 const topCategories = Object.entries(categorySales)
   .map(([category, qty]) => ({ category, quantity: qty }))
