@@ -26,6 +26,7 @@ function AdminDashboard() {
   const [orderStatusData, setOrderStatusData] = useState([]);
   const [barData, setBarData] = useState([]);
   const [areaData, setAreaData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
   const COLORS = ["#28a745", "#ffc107", "#007bff", "#dc3545"];
 
 
