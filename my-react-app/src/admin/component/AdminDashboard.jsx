@@ -98,7 +98,7 @@ function AdminDashboard() {
 
   orders.forEach(order => {
     order.items?.forEach(item => {
-      const cat = item.category || "Unknown";
+      const cat = item.productDetails?.category || "Unknown";
   
       if (!categorySales[cat]) {
         categorySales[cat] = 0;
