@@ -93,33 +93,26 @@ function AdminDashboard() {
       );
 
       
-    const productSales = {};
+    const categorySales = {};
 
-    orders.forEach(order => {
-      order.items?.forEach(item => {
-        const name =
-          item.snapName ||
-          item.productName ||
-          item.productDetails?.name;
-    
-        if (!name) return;
-    
-        if (!productSales[name]) {
-          productSales[name] = 0;
-        }
-    
-        productSales[name] += item.quantity || 1;
-      });
+  orders.forEach(order => {
+    order.items?.forEach(item => {
+      const cat = item.category || "Unknown";
+  
+      if (!categorySales[cat]) {
+        categorySales[cat] = 0;
+      }
+  
+      categorySales[cat] += item.quantity || 1;
     });
-    
-    const topProducts = Object.entries(productSales)
-      .map(([name, qty]) => ({ name, quantity: qty }))
-      .sort((a, b) => b.quantity - a.quantity)
-      .slice(0, 5);
-    
-    console.log("Top Products:", topProducts);
-    
-    setBarData(topProducts);
+  });
+  
+  const categoryData = Object.entries(categorySales).map(([cat, qty]) => ({
+    name: cat,
+    quantity: qty
+  }));
+  
+  setCategoryData(categoryData);
 
       const ordersTrend = {};
       orders.forEach(order => {
@@ -284,13 +277,13 @@ function AdminDashboard() {
       <h4>Top Products</h4>
     </div>
     <ResponsiveContainer width="100%" height={250}>
-      <BarChart data={barData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="quantity" fill="#007bff" />
-      </BarChart>
+      <BarChart data={categoryData}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Bar dataKey="quantity" fill="#ff9800" />
+    </BarChart>
     </ResponsiveContainer>
   </div>
     <div className="graph-card">
