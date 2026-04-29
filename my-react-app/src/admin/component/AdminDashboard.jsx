@@ -94,26 +94,31 @@ function AdminDashboard() {
       );
 
       
-    const categorySales = {};
-
-  orders.forEach(order => {
-    order.items?.forEach(item => {
-      const cat = item.productDetails?.category || "Unknown";
-  
-      if (!categorySales[cat]) {
-        categorySales[cat] = 0;
-      }
-  
-      categorySales[cat] += item.quantity || 1;
-    });
-  });
-  
-  const categoryData = Object.entries(categorySales).map(([cat, qty]) => ({
-    name: cat,
-    quantity: qty
-  }));
-  
-  setCategoryData(categoryData);
+        const categorySales = {};
+    
+        orders.forEach(order => {
+          order.items?.forEach(item => {
+            const cat = item.productDetails?.category || "Unknown";
+            const sub = item.productDetails?.subCategory || "Unknown";
+            const sec = item.productDetails?.section || "Unknown";
+            const key = `${cat} | ${sub} | ${sec}`;
+        
+            if (!categorySales[key]) {
+              categorySales[key] = 0;
+            }
+        
+            categorySales[key] += item.quantity || 1;
+          });
+        });
+        
+        const categoryData = Object.entries(categorySales)
+        .map(([name, qty]) => ({
+          name,
+          quantity: qty
+        }))
+        .sort((a, b) => b.quantity - a.quantity) .slice(0, 5); 
+      
+      setCategoryData(categoryData);
 
       const ordersTrend = {};
       orders.forEach(order => {
