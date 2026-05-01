@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/CartContext";
 
-
 function AddressView() {
 const navigate = useNavigate();
   const [address, setAddress] = useState(null);
