@@ -88,7 +88,7 @@ function AdminDashboard() {
           order.items?.forEach(item => {
             const cat = item.productDetails?.category || "Unknown";
             const sub = item.productDetails?.subCategory || "Unknown";
-            const sec = item.productDetails?.section || "Unknown";
+            const sec = item.productDetails?.section;
             const key = `${cat} | ${sub} | ${sec}`;
         
             if (!categorySales[key]) {
