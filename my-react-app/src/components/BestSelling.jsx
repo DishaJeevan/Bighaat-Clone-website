@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import "../App.css";
 import { useState, useEffect } from "react";
-
 import axios from "axios";
 
 function BestSelling() {
@@ -58,7 +57,6 @@ function BestSelling() {
 
               <p className="save-button">Save ₹{product.saveAmount}</p>
             </div>
-
            
           </div>
           </Link>
