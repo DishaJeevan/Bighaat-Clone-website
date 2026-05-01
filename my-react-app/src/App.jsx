@@ -53,8 +53,6 @@ import AddressView from "./components/AddressView";
 import PaymentPage from "./components/PaymentPage";
 import Contact from "./components/Contact";
 
-
-
 function App() {
   const { isCartOpen } = useContext(CartContext);
 
@@ -88,9 +86,9 @@ function App() {
         <Route path="/tapasnutrition" element={<Tapascropnutrition />} />
         <Route path="/tapasprotection" element={<Tapascropprotection />} />
         <Route path="/otp" element={<Otppage />} />
-       <Route path="/product/:id" element={<IndividualPage />} />
-       <Route path="/products" element={<Products />} />
-       <Route path="/thrips" element={<Thrips />} />
+        <Route path="/product/:id" element={<IndividualPage />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/thrips" element={<Thrips />} />
         <Route path="/leaf-eating" element={<LeafEating />} />
         <Route path="/late-blight" element={<LightBlight />} />
         <Route path="/flower-fruits" element={<FlowerFruits />} />
