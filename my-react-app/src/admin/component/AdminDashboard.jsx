@@ -12,9 +12,7 @@ import { useEffect, useState } from "react";
 import {LineChart,Line,XAxis,YAxis,Tooltip,CartesianGrid,ResponsiveContainer, AreaChart, Area, BarChart, Bar} from "recharts";
 import { PieChart, Pie, Cell, Legend } from "recharts";
 
-
 function AdminDashboard() {
-
   const location = useLocation();
   const navigate = useNavigate();
   const [recentOrders, setRecentOrders] = useState([]);
@@ -29,14 +27,12 @@ function AdminDashboard() {
   const [categoryData, setCategoryData] = useState([]);
   const COLORS = ["#28a745", "#ffc107", "#007bff", "#dc3545"];
 
-
   useEffect(() => {
   const fetchDashboardData = async () => {
     try {
       const ordersRes = await axios.get("https://bighaat-clone.onrender.com/orders");
       const productsRes = await axios.get("https://bighaat-clone.onrender.com/products");
       const usersRes = await axios.get("https://bighaat-clone.onrender.com/users");
-
       const orders = ordersRes.data;
 
       setTotalOrders(orders.length);
@@ -51,19 +47,14 @@ function AdminDashboard() {
         .reduce((sum, order) => sum + order.totalPrice, 0);
 
       setTotalRevenue(revenue);
-
-      
       const latest = [...orders]
         .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
         .slice(0, 5);
-
       setRecentOrders(latest);
 
-    
       const grouped = {};
       orders.forEach(order => {
         const date = new Date(order.datetime).toLocaleDateString();
-
         if (
           order.paymentStatus === "Paid" ||
           (order.paymentMethod === "COD" && order.status === "Delivered")
@@ -72,7 +63,6 @@ function AdminDashboard() {
           grouped[date] += order.totalPrice;
         }
       });
-
       setRevenueData(
         Object.keys(grouped).map(date => ({
           date,
@@ -93,9 +83,7 @@ function AdminDashboard() {
         }))
       );
 
-      
-        const categorySales = {};
-    
+        const categorySales = {};    
         orders.forEach(order => {
           order.items?.forEach(item => {
             const cat = item.productDetails?.category || "Unknown";
@@ -117,7 +105,6 @@ function AdminDashboard() {
           quantity: qty
         }))
         .sort((a, b) => b.quantity - a.quantity) .slice(0, 5); 
-      
       setCategoryData(categoryData);
 
       const ordersTrend = {};
@@ -326,14 +313,11 @@ function AdminDashboard() {
           <tbody>
               {recentOrders.map((order) => (
                 <tr key={order._id}>
-              
                   <td onClick={() => navigate(`/admin/user-orders/${order.user_id}`, { state: { orderId: order._id } })} style={{ cursor: "pointer", color: "#009640" }}>
                     {order._id.slice(-6).toUpperCase()}
                   </td>
                   <td>{new Date(order.datetime).toLocaleDateString()}</td>
-  
                   <td>₹{order.totalPrice}</td>
-            
                   <td>
                     <span className={`status-tag ${order.status?.toLowerCase()}`}>
                       {order.status}
