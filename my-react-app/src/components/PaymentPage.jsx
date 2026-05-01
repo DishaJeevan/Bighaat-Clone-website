@@ -18,8 +18,7 @@ function PaymentPage() {
       return;
     }
     if (!address) {
-      axios
-        .get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
+      axios.get(`https://bighaat-clone.onrender.com/get-address/${user_id}`)
         .then((res) => {
           if (res.data?.name) {
             setAddress(res.data);
