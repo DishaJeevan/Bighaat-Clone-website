@@ -5,7 +5,6 @@ import "../App.css";
 
 function Animalhusbandrymenue() {
   const [products, setProducts] = useState([]);
-
   useEffect(() => {
   const getProducts = async () => {
     try {
