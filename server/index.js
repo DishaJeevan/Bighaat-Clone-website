@@ -616,24 +616,24 @@ app.post("/create-razorpay-order",async(req,res)=>{
   }
 });
 
-app.get("/invoice/:id", async (req, res) => {
-  try {
-    const order = await OrderModel.findById(req.params.id);
+// app.get("/invoice/:id", async (req, res) => {
+//   try {
+//     const order = await OrderModel.findById(req.params.id);
 
-    res.writeHead(200, {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=invoice.pdf",
-    });
+//     res.writeHead(200, {
+//       "Content-Type": "application/pdf",
+//       "Content-Disposition": "attachment; filename=invoice.pdf",
+//     });
 
-    pdfService.buildPDF(
-      order,
-      (chunk) => res.write(chunk),
-      () => res.end()
-    );
-  } catch (err) {
-    res.status(500).json({ error: "Error generating invoice" });
-  }
-});
+//     pdfService.buildPDF(
+//       order,
+//       (chunk) => res.write(chunk),
+//       () => res.end()
+//     );
+//   } catch (err) {
+//     res.status(500).json({ error: "Error generating invoice" });
+//   }
+// });
 
 app.post("/contacts", async (req, res) => {
   try {
