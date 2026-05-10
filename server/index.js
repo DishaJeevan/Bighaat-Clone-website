@@ -691,6 +691,45 @@ app.delete("/delete-contact/:id", async (req, res) => {
   }
 });
 
+app.put("/cancel-order/:id", async (req, res) => {
+  try {
+    const order = await OrderModel.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+
+    if (
+      order.status === "Shipped" ||
+      order.status === "Delivered"
+    ) {
+      return res.status(400).json({
+        error:
+          "Once the order is shipped or delivered, it cannot be cancelled or refunded.",
+      });
+    }
+
+   
+    if (order.paymentMethod === "ONLINE") {
+      return res.status(400).json({
+        error:
+          "Online paid orders cannot be cancelled or refunded once placed.",
+      });
+    }
+
+    order.status = "Cancelled";
+    await order.save();
+
+    res.json({
+      message: "Order cancelled successfully",
+    });
+  } catch (err) {
+    console.error("Cancel order error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
