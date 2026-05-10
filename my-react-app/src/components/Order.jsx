@@ -78,7 +78,7 @@ function Order() {
   {o.status === "Cancelled"
     ? "Cancelled"
     : "Cancel"}
-</button>*}
+</button> */}
             </div> 
 
           </div>
