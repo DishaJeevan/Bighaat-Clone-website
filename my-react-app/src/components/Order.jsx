@@ -68,7 +68,7 @@ function Order() {
                >
                 View
               </button>
-              <button
+           <button
   className="cancel-order"
   onClick={() => cancelOrder(o._id)}
   disabled={
@@ -77,7 +77,9 @@ function Order() {
     o.status === "Cancelled"
   }
 >
-  {o.status === "Cancelled" ? "Cancelled" : "Cancel"}
+  {o.status === "Cancelled"
+    ? "Cancelled"
+    : "Cancel"}
 </button>
             </div>
 
