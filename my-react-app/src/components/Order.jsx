@@ -17,6 +17,26 @@ function Order() {
     .catch((err) => console.log(err));
   }, []);
 
+  const cancelOrder = async (orderId) => {
+  try {
+    const res = await axios.put(
+      `https://bighaat-clone.onrender.com/cancel-order/${orderId}`
+    );
+
+    alert(res.data.message);
+
+    setOrders((prev) =>
+      prev.map((o) =>
+        o._id === orderId
+          ? { ...o, status: "Cancelled" }
+          : o
+      )
+    );
+  } catch (err) {
+    alert(err.response?.data?.error || "Cancel failed");
+  }
+};
+
   return (
     <>
       <div className="manage-container">
