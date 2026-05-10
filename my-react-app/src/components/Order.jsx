@@ -17,25 +17,25 @@ function Order() {
     .catch((err) => console.log(err));
   }, []);
 
-  const cancelOrder = async (orderId) => {
-  try {
-    const res = await axios.put(
-      `https://bighaat-clone.onrender.com/cancel-order/${orderId}`
-    );
+//   const cancelOrder = async (orderId) => {
+//   try {
+//     const res = await axios.put(
+//       `https://bighaat-clone.onrender.com/cancel-order/${orderId}`
+//     );
 
-    alert(res.data.message);
+//     alert(res.data.message);
 
-    setOrders((prev) =>
-      prev.map((o) =>
-        o._id === orderId
-          ? { ...o, status: "Cancelled" }
-          : o
-      )
-    );
-  } catch (err) {
-    alert(err.response?.data?.error || "Cancel failed");
-  }
-};
+//     setOrders((prev) =>
+//       prev.map((o) =>
+//         o._id === orderId
+//           ? { ...o, status: "Cancelled" }
+//           : o
+//       )
+//     );
+//   } catch (err) {
+//     alert(err.response?.data?.error || "Cancel failed");
+//   }
+// };
 
   return (
     <>
@@ -68,9 +68,7 @@ function Order() {
                >
                 View
               </button>
-           <button
-  className="cancel-order"
-  onClick={() => cancelOrder(o._id)}
+           {/* <button className="cancel-order" onClick={() => cancelOrder(o._id)}
   disabled={
     o.status === "Shipped" ||
     o.status === "Delivered" ||
@@ -81,7 +79,7 @@ function Order() {
     ? "Cancelled"
     : "Cancel"}
 </button>
-            </div>
+            </div> */}
 
           </div>
         ))}
