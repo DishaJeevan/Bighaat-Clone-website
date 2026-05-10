@@ -111,7 +111,7 @@ function EditOrder() {
             <option value="Processed">Processed</option>
             <option value="Shipped">Shipped</option>
             <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
+            {/* <option value="Cancelled">Cancelled</option> */}
           </select>
           
           <button type="submit">
