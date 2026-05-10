@@ -696,10 +696,12 @@ app.put("/cancel-order/:id", async (req, res) => {
     const order = await OrderModel.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({
+        error: "Order not found",
+      });
     }
 
-
+  
     if (
       order.status === "Shipped" ||
       order.status === "Delivered"
@@ -711,22 +713,82 @@ app.put("/cancel-order/:id", async (req, res) => {
     }
 
    
-    if (order.paymentMethod === "ONLINE") {
+    if (order.status === "Cancelled") {
       return res.status(400).json({
-        error:
-          "Online paid orders cannot be cancelled or refunded once placed.",
+        error: "Order already cancelled",
       });
     }
 
+   
     order.status = "Cancelled";
+
+    /
+    if (order.paymentMethod === "ONLINE") {
+      order.paymentStatus = "Refund Initiated";
+
+      const amount = order.totalPrice;
+
+      const productList = order.items.map(item => {
+        return `
+          <tr>
+            <td>${item.snapName}</td>
+            <td>${item.quantity}</td>
+            <td>₹${item.snapPrice}</td>
+          </tr>
+        `;
+      }).join("");
+
+      const message = `
+        <h2>Order Cancelled Successfully</h2>
+
+        <p>Your online paid order has been cancelled.</p>
+
+        <p>
+          <strong>Refund Status:</strong>
+          Refund Initiated
+        </p>
+
+        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${productList}
+          </tbody>
+        </table>
+
+        <p><strong>Total Refund Amount:</strong> ₹${amount}</p>
+      `;
+
+      await sendMail(
+        order.email,
+        "Order Cancelled & Refund Initiated",
+        message
+      );
+    }
+
+  
+    else {
+      order.paymentStatus = "Cancelled";
+    }
+
     await order.save();
 
     res.json({
       message: "Order cancelled successfully",
     });
+
   } catch (err) {
     console.error("Cancel order error:", err);
-    res.status(500).json({ error: "Server error" });
+
+    res.status(500).json({
+      error: "Server error",
+    });
   }
 });
 
