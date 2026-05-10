@@ -722,7 +722,7 @@ app.put("/cancel-order/:id", async (req, res) => {
    
     order.status = "Cancelled";
 
-    /
+    
     if (order.paymentMethod === "ONLINE") {
       order.paymentStatus = "Refund Initiated";
 
